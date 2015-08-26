@@ -23,17 +23,22 @@ int main(int argc, char* argv[]) {
 
   char c;
   Line* line;
+  c = (char)fgetc(file);
   line = head;
-  while ((c = (char)fgetc(file)) != EOF) {
+  while (c != EOF) {
     line->value[hare++] = c;
-    if (c == '\n') {
-      Line* nextLine;
-      nextLine = malloc(sizeof(Line));
-      nextLine->value = malloc((BUFFER_SIZE+1) * sizeof(char));
+    if (c != '\n') {
+      c = (char)fgetc(file);
+    } else {
       line->value[hare] = '\0';
-      line->next = nextLine;
-      line = nextLine;
       hare = 0;
+      if ((c = (char)fgetc(file)) != EOF) {
+        Line* nextLine;
+        nextLine = malloc(sizeof(Line));
+        nextLine->value = malloc((BUFFER_SIZE+1) * sizeof(char));
+        line->next = nextLine;
+        line = nextLine;
+      }
     }
   }
 
@@ -53,36 +58,48 @@ Word* loadReservedWords() {
 
   char c;
   Word* word;
+  c = (char)fgetc(file);
   word = head;
-  while ((c = (char)fgetc(file)) != EOF) {
+  while (c != EOF) {
+    // grab the reserved word
     if (c >= 'a' && c <= 'z') {
       word->value[hare++] = c;
+      c = (char)fgetc(file);
     } else if (c >= '0' && c <= '9') {
       int type;
       int attr;
       type = c-48;
+      // grab the token type
       while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
         type = (type*10) + (c-48);
       }
+      // skip to the attribute value
       while (c < '0' || c > '9') {
         c = (char)fgetc(file);
       }
       attr = c-48;
+      // grab the attribute
       while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
         attr = (attr*10) + (c-48);
       }
       word->type = type;
       word->attr = attr;
+      // skip to the end of line
       while (c != '\n') {
         c = (char)fgetc(file);
       }
-      Word* nextWord;
-      nextWord = malloc(sizeof(Word));
-      nextWord->value = malloc(10 * sizeof(char));
       word->value[hare] = '\0';
-      word->next = nextWord;
-      word = nextWord;
       hare = 0;
+      // check if there is a next line
+      if ((c = (char)fgetc(file)) != EOF && c != ' ') {
+        Word* nextWord;
+        nextWord = malloc(sizeof(Word));
+        nextWord->value = malloc(10 * sizeof(char));
+        word->next = nextWord;
+        word = nextWord;
+      }
+    } else {
+      c = (char)fgetc(file);
     }
   }
 
@@ -95,7 +112,7 @@ int printListingFile(Line* head) {
 
   Line* line;
   line = head;
-  while (line != NULL && line->value[0] != '\0') {
+  while (line != NULL) {
     printf("%4d.    %s", lineNumber, line->value);
     printf("\n");
     line = line->next;
