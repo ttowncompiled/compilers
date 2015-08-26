@@ -6,36 +6,40 @@
 
 enum types {
   ADDOP = 1,
+  AND,
   ARRAY,
   ASSIGNOP,
-  BEGIN,
+  BEGIN,        // 5
   CLOSEBRACKET,
   CLOSEPAREN,
   COLON,
   COMMA,
+  DIV,          // 10
   DO,
   ELSE,
   END,
   FUNCTION,
-  ID,
+  ID,           // 15
   IF,
   INTEGER,
   MINUS,
-  MULOP,
+  MOD,
+  MULOP,        // 20
   NOT,
   NUM,
   OF,
   OPENBRACKET,
-  OPENPAREN,
+  OPENPAREN,    // 25
+  OR,
   PERIOD,
   PLUS,
   PROCEDURE,
-  PROGRAM,
+  PROGRAM,      // 30
   RANGE,
   REAL,
   RELOP,
   SEMICOLON,
-  THEN,
+  THEN,         // 35
   VAR,
   WHILE
 };
