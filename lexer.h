@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define BUFFER_SIZE 72
+
 enum types {
   ADDOP = 1,
   ARRAY,
@@ -38,5 +40,10 @@ enum types {
   WHILE
 };
 
-void printListingFile(char* filename);
+typedef struct Line {
+  char* value;
+  struct Line* next;
+} Line;
+
+int printListingFile(Line* head);
 
