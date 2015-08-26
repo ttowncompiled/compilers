@@ -49,5 +49,13 @@ typedef struct Line {
   struct Line* next;
 } Line;
 
+typedef struct Word {
+  char* value;
+  int type;
+  int attr;
+  struct Word* next;
+} Word;
+
+Word* loadReservedWords();
 int printListingFile(Line* head);
 

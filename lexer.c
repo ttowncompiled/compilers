@@ -37,7 +37,56 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  loadReservedWords();
   return printListingFile(head);
+}
+
+Word* loadReservedWords() {
+  FILE* file;
+  Word* head;
+  int hare;
+
+  file = fopen("reserved_words.txt", "r");
+  head = malloc(sizeof(Word));
+  head->value = malloc(10 * sizeof(char));
+  hare = 0;
+
+  char c;
+  Word* word;
+  word = head;
+  while ((c = (char)fgetc(file)) != EOF) {
+    if (c >= 'a' && c <= 'z') {
+      word->value[hare++] = c;
+    } else if (c >= '0' && c <= '9') {
+      int type;
+      int attr;
+      type = c-48;
+      while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
+        type = (type*10) + (c-48);
+      }
+      while (c < '0' || c > '9') {
+        c = (char)fgetc(file);
+      }
+      attr = c-48;
+      while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
+        attr = (attr*10) + (c-48);
+      }
+      word->type = type;
+      word->attr = attr;
+      while (c != '\n') {
+        c = (char)fgetc(file);
+      }
+      Word* nextWord;
+      nextWord = malloc(sizeof(Word));
+      nextWord->value = malloc(10 * sizeof(char));
+      word->value[hare] = '\0';
+      word->next = nextWord;
+      word = nextWord;
+      hare = 0;
+    }
+  }
+
+  return head;
 }
 
 int printListingFile(Line* head) {
