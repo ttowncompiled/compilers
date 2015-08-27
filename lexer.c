@@ -98,8 +98,18 @@ LineList* analyze(char* filename) {
     line->number = line_number;
     node->line = line;
     node->next = next;
+    
+    if (buffer_size > (MAX_BUFFER_SIZE+1) * sizeof(char)) {
+      Line* error = malloc(sizeof(Line));
+      LineList* after = malloc(sizeof(LineList));
+      error->value = "ERROR: Lines can only be 72 characters long.\n";
+      error->number = line_number;
+      after->line = error;
+      after->next = next;
+      node->next = after;
+    }
 
-    node = node->next;
+    node = next;
     buffer = malloc(MAX_BUFFER_SIZE * sizeof(char));
   }
 
@@ -108,11 +118,17 @@ LineList* analyze(char* filename) {
 
 int print_listing_file(LineList* head) {
   LineList* node = head;
+  int line_number = 0;
 
   while (node != NULL && node->line != NULL) {
-    printf("%4d.    %s\n", node->line->number, node->line->value);
+    if (node->line->number != line_number) {
+      printf("\n");
+      line_number++;
+    }
+    printf("%4d.    %s", node->line->number, node->line->value);
     node = node->next;
   }
+  printf("\n");
   
   return 0;
 }
