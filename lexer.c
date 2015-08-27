@@ -16,9 +16,7 @@ int main(int argc, char* argv[]) {
     printf("Please provide the name of a source file.\n");
     return 0;
   }
-
   ReservedWordList* reserved = load_reserved_words();
-  printf("%s\n", reserved->word->value);
   char* filename = argv[1];
   LineList* head = analyze(filename);
   return print_listing_file(head);
@@ -34,7 +32,6 @@ ReservedWordList* load_reserved_words() {
   ReservedWordList* node = head;
   size_t buffer_size = (MAX_BUFFER_SIZE+1) * sizeof(char);
   char* buffer = malloc(buffer_size);
-
   while (-1 != getline(&buffer, &buffer_size, file) && buffer[0] == '"') {
     char c;
     char* value = malloc((MAX_ID_SIZE+1) * sizeof(char));
@@ -42,37 +39,27 @@ ReservedWordList* load_reserved_words() {
     int attr = 0;
     int hare = 0;
     int trts = 0;
-    
-    // move past the first "
     hare++;
-    // grab the value of the reserved word
     while ((c = buffer[hare++]) != '"') {
       value[trts++] = c;
     }
     value[trts] = '\0';
-    // move the past the space
     hare++;
-    // grab the type of the reserved word
     while ((c = buffer[hare++]) != ' ') {
       type = (type*10) + (c-48);
     }
-    // grab the attr of the reserved word
     while ((c = buffer[hare++]) != '\n') {
       attr = (attr*10) + (c-48);
     }
-
     ReservedWord* word = malloc(sizeof(ReservedWord));
     ReservedWordList* next = malloc(sizeof(ReservedWordList));
-
     word->value = value;
     word->type = type;
     word->attr = attr;
     node->word = word;
     node->next = next;
-
     node = node->next;
   }
-
   return head;
 }
 
@@ -87,18 +74,14 @@ LineList* analyze(char* filename) {
   size_t buffer_size = ((MAX_BUFFER_SIZE+1) * sizeof(char));
   char* buffer = malloc(buffer_size);
   int line_number = 0;
-
   while (-1 != getline(&buffer, &buffer_size, file)) {
     line_number++;
-
     Line* line = malloc(sizeof(Line));
     LineList* next = malloc(sizeof(LineList));
-
     line->value = buffer;
     line->number = line_number;
     node->line = line;
     node->next = next;
-    
     if (buffer_size > (MAX_BUFFER_SIZE+1) * sizeof(char)) {
       Line* error = malloc(sizeof(Line));
       LineList* after = malloc(sizeof(LineList));
@@ -108,18 +91,15 @@ LineList* analyze(char* filename) {
       after->next = next;
       node->next = after;
     }
-
     node = next;
     buffer = malloc(MAX_BUFFER_SIZE * sizeof(char));
   }
-
   return head;
 }
 
 int print_listing_file(LineList* head) {
   LineList* node = head;
   int line_number = 0;
-
   while (node != NULL && node->line != NULL) {
     if (node->line->number != line_number) {
       printf("\n");
@@ -129,7 +109,6 @@ int print_listing_file(LineList* head) {
     node = node->next;
   }
   printf("\n");
-  
   return 0;
 }
 
