@@ -1,6 +1,7 @@
 // the header file for the lexical analyzer
-#include <stdio.h>
-#include <stdlib.h>
+
+#ifndef LEXER_H 
+#define LEXER_H
 
 #define BUFFER_SIZE 72
 
@@ -41,7 +42,8 @@ enum types {
   SEMICOLON,
   THEN,         // 35
   VAR,
-  WHILE
+  WHILE,
+  LEXERR
 };
 
 typedef struct Line {
@@ -58,4 +60,5 @@ typedef struct Word {
 
 Word* loadReservedWords();
 int printListingFile(Line* head);
+#endif
 
