@@ -14,38 +14,9 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
-  FILE* file;
-  Line* head;
-  int hare;
-  
-  file = fopen(argv[1], "r");
-  head = malloc(sizeof(Line));
-  head->value = malloc((BUFFER_SIZE+1) * sizeof(char));
-  hare = 0;
-
-  char c;
-  Line* line;
-  c = (char)fgetc(file);
-  line = head;
-  while (c != EOF) {
-    line->value[hare++] = c;
-    if (c != '\n') {
-      c = (char)fgetc(file);
-    } else {
-      line->value[hare] = '\0';
-      hare = 0;
-      if ((c = (char)fgetc(file)) != EOF) {
-        Line* nextLine;
-        nextLine = malloc(sizeof(Line));
-        nextLine->value = malloc((BUFFER_SIZE+1) * sizeof(char));
-        line->next = nextLine;
-        line = nextLine;
-      }
-    }
-  }
-
-  loadReservedWords();
-  return printListingFile(head);
+  char* filename = argv[1];
+  LineList* head = analyze(filename);
+  return print_listing_file(head);
 }
 
 Word* loadReservedWords() {
@@ -53,7 +24,7 @@ Word* loadReservedWords() {
   Word* head;
   int hare;
 
-  file = fopen("reserved_words.txt", "r");
+  file = fopen("../reserved_words.txt", "r");
   head = malloc(sizeof(Word));
   head->value = malloc(10 * sizeof(char));
   hare = 0;
@@ -108,17 +79,44 @@ Word* loadReservedWords() {
   return head;
 }
 
-int printListingFile(Line* head) {
-  int lineNumber;
-  lineNumber = 1;
+LineList* analyze(char* filename) {
+  size_t const MAX_BUFFER_SIZE = 72;
 
-  Line* line;
-  line = head;
-  while (line != NULL) {
-    printf("%4d.    %s", lineNumber, line->value);
-    printf("\n");
-    line = line->next;
-    lineNumber++;
+  FILE* file;
+  if ((file = fopen(filename, "r")) == NULL) {
+    printf("Cannot open file %s\n", filename);
+  }
+  LineList* head = malloc(sizeof(LineList));
+  LineList* node = head;
+  char* buffer = malloc(MAX_BUFFER_SIZE * sizeof(char));
+  int line_number = 0;
+  size_t actual_size = MAX_BUFFER_SIZE;
+
+  while (-1 != getline(&buffer, &actual_size, file)) {
+    line_number++;
+
+    Line* line = malloc(sizeof(Line));
+    LineList* next = malloc(sizeof(LineList));
+
+    line->value = buffer;
+    line->number = line_number;
+
+    node->line = line;
+    node->next = next;
+
+    node = node->next;
+    buffer = malloc(MAX_BUFFER_SIZE * sizeof(char));
+  }
+
+  return head;
+}
+
+int print_listing_file(LineList* head) {
+  LineList* node = head;
+
+  while (node != NULL && node->line != NULL) {
+    printf("%4d.    %s\n", node->line->number, node->line->value);
+    node = node->next;
   }
   
   return 0;

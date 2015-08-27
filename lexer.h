@@ -3,8 +3,6 @@
 #ifndef LEXER_H 
 #define LEXER_H
 
-#define BUFFER_SIZE 72
-
 enum types {
   ADDOP = 1,
   AND,
@@ -48,8 +46,13 @@ enum types {
 
 typedef struct Line {
   char* value;
-  struct Line* next;
+  int number;
 } Line;
+
+typedef struct LineList {
+  Line* line;
+  struct LineList* next;
+} LineList;
 
 typedef struct Word {
   char* value;
@@ -59,6 +62,7 @@ typedef struct Word {
 } Word;
 
 Word* loadReservedWords();
-int printListingFile(Line* head);
+LineList* analyze(char* filename);
+int print_listing_file(LineList* head);
 #endif
 
