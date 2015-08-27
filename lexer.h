@@ -40,7 +40,7 @@ void assert_buffer_size(size_t buffer_size, LineNode* node) {
 }
 
 ReservedWordNode* load_reserved_words();
-ReservedWordNode* parse_reserved_word_entry(char* entry);
+ReservedWordNode* word_node_from(char* entry);
 LineNode* organize(char* filename);
 int print_listing_file(LineNode* head);
 

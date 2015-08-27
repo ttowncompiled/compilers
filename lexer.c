@@ -29,17 +29,17 @@ ReservedWordNode* load_reserved_words() {
   if (-1 == getline(&buffer, &buffer_size, file) || buffer[0] != '"') {
     return head;
   }
-  head = parse_reserved_word_entry(buffer);
+  head = word_node_from(buffer);
   ReservedWordNode* prev = head;
   while (-1 != getline(&buffer, &buffer_size, file) && buffer[0] == '"') {
-    ReservedWordNode* curr = parse_reserved_word_entry(buffer);
+    ReservedWordNode* curr = word_node_from(buffer);
     prev->next = curr;
     prev = curr;
   }
   return head;
 }
 
-ReservedWordNode* parse_reserved_word_entry(char* entry) {
+ReservedWordNode* word_node_from(char* entry) {
   char c;
   char* value = malloc(MAX_ID_SIZE);
   int type = 0;
