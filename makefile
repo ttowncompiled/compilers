@@ -1,5 +1,6 @@
 all:
-	gcc -Wall lexer.c -o lexer
+	gcc -Wall lexer.c -o build/lexer
 
 clean:
-	rm *.o lexer
+	rm build/*
+
