@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "lexer.h"
 
+int const MAX_BUFFER_SIZE = 72;
+int const MAX_ID_SIZE = 10;
+
 int main(int argc, char* argv[]) {
   // check that we have been given the right amount of input
   if (argc > 2) {
@@ -14,85 +17,78 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
+  ReservedWordList* reserved = load_reserved_words();
+  printf("%s\n", reserved->word->value);
   char* filename = argv[1];
   LineList* head = analyze(filename);
   return print_listing_file(head);
 }
 
-Word* loadReservedWords() {
+ReservedWordList* load_reserved_words() {
   FILE* file;
-  Word* head;
-  int hare;
+  if((file = fopen("reserved_words.txt", "r")) == NULL) {
+    printf("Cannot open file reserved_words.txt");
+    exit(1);
+  }
+  ReservedWordList* head = malloc(sizeof(ReservedWordList));
+  ReservedWordList* node = head;
+  size_t buffer_size = (MAX_BUFFER_SIZE+1) * sizeof(char);
+  char* buffer = malloc(buffer_size);
 
-  file = fopen("../reserved_words.txt", "r");
-  head = malloc(sizeof(Word));
-  head->value = malloc(10 * sizeof(char));
-  hare = 0;
-
-  char c;
-  Word* word;
-  c = (char)fgetc(file);
-  word = head;
-  while (c != EOF) {
-    // grab the reserved word
-    if (c >= 'a' && c <= 'z') {
-      word->value[hare++] = c;
-      c = (char)fgetc(file);
-    } else if (c >= '0' && c <= '9') {
-      int type;
-      int attr;
-      type = c-48;
-      // grab the token type
-      while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
-        type = (type*10) + (c-48);
-      }
-      // skip to the attribute value
-      while (c < '0' || c > '9') {
-        c = (char)fgetc(file);
-      }
-      attr = c-48;
-      // grab the attribute
-      while ((c = (char)fgetc(file)) >= '0' && c <= '9') {
-        attr = (attr*10) + (c-48);
-      }
-      word->type = type;
-      word->attr = attr;
-      // skip to the end of line
-      while (c != '\n') {
-        c = (char)fgetc(file);
-      }
-      word->value[hare] = '\0';
-      hare = 0;
-      // check if there is a next line
-      if ((c = (char)fgetc(file)) != EOF && c != ' ') {
-        Word* nextWord;
-        nextWord = malloc(sizeof(Word));
-        nextWord->value = malloc(10 * sizeof(char));
-        word->next = nextWord;
-        word = nextWord;
-      }
-    } else {
-      c = (char)fgetc(file);
+  while (-1 != getline(&buffer, &buffer_size, file) && buffer[0] == '"') {
+    char c;
+    char* value = malloc((MAX_ID_SIZE+1) * sizeof(char));
+    int type = 0;
+    int attr = 0;
+    int hare = 0;
+    int trts = 0;
+    
+    // move past the first "
+    hare++;
+    // grab the value of the reserved word
+    while ((c = buffer[hare++]) != '"') {
+      value[trts++] = c;
     }
+    value[trts] = '\0';
+    // move the past the space
+    hare++;
+    // grab the type of the reserved word
+    while ((c = buffer[hare++]) != ' ') {
+      type = (type*10) + (c-48);
+    }
+    // grab the attr of the reserved word
+    while ((c = buffer[hare++]) != '\n') {
+      attr = (attr*10) + (c-48);
+    }
+
+    ReservedWord* word = malloc(sizeof(ReservedWord));
+    ReservedWordList* next = malloc(sizeof(ReservedWordList));
+
+    word->value = value;
+    word->type = type;
+    word->attr = attr;
+    node->word = word;
+    node->next = next;
+
+    node = node->next;
   }
 
   return head;
 }
 
 LineList* analyze(char* filename) {
-  size_t const MAX_BUFFER_SIZE = 72;
-
   FILE* file;
   if ((file = fopen(filename, "r")) == NULL) {
     printf("Cannot open file %s\n", filename);
+    exit(1);
   }
   LineList* head = malloc(sizeof(LineList));
   LineList* node = head;
-  char* buffer = malloc(MAX_BUFFER_SIZE * sizeof(char));
+  size_t buffer_size = ((MAX_BUFFER_SIZE+1) * sizeof(char));
+  char* buffer = malloc(buffer_size);
   int line_number = 0;
-  size_t actual_size = MAX_BUFFER_SIZE;
 
-  while (-1 != getline(&buffer, &actual_size, file)) {
+  while (-1 != getline(&buffer, &buffer_size, file)) {
     line_number++;
 
     Line* line = malloc(sizeof(Line));
@@ -100,7 +96,6 @@ LineList* analyze(char* filename) {
 
     line->value = buffer;
     line->number = line_number;
-
     node->line = line;
     node->next = next;
 

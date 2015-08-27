@@ -54,14 +54,18 @@ typedef struct LineList {
   struct LineList* next;
 } LineList;
 
-typedef struct Word {
+typedef struct ReservedWord {
   char* value;
   int type;
   int attr;
-  struct Word* next;
-} Word;
+} ReservedWord;
 
-Word* loadReservedWords();
+typedef struct ReservedWordList {
+  ReservedWord* word;
+  struct ReservedWordList* next;
+} ReservedWordList;
+
+ReservedWordList* load_reserved_words();
 LineList* analyze(char* filename);
 int print_listing_file(LineList* head);
 #endif
