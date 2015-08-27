@@ -1,5 +1,3 @@
-// the header file for the lexical analyzer
-
 #ifndef LEXER_H 
 #define LEXER_H
 

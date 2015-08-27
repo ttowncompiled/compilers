@@ -1,4 +1,3 @@
-// a lexical analyzer for a simplified version of Pascal.
 #include <stdio.h>
 #include <stdlib.h>
 #include "lexer.h"
@@ -7,7 +6,6 @@ int const MAX_BUFFER_SIZE = 72;
 int const MAX_ID_SIZE = 10;
 
 int main(int argc, char* argv[]) {
-  // check that we have been given the right amount of input
   if (argc > 2) {
     printf("This compiler only accepts one source file.\n");
     exit(1);
