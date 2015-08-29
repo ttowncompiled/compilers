@@ -64,4 +64,17 @@ typedef struct ReservedWordNode {
   struct ReservedWordNode* next;
 } ReservedWordNode;
 
+typedef struct Token {
+  int line_number;
+  char* lexeme;
+  int type;
+  char* annotation;
+  int attr;
+} Token;
+
+typedef struct TokenNode {
+  Token* token;
+  struct TokenNode* next;
+} TokenNode;
+
 #endif

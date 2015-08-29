@@ -27,6 +27,17 @@ ReservedWordNode* word_node_of(char* value, int type, int attr) {
   return node;
 }
 
+TokenNode* token_node_with(TokenNode* node, int line_number, char* lexeme, int type, char* annotation, int attr) {
+  node->token = malloc(sizeof(Token));
+  node->token->line_number = line_number;
+  node->token->lexeme = lexeme;
+  node->token->type = type;
+  node->token->annotation = annotation;
+  node->token->attr = attr;
+  node->next = NULL;
+  return node;
+}
+
 void assert_buffer_size(size_t buffer_size, LineNode* node) {
   if (buffer_size <= MAX_BUFFER_SIZE) {
     return;
@@ -40,8 +51,15 @@ void assert_buffer_size(size_t buffer_size, LineNode* node) {
 }
 
 ReservedWordNode* load_reserved_words();
+
 ReservedWordNode* word_node_from(char* entry);
+
 LineNode* organize(char* filename);
+
+TokenNode* analyze(LineNode* first, ReservedWordNode* reserved);
+
+int print_token_file(TokenNode* head);
+
 int print_listing_file(LineNode* head);
 
 #endif
