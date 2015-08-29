@@ -41,28 +41,6 @@ ReservedWordNode* load_reserved_words() {
   return head;
 }
 
-ReservedWordNode* word_node_from(char* entry) {
-  char c;
-  char* value = malloc(MAX_ID_SIZE);
-  int type = 0;
-  int attr = 0;
-  int hare = 0;
-  int trts = 0;
-  hare++;
-  while ((c = entry[hare++]) != '"') {
-    value[trts++] = c;
-  }
-  value[trts] = '\0';
-  hare++;
-  while ((c = entry[hare++]) != ' ') {
-    type = (type*10) + (c-48);
-  }
-  while ((c = entry[hare++]) != '\n') {
-    attr = (attr*10) + (c-48);
-  }
-  return word_node_of(value, type, attr);
-}
-
 LineNode* organize(char* filename) {
   FILE* file;
   if ((file = fopen(filename, "r")) == NULL) {
@@ -87,35 +65,6 @@ LineNode* organize(char* filename) {
     prev = curr;
     buffer = malloc(MAX_BUFFER_SIZE);
   }
-  return head;
-}
-
-TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
-  TokenNode* head = malloc(sizeof(TokenNode));
-  TokenNode* curr = head;
-  LineNode* node = first;
-  int line_count = 0;
-  while (node != NULL) {
-    char* buffer = node->line->value;
-    int hare = 0;
-    while (buffer[hare] != '\0') {
-      hare++;
-    }
-    // white space machine
-    // id machine - check reserved words
-    // long real machine
-    // real machine
-    // int machine
-    // relop machine
-    // addop machine
-    // mulop machine
-    // assignop machine
-    // unrecognized symbol
-    node = node->next;
-    line_count++;
-  }
-  // EOF token
-  curr = token_node_with(curr, ++line_count, "EOF", 0, "(EOF)", 0);
   return head;
 }
 
@@ -152,4 +101,32 @@ int print_listing_file(LineNode* head) {
     curr = curr->next;
   }
   return fclose(file);
+}
+
+TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
+  TokenNode* head = malloc(sizeof(TokenNode));
+  TokenNode* curr = head;
+  LineNode* node = first;
+  int line_count = 0;
+  while (node != NULL) {
+    char* buffer = node->line->value;
+    int hare = 0;
+    while (buffer[hare] != '\0') {
+      hare++;
+    }
+    // white space machine
+    // id machine - check reserved words
+    // long real machine
+    // real machine
+    // int machine
+    // relop machine
+    // addop machine
+    // mulop machine
+    // assignop machine
+    // unrecognized symbol
+    node = node->next;
+    line_count++;
+  }
+  curr = token_node_with(curr, ++line_count, "", EOF, "(EOF)", 0);
+  return head;
 }
