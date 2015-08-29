@@ -15,8 +15,7 @@ int main(int argc, char* argv[]) {
   char* filename = argv[1];
   LineNode* first = organize(filename);
   TokenNode* head = analyze(first, reserved);
-  print_token_file(head);
-  return print_listing_file(first);
+  return print_token_file(head) || print_listing_file(first);
 }
 
 ReservedWordNode* load_reserved_words() {
@@ -137,17 +136,20 @@ int print_token_file(TokenNode* head) {
 }
 
 int print_listing_file(LineNode* head) {
+  FILE* file;
+  if ((file = fopen("build/listing_file.txt", "w")) == NULL) {
+    printf("Cannot create file listing_file.txt\n");
+    exit(1);
+  }
   LineNode* curr = head;
-  printf("\n");
   while (curr != NULL) {
-    printf("%4d.    %s", curr->line->number, curr->line->value);
+    fprintf(file, "%4d.    %s", curr->line->number, curr->line->value);
     LineNode* error = curr->error;
     while (error != NULL) {
-      printf("%4d.    %s", error->line->number, error->line->value);
+      fprintf(file, "%4d.    %s", error->line->number, error->line->value);
       error = error->error;
     }
     curr = curr->next;
-    printf("\n");
   }
-  return 0;
+  return fclose(file);
 }
