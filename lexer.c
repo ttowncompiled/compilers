@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 
 ReservedWordNode* load_reserved_words() {
   FILE* file;
-  if((file = fopen("reserved_words.txt", "r")) == NULL) {
+  if((file = fopen("build/reserved_words.txt", "r")) == NULL) {
     printf("Cannot open file reserved_words.txt\n");
     exit(1);
   }
