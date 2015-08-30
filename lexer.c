@@ -55,12 +55,12 @@ LineNode* organize(char* filename) {
   }
   int line_number = 1;
   head = line_node_of(buffer, line_number);
-  assert_buffer_size(buffer_size, head);
+  check_buffer_size(buffer_size, head);
   buffer = malloc(MAX_BUFFER_SIZE);
   LineNode* prev = head;
   while (-1 != getline(&buffer, &buffer_size, file)) {
     LineNode* curr = line_node_of(buffer, ++line_number);
-    assert_buffer_size(buffer_size, curr);
+    check_buffer_size(buffer_size, curr);
     prev->next = curr; 
     prev = curr;
     buffer = malloc(MAX_BUFFER_SIZE);
@@ -74,11 +74,22 @@ int print_token_file(TokenNode* head) {
     printf("Cannot create file token_file.txt\n");
     exit(1);
   }
-  fprintf(file, "%-10s %-13s %-17s %-10s\n", "Line No.", "Lexeme", "TOKEN-TYPE", "ATTRIBUTE");
+  fprintf(file,
+          "%-10s %-13s %-17s %-10s\n",
+          "Line No.",
+          "Lexeme",
+          "TOKEN-TYPE",
+          "ATTRIBUTE");
   TokenNode* curr = head;
   while (curr != NULL) {
     Token* token = curr->token;
-    fprintf(file, "%-10d %-13s %-2d %-14s %-10d\n", token->line_number, token->lexeme, token->type, token->annotation, token->attr);
+    fprintf(file,
+            "%-10d %-13s %-2d %-14s %-10d\n",
+            token->line_number,
+            token->lexeme,
+            token->type,
+            token->annotation,
+            token->attr);
     curr = curr->next;
   }
   return fclose(file);
@@ -124,7 +135,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
       } else if ((token = addop_machine(node, trts)) != NULL) {
       } else if ((token = mulop_machine(node, trts)) != NULL) {
       } else if ((token = assignop_machine(node, trts)) != NULL) {
-      // catchall machine
+      } else if ((token = catchall_machine(node, trts)) != NULL) {
       } else {
         // unrecognized symbol
         (*trts)++;
@@ -137,7 +148,13 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
     node = node->next;
     line_count++;
   }
-  curr = token_node_with(curr, token_of(++line_count, "", ENDFILE, "(EOF)", NIL));
+  curr = token_node_with(curr,
+                         token_of(++line_count,
+                                  "",
+                                  ENDFILE,
+                                  annotation_of(ENDFILE),
+                                  NIL)
+                         );
   return head;
 }
 
@@ -161,7 +178,17 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
     }
     char* lexeme = substring(buffer, (*trts), hare);
     (*trts) = hare;
-    return token_of(node->line->number, lexeme, ID, "(ID)", -2);
+    while (reserved != NULL) {
+      if (is_equal(lexeme, reserved->word->value)) {
+        return token_of(node->line->number,
+                        lexeme,
+                        reserved->word->type,
+                        annotation_of(reserved->word->type),
+                        reserved->word->attr);
+      }
+      reserved = reserved->next;
+    }
+    return token_of(node->line->number, lexeme, ID, annotation_of(ID), -2);
   }
   return NULL;
 }
@@ -191,5 +218,9 @@ Token* mulop_machine(LineNode* node, int* trts) {
 }
 
 Token* assignop_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* catchall_machine(LineNode* node, int* trts) {
   return NULL;
 }

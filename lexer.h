@@ -70,7 +70,7 @@ TokenNode* token_node_with(TokenNode* node, Token* token) {
   return node;
 }
 
-void assert_buffer_size(size_t buffer_size, LineNode* node) {
+void check_buffer_size(size_t buffer_size, LineNode* node) {
   if (buffer_size <= MAX_BUFFER_SIZE) {
     return;
   }
@@ -101,5 +101,6 @@ Token* relop_machine(LineNode* node, int* trts);
 Token* addop_machine(LineNode* node, int* trts);
 Token* mulop_machine(LineNode* node, int* trts);
 Token* assignop_machine(LineNode* node, int* trts);
+Token* catchall_machine(LineNode* node, int* trts);
 
 #endif
