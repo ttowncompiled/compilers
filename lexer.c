@@ -89,7 +89,7 @@ int print_token_file(TokenNode* head) {
             token->lexeme,
             token->type,
             token->annotation,
-            token->attr);
+            token->attr.value);
     curr = curr->next;
   }
   return fclose(file);
