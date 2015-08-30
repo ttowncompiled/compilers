@@ -42,6 +42,12 @@ enum type {
   LEXERR
 };
 
+enum num {
+  INT = 1,
+  REAL_,
+  LREAL
+};
+
 enum relop {
   EQ = 1,
   NEQ,
@@ -166,7 +172,14 @@ char* attr_annotation_of(int type, int attr) {
   if (attr < -1) {
     return "(PTR)";
   }
-  if (type == RELOP) {
+  if (type == NUM) {
+    switch (attr) {
+      case NIL: return "(NULL)";
+      case INT: return "(INT)";
+      case REAL_: return "(REAL)";
+      case LREAL: return "(LREAL)";
+    }
+  } else if (type == RELOP) {
     switch (attr) {
       case NIL: return "(NULL)";
       case EQ: return "(EQ)";

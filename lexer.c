@@ -143,8 +143,8 @@ TokenNode* analyze(LineNode* lines, ReservedWordNode* reserved) {
       } else if ((token = real_machine(lines, trts)) != NULL) {
       } else if ((token = int_machine(lines, trts)) != NULL) {
       } else if ((token = relop_machine(lines, trts)) != NULL) {
-      } else if ((token = addop_machine(lines, trts)) != NULL) {
       } else if ((token = mulop_machine(lines, trts)) != NULL) {
+      } else if ((token = addop_machine(lines, trts)) != NULL) {
       } else if ((token = assignop_machine(lines, trts)) != NULL) {
       } else if ((token = catchall_machine(lines, trts)) != NULL) {
       } else {
@@ -218,25 +218,50 @@ Token* real_machine(LineNode* node, int* trts) {
 }
 
 Token* int_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  int hare = (*trts);
+  if (is_digit(buffer[hare])) {
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    char* lexeme = substring(buffer, (*trts), hare);
+    (*trts) = hare;
+    return token_of(node->line->number, lexeme, NUM, INT);
+  }
   return NULL;
 }
 
 Token* relop_machine(LineNode* node, int* trts) {
-  return NULL;
-}
-
-Token* addop_machine(LineNode* node, int* trts) {
   char* buffer = node->line->value;
   char* lexeme;
-  switch (buffer[(*trts)]) {
-    case '+':
+  switch(buffer[(*trts)]) {
+    case '=':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
-      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
-    case '-':
+      (*trts)++;
+      return token_of(node->line->number, lexeme, RELOP, EQ);
+    case '<':
+      if (buffer[(*trts)+1] == '>') {
+        lexeme = substring(buffer, (*trts), (*trts)+2);
+        (*trts) = (*trts) + 2;
+        return token_of(node->line->number, lexeme, RELOP, NEQ);
+      }
+      if (buffer[(*trts)+1] == '=') {
+        lexeme = substring(buffer, (*trts), (*trts)+2);
+        (*trts) = (*trts) + 2;
+        return token_of(node->line->number, lexeme, RELOP, LTE);
+      }
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
-      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
+      (*trts)++;
+      return token_of(node->line->number, lexeme, RELOP, LT);
+    case '>':
+      if (buffer[(*trts)+1] == '=') {
+        lexeme = substring(buffer, (*trts), (*trts)+2);
+        (*trts) = (*trts) + 2;
+        return token_of(node->line->number, lexeme, RELOP, GTE);
+      }
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts)++;
+      return token_of(node->line->number, lexeme, RELOP, GT);
   }
   return NULL;
 }
@@ -247,12 +272,28 @@ Token* mulop_machine(LineNode* node, int* trts) {
   switch (buffer[(*trts)]) {
     case '*':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, MULOP, NIL);
     case '/':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, MULOP, NIL);
+  }
+  return NULL;
+}
+
+Token* addop_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  char* lexeme;
+  switch (buffer[(*trts)]) {
+    case '+':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts)++;
+      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
+    case '-':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts)++;
+      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
   }
   return NULL;
 }
@@ -271,42 +312,42 @@ Token* catchall_machine(LineNode* node, int* trts) {
   char* buffer = node->line->value;
   if (buffer[(*trts)] == '.' && buffer[(*trts)+1] == '.') {
     char* lexeme = substring(buffer, (*trts), (*trts)+2);
-    (*trts) = (*trts) + 1;
+    (*trts)++;
     return token_of(node->line->number, lexeme, RANGE, NIL);
   }
   char* lexeme;
   switch (buffer[(*trts)]) {
     case '(':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, OPENPAREN, NIL);
     case ')':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, CLOSEPAREN, NIL);
     case '[':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, OPENBRACKET, NIL);
     case ']':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, CLOSEBRACKET, NIL);
     case ':':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, COLON, NIL);
     case ';':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, SEMICOLON, NIL);
     case ',':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, COMMA, NIL);
     case '.':
       lexeme = substring(buffer, (*trts), (*trts)+1);
-      (*trts) = (*trts) + 1;
+      (*trts)++;
       return token_of(node->line->number, lexeme, PERIOD, NIL);
   }
   return NULL;
