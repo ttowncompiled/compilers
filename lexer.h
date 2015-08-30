@@ -1,6 +1,7 @@
 #ifndef LEXER_H 
 #define LEXER_H
 #include "types.h"
+#include "util.h"
 
 size_t const MAX_BUFFER_SIZE = (73 * sizeof(char));
 size_t const MAX_ID_SIZE = (11 * sizeof(char));
@@ -67,32 +68,6 @@ TokenNode* token_node_with(TokenNode* node, Token* token) {
   node->token = token;
   node->next = NULL;
   return node;
-}
-
-char* substring(char* string, int first, int last) {
-  if (last <= first) {
-    return NULL;
-  }
-  char* sub = malloc((last-first+1) * sizeof(char));
-  int idx = 0;
-  while (idx < last-first) {
-    sub[idx] = string[first+idx];
-    idx++;
-  }
-  sub[idx] = '\0';
-  return sub;
-}
-
-int is_digit(char c) {
-  return c >= '0' && c <= '9';
-}
-
-int is_letter(char c) {
-  return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-}
-
-int is_whitespace(char c) {
-  return c == ' ' || c == '\t' || c == '\n';
 }
 
 void assert_buffer_size(size_t buffer_size, LineNode* node) {
