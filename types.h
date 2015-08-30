@@ -138,7 +138,7 @@ char* attr_annotation_of(int attr) {
   if (attr < -1) {
     return "(PTR)";
   }
-  switch(attr) {
+  switch (attr) {
     case NIL: return "(NULL)";
   }
   return NULL;

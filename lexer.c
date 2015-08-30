@@ -232,9 +232,56 @@ Token* mulop_machine(LineNode* node, int* trts) {
 }
 
 Token* assignop_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  if (buffer[(*trts)] == ':' && buffer[(*trts)+1] == '=') {
+    char* lexeme = substring(buffer, (*trts), (*trts)+2);
+    (*trts) = (*trts) + 2;
+    return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
+  }
   return NULL;
 }
 
 Token* catchall_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  if (buffer[(*trts)] == '.' && buffer[(*trts)+1] == '.') {
+    char* lexeme = substring(buffer, (*trts), (*trts)+2);
+    (*trts) = (*trts) + 1;
+    return token_of(node->line->number, lexeme, RANGE, NIL);
+  }
+  char* lexeme;
+  switch (buffer[(*trts)]) {
+    case '(':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, OPENPAREN, NIL);
+    case ')':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, CLOSEPAREN, NIL);
+    case '[':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, OPENBRACKET, NIL);
+    case ']':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, CLOSEBRACKET, NIL);
+    case ':':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, COLON, NIL);
+    case ';':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, SEMICOLON, NIL);
+    case ',':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, COMMA, NIL);
+    case '.':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, PERIOD, NIL);
+  }
   return NULL;
 }
