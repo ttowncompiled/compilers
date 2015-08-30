@@ -53,15 +53,46 @@ ReservedWordNode* word_node_from(char* entry) {
   return word_node_of(value, type, attr);
 }
 
-TokenNode* token_node_with(TokenNode* node, int line_number, char* lexeme, int type, char* annotation, int attr) {
-  node->token = malloc(sizeof(Token));
-  node->token->line_number = line_number;
-  node->token->lexeme = lexeme;
-  node->token->type = type;
-  node->token->annotation = annotation;
-  node->token->attr = attr;
+Token* token_of(int line_number, char* lexeme, int type, char* annotation, int attr) {
+  Token* token = malloc(sizeof(Token));
+  token->line_number = line_number;
+  token->lexeme = lexeme;
+  token->type = type;
+  token->annotation = annotation;
+  token->attr = attr;
+  return token;
+}
+
+TokenNode* token_node_with(TokenNode* node, Token* token) {
+  node->token = token;
   node->next = NULL;
   return node;
+}
+
+char* substring(char* string, int first, int last) {
+  if (last <= first) {
+    return NULL;
+  }
+  char* sub = malloc((last-first+1) * sizeof(char));
+  int idx = 0;
+  while (idx < last-first) {
+    sub[idx] = string[first+idx];
+    idx++;
+  }
+  sub[idx] = '\0';
+  return sub;
+}
+
+int is_digit(char c) {
+  return c >= '0' && c <= '9';
+}
+
+int is_letter(char c) {
+  return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+}
+
+int is_whitespace(char c) {
+  return c == ' ' || c == '\t' || c == '\n';
 }
 
 void assert_buffer_size(size_t buffer_size, LineNode* node) {

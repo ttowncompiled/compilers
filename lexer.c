@@ -108,8 +108,8 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
   TokenNode* curr = head;
   LineNode* node = first;
   int line_count = 0;
+  int* trts = malloc(sizeof(int));
   while (node != NULL) {
-    int* trts = malloc(sizeof(int));
     (*trts) = 0;
     while (node->line->value[(*trts)] != '\0') {
       Token* token;
@@ -117,37 +117,34 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
         continue;
       }
       if ((token = id_machine(node, reserved, trts)) != NULL) {
-        
       } else if ((token = long_real_machine(node, trts)) != NULL) {
-      
       } else if ((token = real_machine(node, trts)) != NULL) {
-        
       } else if ((token = int_machine(node, trts)) != NULL) {
-        
       } else if ((token = relop_machine(node, trts)) != NULL) {
-        
       } else if ((token = addop_machine(node, trts)) != NULL) {
-        
       } else if ((token = mulop_machine(node, trts)) != NULL) {
-        
       } else if ((token = assignop_machine(node, trts)) != NULL) {
-        
+      // catchall machine
       } else {
         // unrecognized symbol
         (*trts)++;
+        continue;
       }
+      curr = token_node_with(curr, token);
+      curr->next = malloc(sizeof(TokenNode));
+      curr = curr->next;
     }
     node = node->next;
     line_count++;
   }
-  curr = token_node_with(curr, ++line_count, "", ENDFILE, "(EOF)", NIL);
+  curr = token_node_with(curr, token_of(++line_count, "", ENDFILE, "(EOF)", NIL));
   return head;
 }
 
 int white_space_machine(LineNode* node, int* trts) {
   char* buffer = node->line->value;
   int hare = (*trts);
-  while (buffer[hare] == ' ' || buffer[hare] == '\t' || buffer[hare] == '\n') {
+  while (is_whitespace(buffer[hare])) {
     hare++;
   }
   (*trts) = hare;
@@ -155,6 +152,17 @@ int white_space_machine(LineNode* node, int* trts) {
 }
 
 Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
+  char* buffer = node->line->value;
+  int hare = (*trts);
+  if (is_letter(buffer[hare])) {
+    hare++;
+    while (is_letter(buffer[hare]) || is_digit(buffer[hare])) {
+      hare++;
+    }
+    char* lexeme = substring(buffer, (*trts), hare);
+    (*trts) = hare;
+    return token_of(node->line->number, lexeme, ID, "(ID)", -2);
+  }
   return NULL;
 }
 
