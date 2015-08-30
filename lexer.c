@@ -140,7 +140,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
     node = node->next;
     line_count++;
   }
-  curr = token_node_with(curr, ++line_count, "", EOF, "(EOF)", 0);
+  curr = token_node_with(curr, ++line_count, "", ENDFILE, "(EOF)", NIL);
   return head;
 }
 

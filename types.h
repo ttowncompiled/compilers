@@ -2,7 +2,9 @@
 #define TYPES_H
 
 enum types {
-  ADDOP = 1,
+  ENDFILE = -1,
+  NIL,
+  ADDOP,
   AND,
   ARRAY,
   ASSIGNOP,
