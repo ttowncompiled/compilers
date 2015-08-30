@@ -111,7 +111,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
   while (node != NULL) {
     int* trts = malloc(sizeof(int));
     (*trts) = 0;
-    while (node->line->value[*trts] != '\0') {
+    while (node->line->value[(*trts)] != '\0') {
       Token* token;
       if (white_space_machine(node, trts)) {
         continue;
@@ -145,7 +145,13 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
 }
 
 int white_space_machine(LineNode* node, int* trts) {
-  return 0;
+  char* buffer = node->line->value;
+  int hare = (*trts);
+  while (buffer[hare] == ' ' || buffer[hare] == '\t' || buffer[hare] == '\n') {
+    hare++;
+  }
+  (*trts) = hare;
+  return buffer[hare] == '\0';
 }
 
 Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
