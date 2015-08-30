@@ -224,10 +224,34 @@ Token* relop_machine(LineNode* node, int* trts) {
 }
 
 Token* addop_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  char* lexeme;
+  switch (buffer[(*trts)]) {
+    case '+':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
+    case '-':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, ASSIGNOP, NIL);
+  }
   return NULL;
 }
 
 Token* mulop_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  char* lexeme;
+  switch (buffer[(*trts)]) {
+    case '*':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, MULOP, NIL);
+    case '/':
+      lexeme = substring(buffer, (*trts), (*trts)+1);
+      (*trts) = (*trts) + 1;
+      return token_of(node->line->number, lexeme, MULOP, NIL);
+  }
   return NULL;
 }
 
