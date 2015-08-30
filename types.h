@@ -66,8 +66,14 @@ typedef struct ReservedWordNode {
   struct ReservedWordNode* next;
 } ReservedWordNode;
 
+typedef struct SymbolNode {
+  char* symbol;
+  struct SymbolNode* next;
+} SymbolNode;
+
 typedef union Attribute {
   int value;
+  SymbolNode* address;
 } Attribute;
 
 typedef struct Token {

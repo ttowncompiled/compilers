@@ -73,6 +73,29 @@ TokenNode* token_node_with(TokenNode* node, Token* token) {
   return node;
 }
 
+SymbolNode* symbol_node_with(SymbolNode* node, char* symbol) {
+  node->symbol = symbol;
+  node->next = NULL;
+  return node;
+}
+
+SymbolNode* save_symbol(SymbolNode* symbols, char* symbol) {
+  if (symbols->symbol == 0) {
+    return symbol_node_with(symbols, symbol);
+  }
+  while (symbols->next != NULL) {
+    if (is_equal(symbol, symbols->symbol)) {
+      return symbols;
+    }
+    symbols = symbols->next;
+  }
+  if (is_equal(symbol, symbols->symbol)) {
+    return symbols;
+  }
+  symbols->next = malloc(sizeof(SymbolNode));
+  return symbol_node_with(symbols->next, symbol);
+}
+
 void check_buffer_size(size_t buffer_size, LineNode* node) {
   if (buffer_size <= MAX_BUFFER_SIZE) {
     return;
@@ -96,7 +119,8 @@ int print_listing_file(LineNode* head);
 TokenNode* analyze(LineNode* first, ReservedWordNode* reserved);
 
 int white_space_machine(LineNode* node, int* trts);
-Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts);
+Token* id_machine(LineNode* node, ReservedWordNode* reserved,
+    SymbolNode* symbols, int* trts);
 Token* long_real_machine(LineNode* node, int* trts);
 Token* real_machine(LineNode* node, int* trts);
 Token* int_machine(LineNode* node, int* trts);

@@ -83,13 +83,24 @@ int print_token_file(TokenNode* head) {
   TokenNode* curr = head;
   while (curr != NULL) {
     Token* token = curr->token;
-    fprintf(file,
-            "%-10d %-13s %-2d %-14s %-10d\n",
-            token->line_number,
-            token->lexeme,
-            token->type,
-            token->annotation,
-            token->attr.value);
+    if (token->attr.value < -1) {
+      SymbolNode* address = token->attr.address;
+      fprintf(file,
+              "%-10d %-13s %-2d %-14s %p\n",
+              token->line_number,
+              token->lexeme,
+              token->type,
+              token->annotation,
+              address);
+    } else {
+      fprintf(file,
+              "%-10d %-13s %-2d %-14s %-10d\n",
+              token->line_number,
+              token->lexeme,
+              token->type,
+              token->annotation,
+              token->attr.value);
+    }
     curr = curr->next;
   }
   return fclose(file);
@@ -115,6 +126,9 @@ int print_listing_file(LineNode* head) {
 }
 
 TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
+  SymbolNode* symbols = malloc(sizeof(SymbolNode));
+  symbols->symbol = 0;
+  symbols->next = 0;
   TokenNode* head = malloc(sizeof(TokenNode));
   TokenNode* curr = head;
   LineNode* node = first;
@@ -127,7 +141,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
       if (white_space_machine(node, trts)) {
         continue;
       }
-      if ((token = id_machine(node, reserved, trts)) != NULL) {
+      if ((token = id_machine(node, reserved, symbols, trts)) != NULL) {
       } else if ((token = long_real_machine(node, trts)) != NULL) {
       } else if ((token = real_machine(node, trts)) != NULL) {
       } else if ((token = int_machine(node, trts)) != NULL) {
@@ -153,7 +167,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
                                   "",
                                   ENDFILE,
                                   annotation_of(ENDFILE),
-                                  NIL)
+                                  EOF)
                          );
   return head;
 }
@@ -168,7 +182,8 @@ int white_space_machine(LineNode* node, int* trts) {
   return buffer[hare] == '\0';
 }
 
-Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
+Token* id_machine(LineNode* node, ReservedWordNode* reserved,
+    SymbolNode* symbols, int* trts) {
   char* buffer = node->line->value;
   int hare = (*trts);
   if (is_letter(buffer[hare])) {
@@ -188,7 +203,15 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
       }
       reserved = reserved->next;
     }
-    return token_of(node->line->number, lexeme, ID, annotation_of(ID), -2);
+    Token* token = token_of(node->line->number,
+                            lexeme,
+                            ID,
+                            annotation_of(ID),
+                            NIL);
+    Attribute attribute;
+    attribute.address = save_symbol(symbols, lexeme);
+    token->attr = attribute;
+    return token;
   }
   return NULL;
 }
