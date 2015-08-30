@@ -3,12 +3,15 @@
 #include "types.h"
 #include "util.h"
 
-size_t const MAX_BUFFER_SIZE = (73 * sizeof(char));
-size_t const MAX_ID_SIZE = (11 * sizeof(char));
-size_t const MAX_INTEGER_SIZE = (11 * sizeof(char));
-size_t const MAX_XX_SIZE = (6 * sizeof(char));
-size_t const MAX_YY_SIZE = (6 * sizeof(char));
-size_t const MAX_ZZ_SIZE = (3 * sizeof(char));
+const int MAX_BUFFER_LENGTH = 72;
+const int MAX_ID_LENGTH = 10;
+const int MAX_INTEGER_LENGTH = 10;
+const int MAX_XX_LENGTH = 5;
+const int MAX_YY_LENGTH = 5;
+const int MAX_ZZ_LENGTH = 5;
+
+size_t const MAX_BUFFER_SIZE = ((MAX_BUFFER_LENGTH+1) * sizeof(char));
+size_t const MAX_ID_SIZE = ((MAX_ID_LENGTH+1) * sizeof(char));
 
 char* const LINE_TOO_LONG = "ERROR: Lines can be only 72 characters long.\n";
 
@@ -71,6 +74,13 @@ TokenNode* token_node_with(TokenNode* node, Token* token) {
   return node;
 }
 
+SymbolNode* new_symbol_table() {
+  SymbolNode* node = malloc(sizeof(SymbolNode));
+  node->symbol = NULL;
+  node->next = NULL;
+  return node;
+}
+
 SymbolNode* symbol_node_with(SymbolNode* node, char* symbol) {
   node->symbol = symbol;
   node->next = NULL;
@@ -78,7 +88,7 @@ SymbolNode* symbol_node_with(SymbolNode* node, char* symbol) {
 }
 
 SymbolNode* save_symbol(SymbolNode* symbols, char* symbol) {
-  if (symbols->symbol == 0) {
+  if (symbols->symbol == NULL) {
     return symbol_node_with(symbols, symbol);
   }
   while (symbols->next != NULL) {

@@ -13,9 +13,9 @@ int main(int argc, char* argv[]) {
   }
   ReservedWordNode* reserved = load_reserved_words();
   char* filename = argv[1];
-  LineNode* first = organize(filename);
-  TokenNode* head = analyze(first, reserved);
-  return print_token_file(head) || print_listing_file(first);
+  LineNode* lines = organize(filename);
+  TokenNode* tokens = analyze(lines, reserved);
+  return print_token_file(tokens) || print_listing_file(lines);
 }
 
 ReservedWordNode* load_reserved_words() {
@@ -68,7 +68,7 @@ LineNode* organize(char* filename) {
   return head;
 }
 
-int print_token_file(TokenNode* head) {
+int print_token_file(TokenNode* tokens) {
   FILE* file;
   if ((file = fopen("build/token_file.txt", "w")) == NULL) {
     printf("Cannot create file token_file.txt\n");
@@ -80,9 +80,8 @@ int print_token_file(TokenNode* head) {
           "Lexeme",
           "TOKEN-TYPE",
           "ATTRIBUTE");
-  TokenNode* curr = head;
-  while (curr != NULL) {
-    Token* token = curr->token;
+  while (tokens != NULL) {
+    Token* token = tokens->token;
     if (token->attr.value < -1) {
       SymbolNode* address = token->attr.address;
       fprintf(file,
@@ -103,55 +102,51 @@ int print_token_file(TokenNode* head) {
               token->attr.value,
               attr_annotation_of(token->attr.value));
     }
-    curr = curr->next;
+    tokens = tokens->next;
   }
   return fclose(file);
 }
 
-int print_listing_file(LineNode* head) {
+int print_listing_file(LineNode* lines) {
   FILE* file;
   if ((file = fopen("build/listing_file.txt", "w")) == NULL) {
     printf("Cannot create file listing_file.txt\n");
     exit(1);
   }
-  LineNode* curr = head;
-  while (curr != NULL) {
-    fprintf(file, "%4d.    %s", curr->line->number, curr->line->value);
-    LineNode* error = curr->error;
+  while (lines != NULL) {
+    fprintf(file, "%4d.    %s", lines->line->number, lines->line->value);
+    LineNode* error = lines->error;
     while (error != NULL) {
       fprintf(file, "%4d.    %s", error->line->number, error->line->value);
       error = error->error;
     }
-    curr = curr->next;
+    lines = lines->next;
   }
   return fclose(file);
 }
 
-TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
-  SymbolNode* symbols = malloc(sizeof(SymbolNode));
-  symbols->symbol = 0;
-  symbols->next = 0;
+TokenNode* analyze(LineNode* lines, ReservedWordNode* reserved) {
+  SymbolNode* symbols = new_symbol_table();
   TokenNode* head = malloc(sizeof(TokenNode));
   TokenNode* curr = head;
-  LineNode* node = first;
   int line_count = 0;
   int* trts = malloc(sizeof(int));
-  while (node != NULL) {
+  while (lines != NULL) {
     (*trts) = 0;
-    while (node->line->value[(*trts)] != '\0') {
+    while (lines->line->value[(*trts)] != '\0') {
       Token* token;
-      if (white_space_machine(node, trts)) {
+      if (white_space_machine(lines, trts)) {
         continue;
       }
-      if ((token = id_machine(node, reserved, symbols, trts)) != NULL) {
-      } else if ((token = long_real_machine(node, trts)) != NULL) {
-      } else if ((token = real_machine(node, trts)) != NULL) {
-      } else if ((token = int_machine(node, trts)) != NULL) {
-      } else if ((token = relop_machine(node, trts)) != NULL) {
-      } else if ((token = addop_machine(node, trts)) != NULL) {
-      } else if ((token = mulop_machine(node, trts)) != NULL) {
-      } else if ((token = assignop_machine(node, trts)) != NULL) {
-      } else if ((token = catchall_machine(node, trts)) != NULL) {
+      if ((token = id_machine(lines, reserved, symbols, trts)) != NULL) {
+      } else if ((token = long_real_machine(lines, trts)) != NULL) {
+      } else if ((token = real_machine(lines, trts)) != NULL) {
+      } else if ((token = int_machine(lines, trts)) != NULL) {
+      } else if ((token = relop_machine(lines, trts)) != NULL) {
+      } else if ((token = addop_machine(lines, trts)) != NULL) {
+      } else if ((token = mulop_machine(lines, trts)) != NULL) {
+      } else if ((token = assignop_machine(lines, trts)) != NULL) {
+      } else if ((token = catchall_machine(lines, trts)) != NULL) {
       } else {
         // unrecognized symbol
         (*trts)++;
@@ -161,7 +156,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
       curr->next = malloc(sizeof(TokenNode));
       curr = curr->next;
     }
-    node = node->next;
+    lines = lines->next;
     line_count++;
   }
   curr = token_node_with(curr,

@@ -90,46 +90,46 @@ typedef struct TokenNode {
 
 char* type_annotation_of(int type) {
   switch (type) {
-    case -1: return "(EOF)";
-    case 0: return "(NULL)";
-    case 1: return "(ADDOP)";
-    case 2: return "(MULOP)";
-    case 3: return "(ARRAY)";
-    case 4: return "(ASSIGNOP)";
-    case 5: return "(BEGIN)";
-    case 6: return "(CLOSEBRACKET)";
-    case 7: return "(CLOSEPAREN)";
-    case 8: return "(COLON)";
-    case 9: return "(COMMA)";
-    case 10: return "(MULOP)";
-    case 11: return "(DO)";
-    case 12: return "(ELSE)";
-    case 13: return "(END)";
-    case 14: return "(FUNCTION)";
-    case 15: return "(ID)";
-    case 16: return "(IF)";
-    case 17: return "(INTEGER)";
-    case 18: return "(MINUS)";
-    case 19: return "(MULOP)";
-    case 20: return "(MULOP)";
-    case 21: return "(NOT)";
-    case 22: return "(NUM)";
-    case 23: return "(OF)";
-    case 24: return "(OPENBRACKET)";
-    case 25: return "(OPENPAREN)";
-    case 26: return "(ADDOP)";
-    case 27: return "(PERIOD)";
-    case 28: return "(PLUS)";
-    case 29: return "(PROCEDURE)";
-    case 30: return "(PROGRAM)";
-    case 31: return "(RANGE)";
-    case 32: return "(REAL)";
-    case 33: return "(RELOP)";
-    case 34: return "(SEMICOLON)";
-    case 35: return "(THEN)";
-    case 36: return "(VAR)";
-    case 37: return "(WHILE)";
-    case 38: return "(LEXERR)";
+    case ENDFILE: return "(EOF)";
+    case NIL: return "(NULL)";
+    case ADDOP: return "(ADDOP)";
+    case AND: return "(MULOP)";
+    case ARRAY: return "(ARRAY)";
+    case ASSIGNOP: return "(ASSIGNOP)";
+    case BEGIN: return "(BEGIN)";
+    case CLOSEBRACKET: return "(CLOSEBRACKET)";
+    case CLOSEPAREN: return "(CLOSEPAREN)";
+    case COLON: return "(COLON)";
+    case COMMA: return "(COMMA)";
+    case DIV: return "(MULOP)";
+    case DO: return "(DO)";
+    case ELSE: return "(ELSE)";
+    case END: return "(END)";
+    case FUNCTION: return "(FUNCTION)";
+    case ID: return "(ID)";
+    case IF: return "(IF)";
+    case INTEGER: return "(INTEGER)";
+    case MINUS: return "(MINUS)";
+    case MOD: return "(MULOP)";
+    case MULOP: return "(MULOP)";
+    case NOT: return "(NOT)";
+    case NUM: return "(NUM)";
+    case OF: return "(OF)";
+    case OPENBRACKET: return "(OPENBRACKET)";
+    case OPENPAREN: return "(OPENPAREN)";
+    case OR: return "(ADDOP)";
+    case PERIOD: return "(PERIOD)";
+    case PLUS: return "(PLUS)";
+    case PROCEDURE: return "(PROCEDURE)";
+    case PROGRAM: return "(PROGRAM)";
+    case RANGE: return "(RANGE)";
+    case REAL: return "(REAL)";
+    case RELOP: return "(RELOP)";
+    case SEMICOLON: return "(SEMICOLON)";
+    case THEN: return "(THEN)";
+    case VAR: return "(VAR)";
+    case WHILE: return "(WHILE)";
+    case LEXERR: return "(LEXERR)";
   }
   return NULL;
 }
@@ -139,7 +139,7 @@ char* attr_annotation_of(int attr) {
     return "(PTR)";
   }
   switch(attr) {
-    case 0: return "(NULL)";
+    case NIL: return "(NULL)";
   }
   return NULL;
 }
