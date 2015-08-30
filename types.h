@@ -1,7 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-enum types {
+enum type {
   ENDFILE = -1,
   NIL,
   ADDOP,
@@ -21,27 +21,57 @@ enum types {
   ID,           // 15
   IF,
   INTEGER,
-  MINUS,
   MOD,
-  MULOP,        // 20
-  NOT,
+  MULOP,
+  NOT,          // 20
   NUM,
   OF,
   OPENBRACKET,
-  OPENPAREN,    // 25
-  OR,
+  OPENPAREN,
+  OR,           // 25
   PERIOD,
-  PLUS,
   PROCEDURE,
-  PROGRAM,      // 30
+  PROGRAM,
   RANGE,
-  REAL,
+  REAL,         // 30
   RELOP,
   SEMICOLON,
-  THEN,         // 35
+  THEN,
   VAR,
-  WHILE,
+  WHILE,        // 35
   LEXERR
+};
+
+enum relop {
+  EQ = 1,
+  NEQ,
+  LT,
+  LTE,
+  GTE,          // 5
+  GT
+};
+
+enum mulop {
+   MULT = 1,
+   DIVISION,
+   DIV_,
+   MOD_,
+   AND_         // 5
+};
+
+enum addop {
+  PLUS = 1,
+  MINUS,
+  OR_
+};
+
+enum lexerr {
+  UNRECOG = 1,
+  ID_LENGTH,
+  INT_LENGTH,
+  XX_LENGTH,
+  YY_LENGTH,    // 5
+  ZZ_LENGTH
 };
 
 typedef struct Line {
@@ -109,7 +139,6 @@ char* type_annotation_of(int type) {
     case ID: return "(ID)";
     case IF: return "(IF)";
     case INTEGER: return "(INTEGER)";
-    case MINUS: return "(MINUS)";
     case MOD: return "(MULOP)";
     case MULOP: return "(MULOP)";
     case NOT: return "(NOT)";
@@ -119,7 +148,6 @@ char* type_annotation_of(int type) {
     case OPENPAREN: return "(OPENPAREN)";
     case OR: return "(ADDOP)";
     case PERIOD: return "(PERIOD)";
-    case PLUS: return "(PLUS)";
     case PROCEDURE: return "(PROCEDURE)";
     case PROGRAM: return "(PROGRAM)";
     case RANGE: return "(RANGE)";
@@ -134,9 +162,46 @@ char* type_annotation_of(int type) {
   return NULL;
 }
 
-char* attr_annotation_of(int attr) {
+char* attr_annotation_of(int type, int attr) {
   if (attr < -1) {
     return "(PTR)";
+  }
+  if (type == RELOP) {
+    switch (attr) {
+      case NIL: return "(NULL)";
+      case EQ: return "(EQ)";
+      case NEQ: return "(NEQ)";
+      case LT: return "(LT)";
+      case LTE: return "(LTE)";
+      case GTE: return "(GTE)";
+      case GT: return "(GT)";
+    }
+  } else if (type == MULOP) {
+    switch (attr) {
+      case NIL: return "(NULL)";
+      case MULT: return "(MULT)";
+      case DIVISION: return "(DVSN)";
+      case DIV_: return "(DIV)";
+      case MOD_: return "(MOD)";
+      case AND_: return "(AND)";
+    }
+  } else if (type == ADDOP) {
+    switch (attr) {
+      case NIL: return "(NULL)";
+      case PLUS: return "(PLUS)";
+      case MINUS: return "(MINUS)";
+      case OR_: return "(OR)";
+    }
+  } else if (type == LEXERR) {
+    switch (attr) {
+      case NIL: return "(NULL)";
+      case UNRECOG: return "(?Symbol)";
+      case ID_LENGTH: return "(#ID>10)";
+      case INT_LENGTH: return "(#INT>10)";
+      case XX_LENGTH: return "(#XX>5)";
+      case YY_LENGTH: return "(YY>5)";
+      case ZZ_LENGTH: return "(ZZ>2)";
+    }
   }
   switch (attr) {
     case NIL: return "(NULL)";

@@ -8,7 +8,7 @@ const int MAX_ID_LENGTH = 10;
 const int MAX_INTEGER_LENGTH = 10;
 const int MAX_XX_LENGTH = 5;
 const int MAX_YY_LENGTH = 5;
-const int MAX_ZZ_LENGTH = 5;
+const int MAX_ZZ_LENGTH = 2;
 
 size_t const MAX_BUFFER_SIZE = ((MAX_BUFFER_LENGTH+1) * sizeof(char));
 size_t const MAX_ID_SIZE = ((MAX_ID_LENGTH+1) * sizeof(char));
@@ -127,15 +127,24 @@ int print_listing_file(LineNode* head);
 TokenNode* analyze(LineNode* first, ReservedWordNode* reserved);
 
 int white_space_machine(LineNode* node, int* trts);
+
 Token* id_machine(LineNode* node, ReservedWordNode* reserved,
     SymbolNode* symbols, int* trts);
+    
 Token* long_real_machine(LineNode* node, int* trts);
+
 Token* real_machine(LineNode* node, int* trts);
+
 Token* int_machine(LineNode* node, int* trts);
+
 Token* relop_machine(LineNode* node, int* trts);
+
 Token* addop_machine(LineNode* node, int* trts);
+
 Token* mulop_machine(LineNode* node, int* trts);
+
 Token* assignop_machine(LineNode* node, int* trts);
+
 Token* catchall_machine(LineNode* node, int* trts);
 
 #endif

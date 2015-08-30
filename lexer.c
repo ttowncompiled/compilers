@@ -91,7 +91,7 @@ int print_token_file(TokenNode* tokens) {
               token->type,
               type_annotation_of(token->type),
               address,
-              attr_annotation_of(token->attr.value));
+              attr_annotation_of(token->type, token->attr.value));
     } else {
       fprintf(file,
               "%-10d %-13s %-2d %-14s %-14d %-10s\n",
@@ -100,7 +100,7 @@ int print_token_file(TokenNode* tokens) {
               token->type,
               type_annotation_of(token->type),
               token->attr.value,
-              attr_annotation_of(token->attr.value));
+              attr_annotation_of(token->type, token->attr.value));
     }
     tokens = tokens->next;
   }
