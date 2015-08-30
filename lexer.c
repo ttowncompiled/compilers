@@ -210,10 +210,51 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved,
 }
 
 Token* long_real_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  int hare = (*trts);
+  if (is_digit(buffer[hare])) {
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    if (buffer[hare] != '.' || !is_digit(buffer[hare+1])) {
+      return NULL;
+    }
+    hare++;
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    if (buffer[hare] != 'E' || !is_digit(buffer[hare+1])) {
+      return NULL;
+    }
+    hare++;
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    char* lexeme = substring(buffer, (*trts), hare);
+    (*trts) = hare;
+    return token_of(node->line->number, lexeme, NUM, LREAL);
+  }
   return NULL;
 }
 
 Token* real_machine(LineNode* node, int* trts) {
+  char* buffer = node->line->value;
+  int hare = (*trts);
+  if (is_digit(buffer[hare])) {
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    if (buffer[hare] != '.' || !is_digit(buffer[hare+1])) {
+      return NULL;
+    }
+    hare++;
+    while(is_digit(buffer[hare])) {
+      hare++;
+    }
+    char* lexeme = substring(buffer, (*trts), hare);
+    (*trts) = hare;
+    return token_of(node->line->number, lexeme, NUM, REAL_);
+  }
   return NULL;
 }
 
