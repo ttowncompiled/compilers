@@ -109,24 +109,73 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
   LineNode* node = first;
   int line_count = 0;
   while (node != NULL) {
-    char* buffer = node->line->value;
-    int hare = 0;
-    while (buffer[hare] != '\0') {
-      hare++;
+    int* trts = malloc(sizeof(int));
+    (*trts) = 0;
+    while (node->line->value[*trts] != '\0') {
+      Token* token;
+      if (white_space_machine(node, trts)) {
+        continue;
+      }
+      if ((token = id_machine(node, reserved, trts)) != NULL) {
+        
+      } else if ((token = long_real_machine(node, trts)) != NULL) {
+      
+      } else if ((token = real_machine(node, trts)) != NULL) {
+        
+      } else if ((token = int_machine(node, trts)) != NULL) {
+        
+      } else if ((token = relop_machine(node, trts)) != NULL) {
+        
+      } else if ((token = addop_machine(node, trts)) != NULL) {
+        
+      } else if ((token = mulop_machine(node, trts)) != NULL) {
+        
+      } else if ((token = assignop_machine(node, trts)) != NULL) {
+        
+      } else {
+        // unrecognized symbol
+        (*trts)++;
+      }
     }
-    // white space machine
-    // id machine - check reserved words
-    // long real machine
-    // real machine
-    // int machine
-    // relop machine
-    // addop machine
-    // mulop machine
-    // assignop machine
-    // unrecognized symbol
     node = node->next;
     line_count++;
   }
   curr = token_node_with(curr, ++line_count, "", EOF, "(EOF)", 0);
   return head;
+}
+
+int white_space_machine(LineNode* node, int* trts) {
+  return 0;
+}
+
+Token* id_machine(LineNode* node, ReservedWordNode* reserved, int* trts) {
+  return NULL;
+}
+
+Token* long_real_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* real_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* int_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* relop_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* addop_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* mulop_machine(LineNode* node, int* trts) {
+  return NULL;
+}
+
+Token* assignop_machine(LineNode* node, int* trts) {
+  return NULL;
 }
