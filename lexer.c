@@ -148,9 +148,11 @@ TokenNode* analyze(LineNode* lines, ReservedWordNode* reserved) {
       } else if ((token = assignop_machine(lines, trts)) != NULL) {
       } else if ((token = catchall_machine(lines, trts)) != NULL) {
       } else {
-        // unrecognized symbol
+        token = token_of(lines->line->number,
+                         substring(lines->line->value, (*trts), (*trts)+1),
+                         LEXERR,
+                         UNRECOG);
         (*trts)++;
-        continue;
       }
       curr = token_node_with(curr, token);
       curr->next = malloc(sizeof(TokenNode));
