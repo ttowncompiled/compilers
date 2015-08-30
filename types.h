@@ -80,7 +80,6 @@ typedef struct Token {
   int line_number;
   char* lexeme;
   int type;
-  char* annotation;
   Attribute attr;
 } Token;
 
@@ -89,7 +88,7 @@ typedef struct TokenNode {
   struct TokenNode* next;
 } TokenNode;
 
-char* annotation_of(int type) {
+char* type_annotation_of(int type) {
   switch (type) {
     case -1: return "(EOF)";
     case 0: return "(NULL)";
@@ -131,6 +130,16 @@ char* annotation_of(int type) {
     case 36: return "(VAR)";
     case 37: return "(WHILE)";
     case 38: return "(LEXERR)";
+  }
+  return NULL;
+}
+
+char* attr_annotation_of(int attr) {
+  if (attr < -1) {
+    return "(PTR)";
+  }
+  switch(attr) {
+    case 0: return "(NULL)";
   }
   return NULL;
 }

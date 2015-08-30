@@ -54,13 +54,11 @@ ReservedWordNode* word_node_from(char* entry) {
   return word_node_of(value, type, attr);
 }
 
-Token* token_of(int line_number, char* lexeme, int type, char* annotation,
-    int attr) {
+Token* token_of(int line_number, char* lexeme, int type, int attr) {
   Token* token = malloc(sizeof(Token));
   token->line_number = line_number;
   token->lexeme = lexeme;
   token->type = type;
-  token->annotation = annotation;
   Attribute attribute;
   attribute.value = attr;
   token->attr = attribute;

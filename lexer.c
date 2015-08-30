@@ -86,20 +86,22 @@ int print_token_file(TokenNode* head) {
     if (token->attr.value < -1) {
       SymbolNode* address = token->attr.address;
       fprintf(file,
-              "%-10d %-13s %-2d %-14s %p\n",
+              "%-10d %-13s %-2d %-14s %p %-10s\n",
               token->line_number,
               token->lexeme,
               token->type,
-              token->annotation,
-              address);
+              type_annotation_of(token->type),
+              address,
+              attr_annotation_of(token->attr.value));
     } else {
       fprintf(file,
-              "%-10d %-13s %-2d %-14s %-10d\n",
+              "%-10d %-13s %-2d %-14s %-14d %-10s\n",
               token->line_number,
               token->lexeme,
               token->type,
-              token->annotation,
-              token->attr.value);
+              type_annotation_of(token->type),
+              token->attr.value,
+              attr_annotation_of(token->attr.value));
     }
     curr = curr->next;
   }
@@ -166,8 +168,7 @@ TokenNode* analyze(LineNode* first, ReservedWordNode* reserved) {
                          token_of(++line_count,
                                   "",
                                   ENDFILE,
-                                  annotation_of(ENDFILE),
-                                  EOF)
+                                  NIL)
                          );
   return head;
 }
@@ -198,16 +199,11 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved,
         return token_of(node->line->number,
                         lexeme,
                         reserved->word->type,
-                        annotation_of(reserved->word->type),
                         reserved->word->attr);
       }
       reserved = reserved->next;
     }
-    Token* token = token_of(node->line->number,
-                            lexeme,
-                            ID,
-                            annotation_of(ID),
-                            NIL);
+    Token* token = token_of(node->line->number, lexeme, ID, NIL);
     Attribute attribute;
     attribute.address = save_symbol(symbols, lexeme);
     token->attr = attribute;
