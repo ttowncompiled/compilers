@@ -43,36 +43,36 @@ enum type {
 };
 
 enum num {
-  INT = 1,
-  REAL_,
-  LREAL
+  _INT_ = 1,
+  _REAL_,
+  _LREAL_
 };
 
 enum relop {
-  EQ = 1,
-  NEQ,
-  LT,
-  LTE,
-  GTE,          // 5
-  GT
+  _EQ_ = 1,
+  _NEQ_,
+  _LT_,
+  _LTE_,
+  _GTE_,          // 5
+  _GT_
 };
 
 enum mulop {
-   MULT = 1,
-   DIVISION,
-   DIV_,
-   MOD_,
-   AND_         // 5
+   _MULT_ = 1,
+   _DIVISION_,
+   _DIV_,
+   _MOD_,
+   _AND_         // 5
 };
 
 enum addop {
-  PLUS = 1,
-  MINUS,
-  OR_
+  _PLUS_ = 1,
+  _MINUS_,
+  _OR_
 };
 
 enum lexerr {
-  UNRECOG = 1,
+  UNREC = 1,
   ID_LENGTH,
   INT_LENGTH,
   XX_LENGTH,
@@ -131,40 +131,40 @@ char* attr_annotation_of(int type, int attr) {
   if (type == NUM) {
     switch (attr) {
       case NIL: return "(NULL)";
-      case INT: return "(INT)";
-      case REAL_: return "(REAL)";
-      case LREAL: return "(LREAL)";
+      case _INT_: return "(INT)";
+      case _REAL_: return "(REAL)";
+      case _LREAL_: return "(LREAL)";
     }
   } else if (type == RELOP) {
     switch (attr) {
       case NIL: return "(NULL)";
-      case EQ: return "(EQ)";
-      case NEQ: return "(NEQ)";
-      case LT: return "(LT)";
-      case LTE: return "(LTE)";
-      case GTE: return "(GTE)";
-      case GT: return "(GT)";
+      case _EQ_: return "(EQ)";
+      case _NEQ_: return "(NEQ)";
+      case _LT_: return "(LT)";
+      case _LTE_: return "(LTE)";
+      case _GTE_: return "(GTE)";
+      case _GT_: return "(GT)";
     }
   } else if (type == MULOP) {
     switch (attr) {
       case NIL: return "(NULL)";
-      case MULT: return "(MULT)";
-      case DIVISION: return "(DVSN)";
-      case DIV_: return "(DIV)";
-      case MOD_: return "(MOD)";
-      case AND_: return "(AND)";
+      case _MULT_: return "(MULT)";
+      case _DIVISION_: return "(DVSN)";
+      case _DIV_: return "(DIV)";
+      case _MOD_: return "(MOD)";
+      case _AND_: return "(AND)";
     }
   } else if (type == ADDOP) {
     switch (attr) {
       case NIL: return "(NULL)";
-      case PLUS: return "(PLUS)";
-      case MINUS: return "(MINUS)";
-      case OR_: return "(OR)";
+      case _PLUS_: return "(PLUS)";
+      case _MINUS_: return "(MINUS)";
+      case _OR_: return "(OR)";
     }
   } else if (type == LEXERR) {
     switch (attr) {
       case NIL: return "(NULL)";
-      case UNRECOG: return "(?Symbol)";
+      case UNREC: return "(?Symbol)";
       case ID_LENGTH: return "(#ID>10)";
       case INT_LENGTH: return "(#INT>10)";
       case XX_LENGTH: return "(#XX>5)";

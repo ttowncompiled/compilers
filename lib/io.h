@@ -1,24 +1,17 @@
 #ifndef IO_H 
 #define IO_H
+#include "global.h"
 #include "types.h"
-
-const int MAX_BUFFER_LENGTH = 72;
-size_t const MAX_BUFFER_SIZE = ((MAX_BUFFER_LENGTH+1) * sizeof(char));
-char* const LINE_TOO_LONG = "ERROR: Lines can be only 72 characters long.\n";
+#include "types_util.h"
 
 void check_buffer_size(size_t buffer_size, LineNode* node) {
   if (buffer_size <= MAX_BUFFER_SIZE) {
     return;
   }
-  LineNode* error = line_node_of(LINE_TOO_LONG, node->line->number);
-  LineNode* curr = node;
-  while (curr->error != NULL) {
-    curr = curr->error;
-  }
-  curr->error = error;
+  throw_error(node->line->number, LINE_TOO_LONG);
 }
 
-ReservedWordNode* load_reserved_words() {
+void load_reserved_words() {
   FILE* file;
   if((file = fopen("build/reserved_words.txt", "r")) == NULL) {
     printf("Cannot open file reserved_words.txt\n");
@@ -28,20 +21,21 @@ ReservedWordNode* load_reserved_words() {
   size_t buffer_size = MAX_BUFFER_SIZE;
   char* buffer = malloc(buffer_size);
   if (-1 == getline(&buffer, &buffer_size, file) || buffer[0] != '"') {
-    return head;
+    reserved_word_table = head;
+    return;
   }
-  head = word_node_from(buffer);
+  head = reserved_word_node_from(buffer);
   ReservedWordNode* prev = head;
   while (-1 != getline(&buffer, &buffer_size, file) && buffer[0] == '"') {
-    ReservedWordNode* curr = word_node_from(buffer);
+    ReservedWordNode* curr = reserved_word_node_from(buffer);
     prev->next = curr;
     prev = curr;
   }
   fclose(file);
-  return head;
+  reserved_word_table = head;
 }
 
-LineNode* organize(char* filename) {
+LineNode* read_file(char* filename) {
   FILE* file;
   if ((file = fopen(filename, "r")) == NULL) {
     printf("Cannot open file %s\n", filename);
@@ -54,12 +48,12 @@ LineNode* organize(char* filename) {
     return head;
   }
   int line_number = 1;
-  head = line_node_of(buffer, line_number);
+  head = new_line_node(line_number, buffer);
   check_buffer_size(buffer_size, head);
   buffer = malloc(MAX_BUFFER_SIZE);
   LineNode* prev = head;
   while (-1 != getline(&buffer, &buffer_size, file)) {
-    LineNode* curr = line_node_of(buffer, ++line_number);
+    LineNode* curr = new_line_node(++line_number, buffer);
     check_buffer_size(buffer_size, curr);
     prev->next = curr; 
     prev = curr;
@@ -113,12 +107,12 @@ int print_listing_file(LineNode* lines) {
     printf("Cannot create file listing_file.txt\n");
     exit(1);
   }
+  ErrorNode* errors = error_list;
   while (lines != NULL) {
     fprintf(file, "%4d.    %s", lines->line->number, lines->line->value);
-    LineNode* error = lines->error;
-    while (error != NULL) {
-      fprintf(file, "%4d.    %s", error->line->number, error->line->value);
-      error = error->error;
+    while (errors != NULL && errors->error->line_number == lines->line->number) {
+      fprintf(file, "%4d.    %s", errors->error->line_number, errors->error->reason);
+      errors = errors->next;
     }
     lines = lines->next;
   }
