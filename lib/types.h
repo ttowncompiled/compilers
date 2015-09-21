@@ -1,19 +1,53 @@
-#ifndef LEXER_H 
-#define LEXER_H
-#include "types.h"
+#ifndef TYPES_H
+#define TYPES_H
 #include "util.h"
 
-const int MAX_BUFFER_LENGTH = 72;
 const int MAX_ID_LENGTH = 10;
-const int MAX_INTEGER_LENGTH = 10;
-const int MAX_XX_LENGTH = 5;
-const int MAX_YY_LENGTH = 5;
-const int MAX_ZZ_LENGTH = 2;
-
-size_t const MAX_BUFFER_SIZE = ((MAX_BUFFER_LENGTH+1) * sizeof(char));
 size_t const MAX_ID_SIZE = ((MAX_ID_LENGTH+1) * sizeof(char));
 
-char* const LINE_TOO_LONG = "ERROR: Lines can be only 72 characters long.\n";
+typedef struct Line {
+  char* value;
+  int number;
+} Line;
+
+typedef struct LineNode {
+  Line* line;
+  struct LineNode* error;
+  struct LineNode* next;
+} LineNode;
+
+typedef struct ReservedWord {
+  char* value;
+  int type;
+  int attr;
+} ReservedWord;
+
+typedef struct ReservedWordNode {
+  ReservedWord* word;
+  struct ReservedWordNode* next;
+} ReservedWordNode;
+
+typedef struct SymbolNode {
+  char* symbol;
+  struct SymbolNode* next;
+} SymbolNode;
+
+typedef union Attribute {
+  int value;
+  SymbolNode* address;
+} Attribute;
+
+typedef struct Token {
+  int line_number;
+  char* lexeme;
+  int type;
+  Attribute attr;
+} Token;
+
+typedef struct TokenNode {
+  Token* token;
+  struct TokenNode* next;
+} TokenNode;
 
 LineNode* line_node_of(char* value, int line_number) {
   LineNode* node = malloc(sizeof(LineNode));
@@ -103,48 +137,5 @@ SymbolNode* save_symbol(SymbolNode* symbols, char* symbol) {
   symbols->next = malloc(sizeof(SymbolNode));
   return symbol_node_with(symbols->next, symbol);
 }
-
-void check_buffer_size(size_t buffer_size, LineNode* node) {
-  if (buffer_size <= MAX_BUFFER_SIZE) {
-    return;
-  }
-  LineNode* error = line_node_of(LINE_TOO_LONG, node->line->number);
-  LineNode* curr = node;
-  while (curr->error != NULL) {
-    curr = curr->error;
-  }
-  curr->error = error;
-}
-
-ReservedWordNode* load_reserved_words();
-
-LineNode* organize(char* filename);
-
-int print_token_file(TokenNode* head);
-
-int print_listing_file(LineNode* head);
-
-TokenNode* analyze(LineNode* first, ReservedWordNode* reserved);
-
-int white_space_machine(LineNode* node, int* trts);
-
-Token* id_machine(LineNode* node, ReservedWordNode* reserved,
-    SymbolNode* symbols, int* trts);
-    
-Token* long_real_machine(LineNode* node, int* trts);
-
-Token* real_machine(LineNode* node, int* trts);
-
-Token* int_machine(LineNode* node, int* trts);
-
-Token* relop_machine(LineNode* node, int* trts);
-
-Token* addop_machine(LineNode* node, int* trts);
-
-Token* mulop_machine(LineNode* node, int* trts);
-
-Token* assignop_machine(LineNode* node, int* trts);
-
-Token* catchall_machine(LineNode* node, int* trts);
 
 #endif

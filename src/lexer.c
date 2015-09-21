@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lexer.h"
+#include "../lib/lexer.h"
 
 int main(int argc, char* argv[]) {
   if (argc > 2) {
@@ -16,113 +16,6 @@ int main(int argc, char* argv[]) {
   LineNode* lines = organize(filename);
   TokenNode* tokens = analyze(lines, reserved);
   return print_token_file(tokens) || print_listing_file(lines);
-}
-
-ReservedWordNode* load_reserved_words() {
-  FILE* file;
-  if((file = fopen("build/reserved_words.txt", "r")) == NULL) {
-    printf("Cannot open file reserved_words.txt\n");
-    exit(1);
-  }
-  ReservedWordNode* head = malloc(sizeof(ReservedWordNode));
-  size_t buffer_size = MAX_BUFFER_SIZE;
-  char* buffer = malloc(buffer_size);
-  if (-1 == getline(&buffer, &buffer_size, file) || buffer[0] != '"') {
-    return head;
-  }
-  head = word_node_from(buffer);
-  ReservedWordNode* prev = head;
-  while (-1 != getline(&buffer, &buffer_size, file) && buffer[0] == '"') {
-    ReservedWordNode* curr = word_node_from(buffer);
-    prev->next = curr;
-    prev = curr;
-  }
-  fclose(file);
-  return head;
-}
-
-LineNode* organize(char* filename) {
-  FILE* file;
-  if ((file = fopen(filename, "r")) == NULL) {
-    printf("Cannot open file %s\n", filename);
-    exit(1);
-  }
-  LineNode* head = malloc(sizeof(LineNode));
-  size_t buffer_size = MAX_BUFFER_SIZE;
-  char* buffer = malloc(buffer_size);
-  if (-1 == getline(&buffer, &buffer_size, file)) {
-    return head;
-  }
-  int line_number = 1;
-  head = line_node_of(buffer, line_number);
-  check_buffer_size(buffer_size, head);
-  buffer = malloc(MAX_BUFFER_SIZE);
-  LineNode* prev = head;
-  while (-1 != getline(&buffer, &buffer_size, file)) {
-    LineNode* curr = line_node_of(buffer, ++line_number);
-    check_buffer_size(buffer_size, curr);
-    prev->next = curr; 
-    prev = curr;
-    buffer = malloc(MAX_BUFFER_SIZE);
-  }
-  return head;
-}
-
-int print_token_file(TokenNode* tokens) {
-  FILE* file;
-  if ((file = fopen("build/token_file.txt", "w")) == NULL) {
-    printf("Cannot create file token_file.txt\n");
-    exit(1);
-  }
-  fprintf(file,
-          "%-10s %-13s %-17s %-10s\n",
-          "Line No.",
-          "Lexeme",
-          "TOKEN-TYPE",
-          "ATTRIBUTE");
-  while (tokens != NULL) {
-    Token* token = tokens->token;
-    if (token->attr.value < -1) {
-      SymbolNode* address = token->attr.address;
-      fprintf(file,
-              "%-10d %-13s %-2d %-14s %p %-10s\n",
-              token->line_number,
-              token->lexeme,
-              token->type,
-              type_annotation_of(token->type),
-              address,
-              attr_annotation_of(token->type, token->attr.value));
-    } else {
-      fprintf(file,
-              "%-10d %-13s %-2d %-14s %-14d %-10s\n",
-              token->line_number,
-              token->lexeme,
-              token->type,
-              type_annotation_of(token->type),
-              token->attr.value,
-              attr_annotation_of(token->type, token->attr.value));
-    }
-    tokens = tokens->next;
-  }
-  return fclose(file);
-}
-
-int print_listing_file(LineNode* lines) {
-  FILE* file;
-  if ((file = fopen("build/listing_file.txt", "w")) == NULL) {
-    printf("Cannot create file listing_file.txt\n");
-    exit(1);
-  }
-  while (lines != NULL) {
-    fprintf(file, "%4d.    %s", lines->line->number, lines->line->value);
-    LineNode* error = lines->error;
-    while (error != NULL) {
-      fprintf(file, "%4d.    %s", error->line->number, error->line->value);
-      error = error->error;
-    }
-    lines = lines->next;
-  }
-  return fclose(file);
 }
 
 TokenNode* analyze(LineNode* lines, ReservedWordNode* reserved) {
@@ -185,11 +78,16 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved,
   char* buffer = node->line->value;
   int hare = (*trts);
   if (is_letter(buffer[hare])) {
+    Token* token;
     hare++;
     while (is_letter(buffer[hare]) || is_digit(buffer[hare])) {
       hare++;
     }
     char* lexeme = substring(buffer, (*trts), hare);
+    if ((token = check_id_length(node, lexeme, (*trts), hare)) != NULL) {
+      (*trts) = hare;
+      return token;
+    }
     (*trts) = hare;
     while (reserved != NULL) {
       if (is_equal(lexeme, reserved->word->value)) {
@@ -200,7 +98,7 @@ Token* id_machine(LineNode* node, ReservedWordNode* reserved,
       }
       reserved = reserved->next;
     }
-    Token* token = token_of(node->line->number, lexeme, ID, NIL);
+    token = token_of(node->line->number, lexeme, ID, NIL);
     Attribute attribute;
     attribute.address = save_symbol(symbols, lexeme);
     token->attr = attribute;
@@ -213,9 +111,14 @@ Token* long_real_machine(LineNode* node, int* trts) {
   char* buffer = node->line->value;
   int hare = (*trts);
   if (is_digit(buffer[hare])) {
+    Token* token;
     while(is_digit(buffer[hare])) {
       hare++;
     }
+    token = check_xx_length(node,
+                            substring(buffer, (*trts), hare),
+                            (*trts),
+                            hare);
     if (buffer[hare] != '.' || !is_digit(buffer[hare+1])) {
       return NULL;
     }
@@ -223,6 +126,10 @@ Token* long_real_machine(LineNode* node, int* trts) {
     while(is_digit(buffer[hare])) {
       hare++;
     }
+    token = check_yy_length(node,
+                            substring(buffer, (*trts), hare),
+                            (*trts),
+                            hare);
     if (buffer[hare] != 'E' || !is_digit(buffer[hare+1])) {
       return NULL;
     }
@@ -230,6 +137,10 @@ Token* long_real_machine(LineNode* node, int* trts) {
     while(is_digit(buffer[hare])) {
       hare++;
     }
+    token = check_xx_length(node,
+                            substring(buffer, (*trts), hare),
+                            (*trts),
+                            hare);
     char* lexeme = substring(buffer, (*trts), hare);
     (*trts) = hare;
     return token_of(node->line->number, lexeme, NUM, LREAL);
