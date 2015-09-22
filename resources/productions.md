@@ -4,13 +4,24 @@
         - _subprogram-declarations_
         - _compound-statement_
         - **.**
+        - | **program id (** _identifier-list_ **) ;**
+        - _declarations_
+        - _compound-statement_
+        - **.**
+        - | **program id (** _identifier_list_ **) ;**
+        - _subprogram-declarations_
+        - _compound-statement_
+        - **.**
+        - | **program id (** _identifier_list_ **) ;**
+        - _compound-statement_
+        - **.**
 
 02.00 _id_ :=
         - **id**
 
 03.00 _declarations_ :=
         - _declarations_ **var** _id_ **:** _type_ **;**
-        - | **epsilon**
+        - | **var** _id_ **:** _type_ **;**
 
 04.00 _type_ :=
         - _standard-type_
@@ -22,20 +33,28 @@
 
 06.00 _subprogram-declarations_ :=
         - _subprogram-declarations_ _subprogram-declaration_ **;**
-        - | **epsilon**
+        - | _subprogram-declaration_ **;**
 
 07.00 _subprogram-declaration_ :=
         - _subprogram-head_
         - _declarations_
         - _subprogram-declarations_
         - _compound-statement_
+        - | _subprogram-head_
+        - _declarations_
+        - _compound-statement_
+        - | _subprogram-head_
+        - _subprogram-declarations_
+        - _compound-statement_
+        - | _subprogram-head_
+        - _compound-statement_
 
 08.00 _subprogram-head_ :=
         - **function id** _arguments_ **:** _standard-type_ **;**
+        - | **function id :** _standard-type_ **;**
 
 09.00 _arguments_ :=
         - **(** _parameter-list_ **)**
-        - | **epsilon**
 
 10.00 _parameter-list_ :=
         - _id_ **:** _type_
@@ -45,10 +64,11 @@
         - **begin**
         - _optional-statements_
         - **end**
+        - | **begin**
+        - **end**
 
 12.00 _optional-statements_ :=
         - _statement-list_
-        - | **epsilon**
 
 13.00 _statement-list_ :=
         - _statement_
