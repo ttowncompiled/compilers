@@ -21,10 +21,11 @@
 
 03.00 _declarations_ :=
         - **var** _id_ **:** _type_ **;** _declarations'_
+        - | **var** _id_ **:** _type_ **;**
 
 03.01 _declarations_ :=
         - **var** _id_ **:** _type_ **;** _declarations'_
-        - **epsilon**
+        - | **var** _id_ **:** _type_ **;**
 
 04.00 _type_ :=
         - _standard-type_
@@ -36,10 +37,11 @@
 
 06.00 _subprogram-declarations_ :=
         - _subprogram-declaration_ **;** _subprogram-declarations'_
+        - | _subprogram-declaration_ **;**
 
 06.01 _subprogram-declarations'_ :=
         - _subprogram-declaration_ **;** _subprogram-declarations'_
-        - **epsilon**
+        - | _subprogram-declaration_ **;**
 
 07.00 _subprogram-declaration_ :=
         - _subprogram-head_
@@ -64,10 +66,11 @@
 
 10.00 _parameter-list_ :=
         - _id_ **:** _type_ _parameter-list'_
+        - | _id_ **:** _type_
 
 10.01 _parameter-list'_ :=
         - **;** _id_ **:** _type_ _parameter-list'_
-        - **epsilon**
+        - | **;** _id_ **:** _type_
 
 11.00 _compound-statement_ :=
         - **begin**
@@ -81,10 +84,11 @@
 
 13.00 _statement-list_ :=
         - _statement_ _statement-list'_
+        - | _statement_
 
 13.01 _statement-list'_ :=
         - **;** _statement_ _statement-list'_
-        - **epsilon**
+        - | **;** _statement_
 
 14.00 _statement_ :=
         - _variable_ **assignop** _expression_
@@ -100,10 +104,11 @@
 
 16.00 _expression-list_ :=
         - _expression_ _expression-list'_
+        - | _expression_
 
 16.01 _expression-list'_ :=
         - **,** _expression_ _expression-list'_
-        - **epsilon**
+        - | **,** _expression_
 
 17.00 _expression_ :=
         - _simple-expression_
@@ -111,18 +116,21 @@
 
 18.00 _simple-expression_ :=
         - _term_ _simple-expression'_
+        - | _term_
         - | _sign_ _term_ _simple-expression'_
+        - | _sign_ _term_
 
 18.01 _simple-expression'_ :=
         - **addop** _term_ _simple-expression'_
-        - **epsilon**
+        - | **addop** _term_
 
 19.00 _term_ :=
         - _factor_ _term'_
+        - | _factor_
 
 19.01 _term'_ :=
         - **mulop** _factor_ _term'_
-        - **epsilon**
+        - | **mulop** _factor_
 
 20.00 _factor_ :=
         - **id**
