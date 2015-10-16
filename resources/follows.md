@@ -5,11 +5,11 @@
 }
 
 01.01 F(_program-body_) := {
-  F(_program_)
+  **$**
 }
 
 01.02 F(_program-subbody_) := {
-  F(_program-body)
+  **$**
 }
 
 02.00 F(_id_) := {
@@ -21,7 +21,7 @@
 }
 
 03.01 F(_identifier-list'_) := {
-  F(_identifier-list_)
+  **)**
 }
 
 04.00 F(_declarations_) := {
@@ -56,11 +56,11 @@
 }
 
 08.01 F(_subprogram-body_) := {
-  F(_subprogram-declaration_)
+  **;**
 }
 
 08.02 F(_subprogram-subbody_) := {
-  F(_subprogram-body_)
+  **;**
 }
 
 09.00 F(_subprogram-head_) := {
@@ -80,12 +80,12 @@
 }
 
 11.01 F(_parameter-list'_) := {
-  F(_parameter-list_)
+  **)**
 }
 
 12.00 F(_compound-statement_) := {
   **.**,
-  F(_subprogram-subbody_),
+  **;**,
   F(_statement_)
 }
 
@@ -98,11 +98,11 @@
 }
 
 14.00 F(_statement-list_) := {
-  F(_optional-statements_)
+  **end**
 }
 
 14.01 F(_statement-list'_) := {
-  F(_statement-list_)
+  **end**
 }
 
 15.00 F(_statement_) := {
@@ -119,7 +119,7 @@
 }
 
 16.01 F(_variable'_) := {
-  F(_variable_)
+  **assignop**
 }
 
 17.00 F(_expression-list_) := {
@@ -127,7 +127,7 @@
 }
 
 17.01 F(_expression-list'_) := {
-  F(_expression-list_)
+  **)**
 }
 
 18.00 F(_expression_) := {
