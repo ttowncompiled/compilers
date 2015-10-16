@@ -25,7 +25,7 @@
 
 03.01 f(_identifier-list'_) := {
   **,** (1),
-  F(_identifier-list'_) (2)
+  **)** (2)
 }
 
 04.00 f(_declarations_) := {
@@ -34,7 +34,8 @@
 
 04.01 f(_declarations'_) := {
   **var** (1),
-  F(_declarations'_) (2)
+  **function** (2),
+  **begin** (2)
 }
 
 05.00 f(_type_) := {
@@ -54,7 +55,7 @@
 
 07.01 f(_subprogram-declarations'_) := {
   **function** (1),
-  F(_subprogram-declarations'_) (2)
+  **begin** (2)
 }
 
 08.00 f(_subprogram-declaration_) := {
@@ -91,7 +92,7 @@
 
 11.01 f(_parameter-list'_) := {
   **;** (1),
-  F(_parameter-list'_) (2)
+  **)** (2)
 }
 
 12.00 f(_compound-statement_) := {
@@ -122,7 +123,7 @@
 
 14.01 f(_statement-list'_) := {
   **;** (1),
-  F(_statement-list'_) (2)
+  **end** (2)
 }
 
 15.00 f(_statement_) := {
@@ -134,7 +135,8 @@
 
 15.01 f(_statement'_) := {
   **else** (1),
-  F(_statement'_) (2)
+  **;** (2),
+  **end** (2)
 }
 
 16.00 f(_variable_) := {
@@ -143,7 +145,7 @@
 
 16.01 f(_variable'_) := {
   **[** (1),
-  F(_variable'_) (2)
+  **assignop** (2)
 }
 
 17.00 f(_expression-list_) := {
@@ -157,7 +159,7 @@
 
 17.01 f(_expression-list'_) := {
   **,** (1),
-  F(_expression-list'_) (2)
+  **)** (2)
 }
 
 18.00 f(_expression_) := {
@@ -171,7 +173,13 @@
 
 18.01 f(_expression'_) := {
   **relop** (1),
-  F(_expression'_) (2)
+  **else** (2),
+  **;** (2),
+  **end** (2),
+  **then** (2),
+  **do** (2),
+  **]** (2),
+  **)** (2)
 }
 
 19.00 f(_simple-expression_) := {
@@ -185,7 +193,14 @@
 
 19.01 f(_simple-expression'_) := {
   **addop** (1),
-  F(_simple-expression'_) (2)
+  **relop** (2),
+  **else** (2),
+  **;** (2),
+  **end** (2),
+  **then** (2),
+  **do** (2),
+  **]** (2),
+  **)** (2)
 }
 
 20.00 f(_term_) := {
@@ -197,7 +212,15 @@
 
 20.01 f(_term'_) := {
   **mulop** (1),
-  F(_term'_) (2)
+  **addop** (2),
+  **relop** (2),
+  **else** (2),
+  **;** (2),
+  **end** (2),
+  **then** (2),
+  **do** (2),
+  **]** (2),
+  **)** (2)
 }
 
 21.00 f(_factor_) := {
@@ -210,7 +233,16 @@
 21.01 f(_factor'_) := {
   **(** (1),
   **[** (2),
-  F(_factor'_) (3)
+  **mulop** (3),
+  **addop** (3),
+  **relop** (3),
+  **else** (3),
+  **;** (3),
+  **end** (3),
+  **then** (3),
+  **do** (3),
+  **]** (3),
+  **)** (3)
 }
 
 22.00 f(_sign_) := {

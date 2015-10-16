@@ -25,30 +25,31 @@
 }
 
 04.00 F(_declarations_) := {
-  f(_program-subbody_),
-  f(_subprogram-subbody_)
+  **function**,
+  **begin**
 }
 
 04.01 F(_declarations'_) := {
-  F(_declarations_)
+  **function**,
+  **begin**
 }
 
 05.00 F(_type_) := {
   **;**,
-  f(_parameter-list'_)
+  **)**
 }
 
 06.00 F(_standard-type_) := {
-  F(_type_),
-  **;**
+  **;**,
+  **)**
 }
 
 07.00 F(_subprogram-declarations_) := {
-  f(_compound-statement_)
+  **begin**
 }
 
 07.01 F(_subprogram-declarations'_) := {
-  F(_subprogram-declarations_)
+  **begin**
 }
 
 08.00 F(_subprogram-declaration_) := {
@@ -64,11 +65,15 @@
 }
 
 09.00 F(_subprogram-head_) := {
-  f(_subprogram-body_)
+  **var**,
+  **function**,
+  **begin**
 }
 
 09.01 F(_subprogram-head'_) := {
-  F(_subprogram-head_)
+  **var**,
+  **function**,
+  **begin**
 }
 
 10.00 F(_arguments_) := {
@@ -86,11 +91,17 @@
 12.00 F(_compound-statement_) := {
   **.**,
   **;**,
-  F(_statement_)
+  **else**,
+  **;**,
+  **end**
 }
 
 12.01 F(_compound-statement'_) := {
-  F(_compound-statement_)
+  **.**,
+  **;**,
+  **else**,
+  **;**,
+  **end**
 }
 
 13.00 F(_optional-statements_) := {
@@ -106,12 +117,15 @@
 }
 
 15.00 F(_statement_) := {
-  f(_statement-list'_),
-  f(_statement'_)
+  **else**,
+  **;**,
+  **end**
 }
 
 15.01 F(_statement'_) := {
-  F(_statement_)
+  **else**,
+  **;**,
+  **end**
 }
 
 16.00 F(_variable_) := {
@@ -131,43 +145,100 @@
 }
 
 18.00 F(_expression_) := {
-  F(_statement_),
+  **else**,
+  **;**,
+  **end**,
   **then**,
   **do**,
   **]**,
-  f(_expression-list'_),
   **)**
 }
 
 18.01 F(_expression'_) := {
-  F(_expression_)
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 19.00 F(_simple-expression_) := {
-  f(_expression'_),
-  F(_expression'_)
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 19.01 F(_simple-expression'_) := {
-  F(_simple-expression_)
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 20.00 F(_term_) := {
-  f(_simple-expression'_)
+  **addop**,
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 20.01 F(_term'_) := {
-  F(_term_)
+  **addop**,
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 21.00 F(_factor_) := {
-  f(_term'_)
+  **mulop**,
+  **addop**,
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 21.01 F(_factor'_) := {
-  F(_factor_)
+  **mulop**,
+  **addop**,
+  **relop**,
+  **else**,
+  **;**,
+  **end**,
+  **then**,
+  **do**,
+  **]**,
+  **)**
 }
 
 22.00 F(_sign_) := {
-  f(_term_)
+  **id**,
+  **num**,
+  **(**,
+  **not**
 }
