@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../lib/io.h"
 #include "../lib/lexer.h"
+#include "../lib/parser.h"
 
 int main(int argc, char* argv[]) {
   if (argc > 2) {
@@ -15,7 +16,10 @@ int main(int argc, char* argv[]) {
   load_reserved_words();
   char* filename = argv[1];
   LineNode* lines = read_file(filename);
-  TokenNode* tokens = tokenize(lines);
-  return print_token_file(tokens) || print_listing_file(lines);
+  print_listing_file(lines);
+  tokenize(lines);
+  print_token_file(tokens);
+  program();
+  return 0;
 }
 

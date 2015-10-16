@@ -3,6 +3,8 @@
 #include "global.h"
 #include "lexerr.h"
 
+TokenNode* tokens = NULL;
+
 int white_space_machine(LineNode* node, int* trts) {
   char* buffer = node->line->value;
   int hare = (*trts);
@@ -267,7 +269,7 @@ Token* catchall_machine(LineNode* node, int* trts) {
   return NULL;
 }
 
-TokenNode* tokenize(LineNode* lines) {
+void tokenize(LineNode* lines) {
   TokenNode* head = NULL;
   TokenNode* prev;
   int line_count = 0;
@@ -314,7 +316,7 @@ TokenNode* tokenize(LineNode* lines) {
                                   ENDFILE,
                                   NIL)
                          );
-  return head;
+  tokens = head;
 }
 
 #endif
