@@ -1,8 +1,6 @@
 #ifndef IO_H 
 #define IO_H
 #include "global.h"
-#include "types.h"
-#include "types_util.h"
 
 void check_buffer_size(size_t buffer_size, LineNode* node) {
   if (buffer_size <= MAX_BUFFER_SIZE) {
