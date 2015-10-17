@@ -70,21 +70,22 @@ void program() {
   if ((token = match(PROGRAM)) != NULL) {
     // first production
     if ((token = match(ID)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
     }
     if ((token = match(OPENPAREN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '(' and received ", token->lexeme));
     }
     identifier_list();
     if ((token = match(CLOSEPAREN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ')' and received ", token->lexeme));
     }
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     program_body();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'program' and received ", token->lexeme));
 }
 
 void program_body() {
@@ -105,6 +106,7 @@ void program_body() {
     program_subbody();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'var', 'function', or 'begin' and received ", token->lexeme));
 }
 
 void program_subbody() {
@@ -114,7 +116,7 @@ void program_subbody() {
     subprogram_declarations();
     compound_statement();
     if ((token = match(PERIOD)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '.' and received ", token->lexeme));
     }
     return;
   }
@@ -122,10 +124,11 @@ void program_subbody() {
     // second production
     compound_statement();
     if ((token = match(PERIOD)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '.' and received ", token->lexeme));
     }
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'function' or 'begin' and received ", token->lexeme));
 }
 
 void id() {
@@ -134,6 +137,7 @@ void id() {
     // first production
     return;
   }
+  throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
 }
 
 void identifier_list() {
@@ -143,6 +147,7 @@ void identifier_list() {
     identifier_list_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
 }
 
 void identifier_list_prime() {
@@ -150,7 +155,7 @@ void identifier_list_prime() {
   if ((token = match(COMMA)) != NULL) {
     // first production
     if ((token = match(ID)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
     }
     identifier_list_prime();
     return;
@@ -159,6 +164,7 @@ void identifier_list_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected ',' or ')' and received ", token->lexeme));
 }
 
 void declarations() {
@@ -167,15 +173,16 @@ void declarations() {
     // first production
     id();
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     type();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     declarations_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'var' and received ", token->lexeme));
 }
 
 void declarations_prime() {
@@ -184,11 +191,11 @@ void declarations_prime() {
     // first production
     id();
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     type();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     declarations_prime();
     return;
@@ -201,6 +208,7 @@ void declarations_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'var', 'function', or 'begin' and received ", token->lexeme));
 }
 
 void type() {
@@ -218,26 +226,27 @@ void type() {
   if ((token = match(ARRAY)) != NULL) {
     // second production
     if ((token = match(OPENBRACKET)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '[' and received ", token->lexeme));
     }
     if ((token = match(NUM)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected num and received ", token->lexeme));
     }
     if ((token = match(RANGE)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '..' and received ", token->lexeme));
     }
     if ((token = match(NUM)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected num and received ", token->lexeme));
     }
     if ((token = match(CLOSEBRACKET)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ']' and received ", token->lexeme));
     }
     if ((token = match(OF)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'of' and received ", token->lexeme));
     }
     standard_type();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'integer', 'real', or 'array' and received ", token->lexeme));
 }
 
 void standard_type() {
@@ -250,6 +259,7 @@ void standard_type() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'integer' or 'real' and received ", token->lexeme));
 }
 
 void subprogram_declarations() {
@@ -258,11 +268,12 @@ void subprogram_declarations() {
     // first production
     subprogram_declaration();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     subprogram_declarations_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'function' and received ", token->lexeme));
 }
 
 void subprogram_declarations_prime() {
@@ -271,7 +282,7 @@ void subprogram_declarations_prime() {
     // first production
     subprogram_declaration();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     subprogram_declarations_prime();
     return;
@@ -280,6 +291,7 @@ void subprogram_declarations_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'begin' or 'function' and received ", token->lexeme));
 }
 
 void subprogram_declaration() {
@@ -290,6 +302,7 @@ void subprogram_declaration() {
     subprogram_body();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'function' and received ", token->lexeme));
 }
 
 void subprogram_body() {
@@ -310,6 +323,7 @@ void subprogram_body() {
     subprogram_subbody();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'var', 'function' or 'begin' and received ", token->lexeme));
 }
 
 void subprogram_subbody() {
@@ -325,6 +339,7 @@ void subprogram_subbody() {
     compound_statement();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'function' or 'begin' and received ", token->lexeme));
 }
 
 void subprogram_head() {
@@ -337,6 +352,7 @@ void subprogram_head() {
     subprogram_head_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'function' and received ", token->lexeme));
 }
 
 void subprogram_head_prime() {
@@ -345,25 +361,26 @@ void subprogram_head_prime() {
     // first production
     arguments();
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     standard_type();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     return;
   }
   if ((token = match(COLON)) != NULL) {
     // second production
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     standard_type();
     if ((token = match(SEMICOLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ';' and received ", token->lexeme));
     }
     return;
   }
+  throw_error(token->line_number, strcat("Expected '(' or ':' and received ", token->lexeme));
 }
 
 void arguments() {
@@ -372,10 +389,11 @@ void arguments() {
     // first production
     parameter_list();
     if ((token = match(CLOSEPAREN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ')' and received ", token->lexeme));
     }
     return;
   }
+  throw_error(token->line_number, strcat("Expected '(' and received ", token->lexeme));
 }
 
 void parameter_list() {
@@ -384,12 +402,13 @@ void parameter_list() {
     // first production
     id();
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     type();
     parameter_list_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
 }
 
 void parameter_list_prime() {
@@ -398,7 +417,7 @@ void parameter_list_prime() {
     // first production
     id();
     if ((token = match(COLON)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ':' and received ", token->lexeme));
     }
     type();
     parameter_list_prime();
@@ -408,6 +427,7 @@ void parameter_list_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected ';' or ')' and received ", token->lexeme));
 }
 
 void compound_statement() {
@@ -417,6 +437,7 @@ void compound_statement() {
     compound_statement_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'begin' and received ", token->lexeme));
 }
 
 void compound_statement_prime() {
@@ -425,7 +446,7 @@ void compound_statement_prime() {
     // first production
     optional_statements();
     if ((token = match(END)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'end' and received ", token->lexeme));
     }
     return;
   }
@@ -433,7 +454,7 @@ void compound_statement_prime() {
     // first production
     optional_statements();
     if ((token = match(END)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'end' and received ", token->lexeme));
     }
     return;
   }
@@ -441,7 +462,7 @@ void compound_statement_prime() {
     // first production
     optional_statements();
     if ((token = match(END)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'end' and received ", token->lexeme));
     }
     return;
   }
@@ -449,7 +470,7 @@ void compound_statement_prime() {
     // first production
     optional_statements();
     if ((token = match(END)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'end' and received ", token->lexeme));
     }
     return;
   }
@@ -457,6 +478,7 @@ void compound_statement_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, 'begin', 'if', 'while', or 'end' and received ", token->lexeme));
 }
 
 void optional_statements() {
@@ -481,6 +503,7 @@ void optional_statements() {
     statement_list();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, 'begin', 'if', or 'while' and received ", token->lexeme));
 }
 
 void statement_list() {
@@ -509,6 +532,7 @@ void statement_list() {
     statement_list_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, 'begin', 'if', or 'while' and received ", token->lexeme));
 }
 
 void statement_list_prime() {
@@ -523,6 +547,7 @@ void statement_list_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected ';' or 'end' and received ", token->lexeme));
 }
 
 void statement() {
@@ -531,7 +556,7 @@ void statement() {
     // first production
     variable();
     if ((token = match(ASSIGNOP)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected assignop and received ", token->lexeme));
     }
     expression();
     return;
@@ -545,7 +570,7 @@ void statement() {
     // third production
     expression();
     if ((token = match(THEN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'then' and received ", token->lexeme));
     }
     statement();
     statement_prime();
@@ -555,11 +580,12 @@ void statement() {
     // fourth production
     expression();
     if ((token = match(DO)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected 'do' and received ", token->lexeme));
     }
     statement();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, 'begin', 'if', or 'while' and received ", token->lexeme));
 }
 
 void statement_prime() {
@@ -577,6 +603,7 @@ void statement_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected 'else', ';', or 'end' and received ", token->lexeme));
 }
 
 void variable() {
@@ -586,6 +613,7 @@ void variable() {
     variable_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id and received ", token->lexeme));
 }
 
 void variable_prime() {
@@ -594,7 +622,7 @@ void variable_prime() {
     // first production
     expression();
     if ((token = match(CLOSEBRACKET)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ']' and received ", token->lexeme));
     }
     return;
   }
@@ -602,6 +630,7 @@ void variable_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected '[' or assignop and received ", token->lexeme));
 }
 
 void expression_list() {
@@ -642,6 +671,7 @@ void expression_list() {
     expression_list_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, num, '(', 'not', '+', or '-' and received ", token->lexeme));
 }
 
 void expression_list_prime() {
@@ -656,6 +686,7 @@ void expression_list_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected ',' or ')' and received ", token->lexeme));
 }
 
 void expression() {
@@ -696,6 +727,7 @@ void expression() {
     expression_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, num, '(', 'not', '+', or '-' and received ", token->lexeme));
 }
 
 void expression_prime() {
@@ -733,6 +765,7 @@ void expression_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected relop, 'else', ';', 'end', 'then', 'do', ']', or ')' and received ", token->lexeme));
 }
 
 void simple_expression() {
@@ -775,6 +808,7 @@ void simple_expression() {
     simple_expression_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, num, '(', 'not', '+', or '-' and received ", token->lexeme));
 }
 
 void simple_expression_prime() {
@@ -817,6 +851,7 @@ void simple_expression_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected addop, relop, 'else', ';', 'end', 'then', 'do', ']', or ')' and received ", token->lexeme));
 }
 
 void term() {
@@ -845,6 +880,7 @@ void term() {
     term_prime();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, num, '(', or 'not' and received ", token->lexeme));
 }
 
 void term_prime() {
@@ -891,6 +927,7 @@ void term_prime() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected mulop, addop, relop, 'else', ';', 'end', 'then', 'do', ']', or ')' and received ", token->lexeme));
 }
 
 void factor() {
@@ -908,7 +945,7 @@ void factor() {
     // third production
     expression();
     if ((token = match(CLOSEPAREN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected '(' and received ", token->lexeme));
     }
     return;
   }
@@ -917,6 +954,7 @@ void factor() {
     factor();
     return;
   }
+  throw_error(token->line_number, strcat("Expected id, num, '(', or 'not' and received ", token->lexeme));
 }
 
 void factor_prime() {
@@ -925,7 +963,7 @@ void factor_prime() {
     // first production
     expression_list();
     if ((token = match(CLOSEPAREN)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ')' and received ", token->lexeme));
     }
     return;
   }
@@ -933,7 +971,7 @@ void factor_prime() {
     // second production
     expression();
     if ((token = match(CLOSEBRACKET)) == NULL) {
-      
+      throw_error(token->line_number, strcat("Expected ']' and received ", token->lexeme));
     }
     return;
   }
@@ -977,6 +1015,7 @@ void factor_prime() {
     // third production
     return;
   }
+  throw_error(token->line_number, strcat("Expected '(', '[', mulop, addop, relop, 'else', ';', 'end', 'then', 'do', ']', or ')' and received ", token->lexeme));
 }
 
 void sign() {
@@ -989,6 +1028,7 @@ void sign() {
     // second production
     return;
   }
+  throw_error(token->line_number, strcat("Expected '+' or '-' and received ", token->lexeme));
 }
 
 #endif
