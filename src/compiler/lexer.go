@@ -14,7 +14,7 @@ func MatchWhitespace(l string, index int) int {
   return i
 }
 
-func MatchId(l string, index int, ln int) (int, lib.Token) {
+func MatchId(l string, index int, ln int, rwords map[string]int) (int, lib.Token) {
   if !unicode.IsLetter(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -22,7 +22,11 @@ func MatchId(l string, index int, ln int) (int, lib.Token) {
   for i < len(l) && (unicode.IsLetter(rune(l[i])) || unicode.IsDigit(rune(l[i]))) {
     i++
   }
-  return i, lib.Token{ln, l[index:i], lib.ID, lib.NULL}
+  lex := l[index:i]
+  if val, ok := rwords[lex]; ok {
+    return i, lib.Token{ln, lex, val, lib.NULL}
+  }
+  return i, lib.Token{ln, lex, lib.ID, lib.NULL}
 }
 
 func MatchLongReal(l string, index int, ln int) (int, lib.Token) {
@@ -178,11 +182,11 @@ func CatchAll(l string, index int, ln int) (int, lib.Token) {
   return index, lib.Token{}
 }
 
-func TokenizeLine(line lib.Line, tokens *list.List) {
+func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int) {
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
-    if idx, t := MatchId(line.Value, i, line.Number); idx != i {
+    if idx, t := MatchId(line.Value, i, line.Number, rwords); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
@@ -231,11 +235,11 @@ func TokenizeLine(line lib.Line, tokens *list.List) {
   }
 }
 
-func Tokenize(listing *list.List) *list.List {
+func Tokenize(listing *list.List, rwords map[string]int) *list.List {
   tokens := list.New()
   for e := listing.Front(); e != nil; e = e.Next() {
     line := e.Value.(lib.Line)
-    TokenizeLine(line, tokens)
+    TokenizeLine(line, tokens, rwords)
   }
   return tokens
 }
