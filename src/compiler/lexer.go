@@ -14,38 +14,38 @@ func MatchWhitespace(l string, index int) int {
   return i
 }
 
-func MatchId(l string, index int) (int, string) {
+func MatchId(l string, index int, ln int) (int, lib.Token) {
   if !unicode.IsLetter(rune(l[index])) {
-    return index, ""
+    return index, lib.Token{}
   }
   i := index
   for i < len(l) && (unicode.IsLetter(rune(l[i])) || unicode.IsDigit(rune(l[i]))) {
     i++
   }
-  return i, l[index:i]
+  return i, lib.Token{ln, l[index:i], lib.ID, lib.NULL}
 }
 
-func MatchLongReal(l string, index int) (int, string) {
+func MatchLongReal(l string, index int, ln int) (int, lib.Token) {
   if !unicode.IsDigit(rune(l[index])) {
-    return index, ""
+    return index, lib.Token{}
   }
   i := index
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
   if i >= len(l) || (string(l[i]) != "." && string(l[i]) != "E") {
-    return index, ""
+    return index, lib.Token{}
   }
   if string(l[i]) == "." {
     i++
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
-      return index, ""
+      return index, lib.Token{}
     }
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
     }
     if i >= len(l) || string(l[i]) != "E" {
-      return index, ""
+      return index, lib.Token{}
     }
   }
   if string(l[i]) == "E" {
@@ -54,173 +54,188 @@ func MatchLongReal(l string, index int) (int, string) {
       i++
     }
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
-      return index, ""
+      return index, lib.Token{}
     }
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
     }
   }
-  return i, l[index:i]
+  return i, lib.Token{ln, l[index:i], lib.NUM, lib.LONG_REAL}
 }
 
-func MatchReal(l string, index int) (int, string) {
+func MatchReal(l string, index int, ln int) (int, lib.Token) {
   if !unicode.IsDigit(rune(l[index])) {
-    return index, ""
+    return index, lib.Token{}
   }
   i := index
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
   if i >= len(l) || string(l[i]) != "." {
-    return index, ""
+    return index, lib.Token{}
   }
   if string(l[i]) == "." {
     i++
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
-      return index, ""
+      return index, lib.Token{}
     }
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
     }
   }
-  return i, l[index:i]
+  return i, lib.Token{ln, l[index:i], lib.NUM, lib.REAL}
 }
 
-func MatchInt(l string, index int) (int, string) {
+func MatchInt(l string, index int, ln int) (int, lib.Token) {
   if !unicode.IsDigit(rune(l[index])) {
-    return index, ""
+    return index, lib.Token{}
   }
   i := index
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
-  return i, l[index:i]
+  return i, lib.Token{ln, l[index:i], lib.NUM, lib.INT}
 }
 
-func MatchRelop(l string, index int) (int, string) {
-  i := index
-  if string(l[i]) == "=" {
-    i++
-    return i, l[index:i]
+func MatchRelop(l string, index int, ln int) (int, lib.Token) {
+  if string(l[index]) == "=" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.RELOP, lib.EQ}
   }
-  if string(l[i]) == "<" {
-    i++
-    if string(l[i]) == "=" || string(l[i]) == ">" {
-      i++
+  if string(l[index]) == "<" {
+    if string(l[index+1]) == "=" {
+      return index+2, lib.Token{ln, l[index:index+2], lib.RELOP, lib.LEQ}
     }
-    return i, l[index:i]
-  }
-  if string(l[i]) == ">" {
-    i++
-    if string(l[i]) == "=" {
-      i++
+    if string(l[index+1]) == ">" {
+      return index+2, lib.Token{ln, l[index:index+2], lib.RELOP, lib.NEQ}
     }
-    return i, l[index:i]
+    return index+1, lib.Token{ln, l[index:index+1], lib.RELOP, lib.LT}
   }
-  return index, ""
+  if string(l[index]) == ">" {
+    if string(l[index+1]) == "=" {
+      return index+2, lib.Token{ln, l[index:index+2], lib.RELOP, lib.GEQ}
+    }
+    return index+1, lib.Token{ln, l[index:index+1], lib.RELOP, lib.GT}
+  }
+  return index, lib.Token{}
 }
 
-func MatchAddop(l string, index int) (int, string) {
-  i := index
-  if string(l[i]) == "+" || string(l[i]) == "-" {
-    i++
-    return i, l[index:i]
+func MatchAddop(l string, index int, ln int) (int, lib.Token) {
+  if string(l[index]) == "+" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.ADDOP, lib.PLUS}
   }
-  return index, ""
+  if string(l[index]) == "-" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.ADDOP, lib.MINUS}
+  }
+  return index, lib.Token{}
 }
 
-func MatchMulop(l string, index int) (int, string) {
-  i := index
-  if string(l[i]) == "*" || string(l[i]) == "/" {
-    i++
-    return i, l[index:i]
+func MatchMulop(l string, index int, ln int) (int, lib.Token) {
+  if string(l[index]) == "*" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.MULOP, lib.ASTERISK}
   }
-  return index, ""
+  if string(l[index]) == "/" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.MULOP, lib.SLASH}
+  }
+  return index, lib.Token{}
 }
 
-func MatchAssignop(l string, index int) (int, string) {
-  i := index
-  if string(l[i]) == ":" && string(l[i+1]) == "=" {
-    i += 2
-    return i, l[index:i]
+func MatchAssignop(l string, index int, ln int) (int, lib.Token) {
+  if string(l[index]) == ":" && string(l[index+1]) == "=" {
+    return index+2, lib.Token{ln, l[index:index+2], lib.ASSIGNOP, lib.NULL}
   }
-  return index, ""
+  return index, lib.Token{}
 }
 
-func CatchAll(l string, index int) (int, string) {
-  i := index
-  c := string(l[i])
+func CatchAll(l string, index int, ln int) (int, lib.Token) {
+  c := string(l[index])
   if c == "." {
-    i++
-    if i < len(l) && string(l[i]) == "." {
-      i++
+    if index+1 < len(l) && string(l[index+1]) == "." {
+      return index+2, lib.Token{ln, l[index:index+2], lib.RANGE, lib.NULL}
     }
-    return i, l[index:i]
+    return index+1, lib.Token{ln, l[index:index+1], lib.PERIOD, lib.NULL}
   }
-  if c == "[" || c == "]" || c == "(" || c == ")" || c == ";" || c == ":" || c == "," {
-    i++
-    return i, l[index:i]
+  if c == "[" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.OPEN_BRACKET, lib.NULL}
   }
-  return index, ""
+  if c == "]" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.CLOSE_BRACKET, lib.NULL}
+  }
+  if c == "(" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.OPEN_PAREN, lib.NULL}
+  }
+  if c == ")" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.CLOSE_PAREN, lib.NULL}
+  }
+  if c == ";" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.SEMICOLON, lib.NULL}
+  }
+  if c == ":" {
+    return index+1, lib.Token{ln, l[index:index+1], lib.COLON, lib.NULL}
+  }
+  if c == "," {
+    return index+1, lib.Token{ln, l[index:index+1], lib.COMMA, lib.NULL}
+  }
+  return index, lib.Token{}
 }
 
 func TokenizeLine(line lib.Line, tokens *list.List) {
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
-    if idx, lex := MatchId(line.Value, i); lex != "" {
+    if idx, t := MatchId(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchLongReal(line.Value, i); lex != "" {
+    if idx, t := MatchLongReal(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchReal(line.Value, i); lex != "" {
+    if idx, t := MatchReal(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchInt(line.Value, i); lex != "" {
+    if idx, t := MatchInt(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchRelop(line.Value, i); lex != "" {
+    if idx, t := MatchRelop(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchAddop(line.Value, i); lex != "" {
+    if idx, t := MatchAddop(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchMulop(line.Value, i); lex != "" {
+    if idx, t := MatchMulop(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := MatchAssignop(line.Value, i); lex != "" {
+    if idx, t := MatchAssignop(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
-    if idx, lex := CatchAll(line.Value, i); lex != "" {
+    if idx, t := CatchAll(line.Value, i, line.Number); idx != i {
       i = idx
-      tokens.PushBack(lib.Token{line.Number, lex})
+      tokens.PushBack(t)
       continue
     }
     i++
   }
 }
 
-func Tokenize(listing *list.List) {
+func Tokenize(listing *list.List) *list.List {
   tokens := list.New()
   for e := listing.Front(); e != nil; e = e.Next() {
     line := e.Value.(lib.Line)
     TokenizeLine(line, tokens)
   }
+  return tokens
 }

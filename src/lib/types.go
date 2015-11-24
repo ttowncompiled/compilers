@@ -11,4 +11,6 @@ type Line struct {
 type Token struct {
   LineNumber int
   Lexeme string
+  Type int
+  Attr int
 }
