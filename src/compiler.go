@@ -29,9 +29,11 @@ func OutputListingFile(listing *list.List) {
 }
 
 func OutputTokenFile(tokens *list.List) {
+  fmt.Printf("%-20s %-20s %-20s\n", "Lexeme", "Type", "Attribute")
+  fmt.Println("--------------------------------------------------------------")
   for e := tokens.Front(); e != nil; e = e.Next() {
     t := e.Value.(lib.Token)
-    fmt.Println(t.Lexeme, t.Type, t.Attr)
+    fmt.Printf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr))
   }
   fmt.Print("\n")
 }
