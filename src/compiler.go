@@ -66,12 +66,17 @@ func OutputListingFile(listing *list.List) {
   }
 }
 
-func OutputTokenFile(tokens *list.List) {
+func OutputTokenFile(tokens *list.List, symbols map[string]lib.Token) {
   fmt.Printf("%-20s %-20s %-20s\n", "Lexeme", "Type", "Attribute")
   fmt.Println("--------------------------------------------------------------")
   for e := tokens.Front(); e != nil; e = e.Next() {
     t := e.Value.(lib.Token)
-    fmt.Printf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr))
+    if t.Type == lib.ID {
+      token := symbols[t.Lexeme]
+      fmt.Printf("%-20s %-2d %-17s %-20p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), &token)
+    } else {
+      fmt.Printf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr))
+    }
   }
   fmt.Print("\n")
 }
@@ -83,7 +88,8 @@ func main() {
   rpath, e1 := filepath.Abs(os.Args[2])
   check(e1)
   rwords := ReadReservedWordFile(rpath)
-  tokens := compiler.Tokenize(listing, rwords)
+  tokens, symbols := compiler.Tokenize(listing, rwords)
+  fmt.Println(symbols)
   OutputListingFile(listing)
-  OutputTokenFile(tokens)
+  OutputTokenFile(tokens, symbols)
 }
