@@ -14,7 +14,7 @@ func MatchWhitespace(l string, index int) int {
   return i
 }
 
-func MatchId(l string, index int, ln int, rwords map[string]int, symbols map[string]lib.Token) (int, lib.Token) {
+func MatchId(l string, index int, ln int, rwords map[string]int, symbols map[string]*lib.Token) (int, lib.Token) {
   if !unicode.IsLetter(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -28,7 +28,7 @@ func MatchId(l string, index int, ln int, rwords map[string]int, symbols map[str
   }
   t := lib.Token{ln, lex, lib.ID, lib.NULL}
   if _, ok := symbols[lex]; !ok {
-    symbols[lex] = t
+    symbols[lex] = &t
   }
   return i, lib.Token{ln, lex, lib.ID, lib.NULL}
 }
@@ -186,7 +186,7 @@ func CatchAll(l string, index int, ln int) (int, lib.Token) {
   return index, lib.Token{}
 }
 
-func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbols map[string]lib.Token) {
+func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbols map[string]*lib.Token) {
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
@@ -239,9 +239,9 @@ func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbo
   }
 }
 
-func Tokenize(listing *list.List, rwords map[string]int) (*list.List, map[string]lib.Token) {
+func Tokenize(listing *list.List, rwords map[string]int) (*list.List, map[string]*lib.Token) {
   tokens := list.New()
-  symbols := make(map[string]lib.Token)
+  symbols := make(map[string]*lib.Token)
   for e := listing.Front(); e != nil; e = e.Next() {
     line := e.Value.(lib.Line)
     TokenizeLine(line, tokens, rwords, symbols)
