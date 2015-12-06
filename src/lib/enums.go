@@ -89,7 +89,7 @@ func Annotate(c int) string {
     case 25: return "(RELOP)"
     case 26: return "(ADDOP)"
     case 27: return "(MULOP)"
-    case 28: return "(ASSINGOP)"
+    case 28: return "(ASSIGNOP)"
     case 29: return "(OPEN_BRACKET)"
     case 30: return "(CLOSE_BRACKET)"
     case 31: return "(OPEN_PAREN)"
