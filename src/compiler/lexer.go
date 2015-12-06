@@ -3,6 +3,7 @@ package compiler
 import (
   "container/list"
   "lib"
+  "strings"
   "unicode"
 )
 
@@ -14,7 +15,7 @@ func MatchWhitespace(l string, index int) int {
   return i
 }
 
-func MatchId(line lib.Line, index int, ln int, rwords map[string]int, symbols map[string]*lib.Token) (int, lib.Token) {
+func MatchId(line lib.Line, index int, rwords map[string]int, symbols map[string]*lib.Token) (int, lib.Token) {
   l := line.Value
   if !unicode.IsLetter(rune(l[index])) {
     return index, lib.Token{}
@@ -25,21 +26,22 @@ func MatchId(line lib.Line, index int, ln int, rwords map[string]int, symbols ma
   }
   lex := l[index:i]
   if val, ok := rwords[lex]; ok {
-    return i, lib.Token{ln, lex, val, lib.NULL}
+    return i, lib.Token{line.Number, lex, val, lib.NULL}
   }
   if (len(lex) > 10) {
-    t := lib.Token{ln, lex, lib.LEXERR, lib.ID_TOO_LONG}
+    t := lib.Token{line.Number, lex, lib.LEXERR, lib.ID_TOO_LONG}
     line.Errors.PushBack(lib.Error{"LEXERR: ID '" + t.Lexeme + "' can't be longer than 10 characters", &t})
     return i, t
   }
-  t := lib.Token{ln, lex, lib.ID, lib.NULL}
+  t := lib.Token{line.Number, lex, lib.ID, lib.NULL}
   if _, ok := symbols[lex]; !ok {
     symbols[lex] = &t
   }
   return i, t
 }
 
-func MatchLongReal(l string, index int, ln int) (int, lib.Token) {
+func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
+  l := line.Value
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -74,10 +76,27 @@ func MatchLongReal(l string, index int, ln int) (int, lib.Token) {
       i++
     }
   }
-  return i, lib.Token{ln, l[index:i], lib.NUM, lib.LONG_REAL}
+  lexeme := l[index:i]
+  if (strings.Index(lexeme, ".") > 10) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: characteristic of '" + lexeme + "' can't be longer than 10 digits", &t})
+    return i, t
+  }
+  if (strings.Index(lexeme, "E") - strings.Index(lexeme, ".") > 6) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: mantissa of '" + lexeme + "' can't be longer than 5 digits", &t})
+    return i, t
+  }
+  if (len(lexeme) - strings.Index(lexeme, "E") > 2) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.ZZ_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: exponent of '" + lexeme + "' can't be longer than 2 digits", &t})
+    return i, t
+  }
+  return i, lib.Token{line.Number, lexeme, lib.NUM, lib.LONG_REAL}
 }
 
-func MatchReal(l string, index int, ln int) (int, lib.Token) {
+func MatchReal(line lib.Line, index int) (int, lib.Token) {
+  l := line.Value
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -97,10 +116,22 @@ func MatchReal(l string, index int, ln int) (int, lib.Token) {
       i++
     }
   }
-  return i, lib.Token{ln, l[index:i], lib.NUM, lib.REAL}
+  lexeme := l[index:i]
+  if (strings.Index(lexeme, ".") > 10) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: characteristic of '" + lexeme + "' can't be longer than 10 digits", &t})
+    return i, t
+  }
+  if (len(lexeme) - strings.Index(lexeme, ".") > 6) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: mantissa of '" + lexeme + "' can't be longer than 5 digits", &t})
+    return i, t
+  }
+  return i, lib.Token{line.Number, lexeme, lib.NUM, lib.REAL}
 }
 
-func MatchInt(l string, index int, ln int) (int, lib.Token) {
+func MatchInt(line lib.Line, index int) (int, lib.Token) {
+  l := line.Value
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -108,7 +139,13 @@ func MatchInt(l string, index int, ln int) (int, lib.Token) {
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
-  return i, lib.Token{ln, l[index:i], lib.NUM, lib.INT}
+  lexeme := l[index:i]
+  if (len(lexeme) > 10) {
+    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: Integer '" + lexeme + "' can't be longer than 10 digits", &t})
+    return i, t
+  }
+  return i, lib.Token{line.Number, lexeme, lib.NUM, lib.INT}
 }
 
 func MatchRelop(l string, index int, ln int) (int, lib.Token) {
@@ -196,22 +233,22 @@ func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbo
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
-    if idx, t := MatchId(line, i, line.Number, rwords, symbols); idx != i {
+    if idx, t := MatchId(line, i, rwords, symbols); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
     }
-    if idx, t := MatchLongReal(line.Value, i, line.Number); idx != i {
+    if idx, t := MatchLongReal(line, i); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
     }
-    if idx, t := MatchReal(line.Value, i, line.Number); idx != i {
+    if idx, t := MatchReal(line, i); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
     }
-    if idx, t := MatchInt(line.Value, i, line.Number); idx != i {
+    if idx, t := MatchInt(line, i); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
