@@ -246,5 +246,7 @@ func Tokenize(listing *list.List, rwords map[string]int) (*list.List, map[string
     line := e.Value.(lib.Line)
     TokenizeLine(line, tokens, rwords, symbols)
   }
+  eofToken := lib.Token{listing.Len(), "", lib.EOF, lib.NULL}
+  tokens.PushBack(eofToken)
   return tokens, symbols
 }

@@ -91,6 +91,10 @@ func OutputSymbolFile(symbols map[string]*lib.Token) {
 }
 
 func main() {
+  if (len(os.Args) < 3) {
+    fmt.Println("usage: go run compiler.go <pascal-file> <reserved-words-file>")
+    os.Exit(1)
+  }
   fpath, e0 := filepath.Abs(os.Args[1])
   check(e0)
   listing := ReadSourceFile(fpath)

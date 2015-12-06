@@ -1,6 +1,7 @@
 package lib
 
 const (
+  EOF = -1
   NULL = 0
   AND = 1
   ARRAY = 2
@@ -54,6 +55,7 @@ const (
 
 func Annotate(c int) string {
   switch c {
+    case -1: return "($)"
     case 0: return "(NULL)"
     case 1: return "(AND)"
     case 2: return "(ARRAY)"
