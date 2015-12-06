@@ -56,38 +56,53 @@ func ReadReservedWordFile(rpath string) map[string]int {
 }
 
 func OutputListingFile(listing *list.List) {
+  fpath, e0 := filepath.Abs("output/listing_file.txt")
+  check(e0)
+  f, e1 := os.Create(fpath)
+  check(e1)
+  defer f.Close()
+  
   for e := listing.Front(); e != nil; e = e.Next() {
     l := e.Value.(lib.Line)
-    fmt.Println(l.Number, l.Value)
+    f.WriteString(string(l.Number) + " " + l.Value + "\n")
     for e1 := l.Errors.Front(); e1 != nil; e1 = e1.Next() {
-      fmt.Println(l.Number, e1.Value.(lib.Error).Reason)
+      f.WriteString(string(l.Number) + " " + e1.Value.(lib.Error).Reason + "\n")
     }
-    fmt.Print("\n")
   }
 }
 
 func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token) {
-  fmt.Printf("%-20s %-20s %-20s\n", "Lexeme", "Type", "Attribute")
-  fmt.Println("--------------------------------------------------------------")
+  fpath, e0 := filepath.Abs("output/token_file.txt")
+  check(e0)
+  f, e1 := os.Create(fpath)
+  check(e1)
+  defer f.Close()
+  
+  f.WriteString(fmt.Sprintf("%-20s %-20s %-20s\n", "Lexeme", "Type", "Attribute"))
+  f.WriteString("--------------------------------------------------------------\n")
   for e := tokens.Front(); e != nil; e = e.Next() {
     t := e.Value.(lib.Token)
     if t.Type == lib.ID {
       address := symbols[t.Lexeme]
-      fmt.Printf("%-20s %-2d %-17s %-20p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), address)
+      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-20p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), address))
     } else {
-      fmt.Printf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr))
+      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr)))
     }
   }
-  fmt.Print("\n")
 }
 
 func OutputSymbolFile(symbols map[string]*lib.Token) {
-  fmt.Printf("%-20s %-20s\n", "Lexeme", "Token")
-  fmt.Println("-----------------------------------------")
+  fpath, e0 := filepath.Abs("output/symbol_file.txt")
+  check(e0)
+  f, e1 := os.Create(fpath)
+  check(e1)
+  defer f.Close()
+  
+  f.WriteString(fmt.Sprintf("%-20s %-20s\n", "Lexeme", "Token"))
+  f.WriteString("-----------------------------------------\n")
   for k, v := range symbols {
-    fmt.Printf("%-20s %-20p\n", k, v)
+    f.WriteString(fmt.Sprintf("%-20s %-20p\n", k, v))
   }
-  fmt.Print("\n")
 }
 
 func main() {

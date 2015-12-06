@@ -1,0 +1,27 @@
+ program examplejpeg(input, output);
+ LEXERR: ID 'examplejpeg' can't be longer than 10 characters
+ var x, y: integer;
+ x := 12345678901.0E0
+ LEXERR: characteristic of '12345678901.0E0' can't be longer than 10 digits
+ x := 0.123456E0
+ LEXERR: mantissa of '0.123456E0' can't be longer than 5 digits
+ x := 0.0E123
+ LEXERR: exponent of '0.0E123' can't be longer than 2 digits
+ x := 12345678901.0
+ LEXERR: characteristic of '12345678901.0' can't be longer than 10 digits
+ x := 0.123456
+ LEXERR: mantissa of '0.123456' can't be longer than 5 digits
+ x := 12345678901
+ LEXERR: Integer '12345678901' can't be longer than 10 digits
+	 function gcd(a, b: integer): integer;
+
+ begin
+   if b = 0.0E0 then gcd := a / b
+   else gcd := gcd(b, a mod b)
+ end;
+ 
+ begin
+   read(x, y);
+   write(gcd(x, y))
+ end. #
+ LEXERR: unrecognized symbol '#'
