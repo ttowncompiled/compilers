@@ -51,6 +51,8 @@ const (
   MINUS = 46
   ASTERISK = 47
   SLASH = 48
+  UNRECOGNIZED_SYMBOL = 49
+  ID_TOO_LONG = 50
 )
 
 func Annotate(c int) string {

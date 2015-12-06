@@ -60,7 +60,7 @@ func OutputListingFile(listing *list.List) {
     l := e.Value.(lib.Line)
     fmt.Println(l.Number, l.Value)
     for e1 := l.Errors.Front(); e1 != nil; e1 = e1.Next() {
-      fmt.Println(l.Number, e1.Value)
+      fmt.Println(l.Number, e1.Value.(lib.Error).Reason)
     }
     fmt.Print("\n")
   }

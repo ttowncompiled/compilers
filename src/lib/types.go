@@ -8,6 +8,11 @@ type Line struct {
   Errors *list.List
 }
 
+type Error struct {
+  Reason string
+  Value *Token
+}
+
 type Token struct {
   LineNumber int
   Lexeme string

@@ -14,7 +14,8 @@ func MatchWhitespace(l string, index int) int {
   return i
 }
 
-func MatchId(l string, index int, ln int, rwords map[string]int, symbols map[string]*lib.Token) (int, lib.Token) {
+func MatchId(line lib.Line, index int, ln int, rwords map[string]int, symbols map[string]*lib.Token) (int, lib.Token) {
+  l := line.Value
   if !unicode.IsLetter(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -26,11 +27,16 @@ func MatchId(l string, index int, ln int, rwords map[string]int, symbols map[str
   if val, ok := rwords[lex]; ok {
     return i, lib.Token{ln, lex, val, lib.NULL}
   }
+  if (len(lex) > 10) {
+    t := lib.Token{ln, lex, lib.LEXERR, lib.ID_TOO_LONG}
+    line.Errors.PushBack(lib.Error{"LEXERR: ID '" + t.Lexeme + "' can't be longer than 10 characters", &t})
+    return i, t
+  }
   t := lib.Token{ln, lex, lib.ID, lib.NULL}
   if _, ok := symbols[lex]; !ok {
     symbols[lex] = &t
   }
-  return i, lib.Token{ln, lex, lib.ID, lib.NULL}
+  return i, t
 }
 
 func MatchLongReal(l string, index int, ln int) (int, lib.Token) {
@@ -190,7 +196,7 @@ func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbo
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
-    if idx, t := MatchId(line.Value, i, line.Number, rwords, symbols); idx != i {
+    if idx, t := MatchId(line, i, line.Number, rwords, symbols); idx != i {
       i = idx
       tokens.PushBack(t)
       continue
@@ -235,6 +241,9 @@ func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]int, symbo
       tokens.PushBack(t)
       continue
     }
+    unrecognizedSymbol := lib.Token{line.Number, string(line.Value[i]), lib.LEXERR, lib.UNRECOGNIZED_SYMBOL}
+    tokens.PushBack(unrecognizedSymbol)
+    line.Errors.PushBack(lib.Error{"LEXERR: unrecognized symbol '" + unrecognizedSymbol.Lexeme + "'", &unrecognizedSymbol})
     i++
   }
 }
