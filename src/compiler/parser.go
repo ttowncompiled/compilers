@@ -8,6 +8,14 @@ import (
 func match(tokens *list.List, expectedType int) (lib.Token, bool) {
   t := tokens.Front().Value.(lib.Token)
   if (t.Type == expectedType) {
+    return t, true
+  }
+  return t, false
+}
+
+func matchYank(tokens *list.List, expectedType int) (lib.Token, bool) {
+  t := tokens.Front().Value.(lib.Token)
+  if (t.Type == expectedType) {
     tokens.Remove(tokens.Front())
     return t, true
   }
@@ -38,12 +46,12 @@ func sync(tokens *list.List, follows *list.List) bool {
 }
 
 func identifierListPrime(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.COMMA)
+  t, ok := matchYank(tokens, lib.COMMA)
   if !ok {
     // epsilon production
     return
   }
-  if t, ok = match(tokens, lib.ID); !ok {
+  if t, ok = matchYank(tokens, lib.ID); !ok {
     report(listing, "ID", t)
     sync(tokens, lib.IdentifierListPrimeFollows())
     return
@@ -52,7 +60,7 @@ func identifierListPrime(listing *list.List, tokens *list.List) {
 }
 
 func identifierList(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.ID)
+  t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
     sync(tokens, lib.IdentifierListFollows())
@@ -62,11 +70,11 @@ func identifierList(listing *list.List, tokens *list.List) {
 }
 
 func standardType(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.INTEGER)
+  t, ok := matchYank(tokens, lib.INTEGER)
   if ok {
     return
   }
-  t, ok = match(tokens, lib.REAL)
+  t, ok = matchYank(tokens, lib.REAL)
   if !ok {
     report(listing, "integer OR real", t)
     sync(tokens, lib.StandardTypeFollows())
@@ -82,38 +90,38 @@ func type_(listing *list.List, tokens *list.List) {
   if ok {
     standardType(listing, tokens)
   }
-  t, ok = match(tokens, lib.ARRAY)
+  t, ok = matchYank(tokens, lib.ARRAY)
   if !ok {
     report(listing, "integer OR real OR array", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.OPEN_BRACKET); !ok {
+  if t, ok = matchYank(tokens, lib.OPEN_BRACKET); !ok {
     report(listing, "[", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.NUM); !ok {
+  if t, ok = matchYank(tokens, lib.NUM); !ok {
     report(listing, "NUM", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.RANGE); !ok {
+  if t, ok = matchYank(tokens, lib.RANGE); !ok {
     report(listing, "..", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.NUM); !ok {
+  if t, ok = matchYank(tokens, lib.NUM); !ok {
     report(listing, "NUM", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.CLOSE_BRACKET); !ok {
+  if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
     report(listing, "]", t)
     sync(tokens, lib.TypeFollows())
     return
   }
-  if t, ok = match(tokens, lib.OF); !ok {
+  if t, ok = matchYank(tokens, lib.OF); !ok {
     report(listing, "of", t)
     sync(tokens, lib.TypeFollows())
     return
@@ -121,34 +129,8 @@ func type_(listing *list.List, tokens *list.List) {
   standardType(listing, tokens)
 }
 
-func declarations(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.VAR)
-  if !ok {
-    report(listing, "var", t)
-    sync(tokens, lib.DeclarationsFollows())
-    return
-  }
-  if t, ok = match(tokens, lib.ID); !ok {
-    report(listing, "ID", t)
-    sync(tokens, lib.DeclarationsFollows())
-    return
-  }
-  if t, ok = match(tokens, lib.COLON); !ok {
-    report(listing, ":", t)
-    sync(tokens, lib.DeclarationsFollows())
-    return
-  }
-  type_(listing, tokens)
-  if t, ok = match(tokens, lib.SEMICOLON); !ok {
-    report(listing, ";", t)
-    sync(tokens, lib.DeclarationsFollows())
-    return
-  }
-  declarationsPrime(listing, tokens)
-}
-
 func declarationsPrime(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.VAR)
+  t, ok := matchYank(tokens, lib.VAR)
   if !ok {
     if t, ok = match(tokens, lib.FUNCTION); ok {
       // epsilon production
@@ -162,18 +144,18 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
     sync(tokens, lib.DeclarationsPrimeFollows())
     return
   }
-  if t, ok = match(tokens, lib.ID); !ok {
+  if t, ok = matchYank(tokens, lib.ID); !ok {
     report(listing, "ID", t)
     sync(tokens, lib.DeclarationsPrimeFollows())
     return
   }
-  if t, ok = match(tokens, lib.COLON); !ok {
+  if t, ok = matchYank(tokens, lib.COLON); !ok {
     report(listing, ":", t)
     sync(tokens, lib.DeclarationsPrimeFollows())
     return
   }
   type_(listing, tokens)
-  if t, ok = match(tokens, lib.SEMICOLON); !ok {
+  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.DeclarationsPrimeFollows())
     return
@@ -181,22 +163,105 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
   declarationsPrime(listing, tokens)
 }
 
+func declarations(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.VAR)
+  if !ok {
+    report(listing, "var", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  if t, ok = matchYank(tokens, lib.ID); !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  if t, ok = matchYank(tokens, lib.COLON); !ok {
+    report(listing, ":", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  type_(listing, tokens)
+  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
+    report(listing, ";", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  declarationsPrime(listing, tokens)
+}
+
+func subprogramHeadPrime(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.OPEN_PAREN)
+  if ok {
+    // arguments(listing, tokens)
+    if t, ok = matchYank(tokens, lib.COLON); !ok {
+      report(listing, ":", t)
+      sync(tokens, lib.SubprogramHeadPrimeFollows())
+      return
+    }
+    standardType(listing, tokens)
+    if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
+      report(listing, ";", t)
+      sync(tokens, lib.SubprogramHeadPrimeFollows())
+      return
+    }
+  }
+  t, ok = matchYank(tokens, lib.COLON)
+  if !ok {
+    report(listing, "( OR :", t)
+    sync(tokens, lib.SubprogramHeadPrimeFollows())
+    return
+  }
+  standardType(listing, tokens)
+  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
+    report(listing, ";", t)
+    sync(tokens, lib.SubprogramHeadPrimeFollows())
+    return
+  }
+}
+
+func subprogramHead(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.FUNCTION)
+  if !ok {
+    report(listing, "function", t)
+    sync(tokens, lib.SubprogramHeadFollows())
+    return
+  }
+  if t, ok = matchYank(tokens, lib.ID); !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.SubprogramHeadFollows())
+    return
+  }
+  subprogramHeadPrime(listing, tokens)
+}
+
+func subprogramDeclaration(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.FUNCTION)
+  if !ok {
+    report(listing, "function", t)
+    sync(tokens, lib.SubprogramDeclarationFollows())
+    return
+  }
+  subprogramHead(listing, tokens)
+  // subprogramBody(listing, tokens)
+}
+
 func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
-    // subprogramDeclaration(listing, tokens)
-    if t, ok = match(tokens, lib.SEMICOLON); !ok {
+    subprogramDeclaration(listing, tokens)
+    if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
-      sync(tokens, lib.SubprogramDeclarationsFollows())
+      sync(tokens, lib.SubprogramDeclarationsPrimeFollows())
       return
     }
     subprogramDeclarationsPrime(listing, tokens)
   }
   if t, ok = match(tokens, lib.BEGIN); !ok {
     report(listing, "function OR begin", t)
-    sync(tokens, lib.SubprogramDeclarationsFollows())
+    sync(tokens, lib.SubprogramDeclarationsPrimeFollows())
     return
   }
+  // epsilon production
 }
 
 func subprogramDeclarations(listing *list.List, tokens *list.List) {
@@ -206,8 +271,8 @@ func subprogramDeclarations(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramDeclarationsFollows())
     return
   }
-  // subprogramDeclaration(listing, tokens)
-  if t, ok = match(tokens, lib.SEMICOLON); !ok {
+  subprogramDeclaration(listing, tokens)
+  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.SubprogramDeclarationsFollows())
     return
@@ -218,9 +283,9 @@ func subprogramDeclarations(listing *list.List, tokens *list.List) {
 func programSubbody(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
-    // subprogramDeclarations(listing, tokens)
+    subprogramDeclarations(listing, tokens)
     // compoundStatement(listing, tokens)
-    if t, ok = match(tokens, lib.PERIOD); !ok {
+    if t, ok = matchYank(tokens, lib.PERIOD); !ok {
       report(listing, ".", t)
       sync(tokens, lib.ProgramSubbodyFollows())
       return
@@ -233,7 +298,7 @@ func programSubbody(listing *list.List, tokens *list.List) {
     return
   }
   // compoundStatement(listing, tokens)
-  if t, ok = match(tokens, lib.PERIOD); !ok {
+  if t, ok = matchYank(tokens, lib.PERIOD); !ok {
     report(listing, ".", t)
     sync(tokens, lib.ProgramSubbodyFollows())
     return
@@ -259,29 +324,29 @@ func programBody(listing *list.List, tokens *list.List) {
 }
 
 func program(listing *list.List, tokens *list.List) {
-  t, ok := match(tokens, lib.PROGRAM)
+  t, ok := matchYank(tokens, lib.PROGRAM)
   if !ok {
     report(listing, "program", t)
     sync(tokens, lib.ProgramFollows())
     return
   }
-  if t, ok = match(tokens, lib.ID); !ok {
+  if t, ok = matchYank(tokens, lib.ID); !ok {
     report(listing, "ID", t)
     sync(tokens, lib.ProgramFollows())
     return
   }
-  if t, ok = match(tokens, lib.OPEN_PAREN); !ok {
+  if t, ok = matchYank(tokens, lib.OPEN_PAREN); !ok {
     report(listing, "(", t)
     sync(tokens, lib.ProgramFollows())
     return
   }
   identifierList(listing, tokens)
-  if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
+  if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
     sync(tokens, lib.ProgramFollows())
     return
   }
-  if t, ok = match(tokens, lib.SEMICOLON); !ok {
+  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.ProgramFollows())
     return
