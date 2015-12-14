@@ -289,11 +289,67 @@ func subprogramHead(listing *list.List, tokens *list.List) {
   subprogramHeadPrime(listing, tokens)
 }
 
+func optionalStatements(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    t, ok = match(tokens, lib.BEGIN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.IF)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.WHILE)
+  }
+  if !ok {
+    report(listing, "ID OR begin OR if OR while", t)
+    sync(tokens, lib.OptionalStatementsFollows())
+    return
+  }
+  // statementList(listing, tokens)
+}
+
+func compoundStatementPrime(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    t, ok = match(tokens, lib.BEGIN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.IF)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.WHILE)
+  }
+  if ok {
+    optionalStatements(listing, tokens)
+    if t, ok = matchYank(tokens, lib.END); !ok {
+      report(listing, "end", t)
+      sync(tokens, lib.CompoundStatementPrimeFollows())
+      return
+    }
+  }
+  t, ok = matchYank(tokens, lib.END)
+  if !ok {
+    report(listing, "ID OR begin OR if OR while OR end", t)
+    sync(tokens, lib.CompoundStatementPrimeFollows())
+    return
+  }
+}
+
+func compoundStatement(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.BEGIN)
+  if !ok {
+    report(listing, "begin", t)
+    sync(tokens, lib.CompoundStatementFollows())
+    return
+  }
+  compoundStatementPrime(listing, tokens)
+}
+
 func subprogramSubbody(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
     subprogramDeclarations(listing, tokens)
-    // compoundStatement(listing, tokens)
+    compoundStatement(listing, tokens)
   }
   t, ok = match(tokens, lib.BEGIN)
   if !ok {
@@ -301,7 +357,7 @@ func subprogramSubbody(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramSubbodyFollows())
     return
   }
-  // compoundStatement(listing, tokens)
+  compoundStatement(listing, tokens)
 }
 
 func subprogramBody(listing *list.List, tokens *list.List) {
@@ -372,7 +428,7 @@ func programSubbody(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
     subprogramDeclarations(listing, tokens)
-    // compoundStatement(listing, tokens)
+    compoundStatement(listing, tokens)
     if t, ok = matchYank(tokens, lib.PERIOD); !ok {
       report(listing, ".", t)
       sync(tokens, lib.ProgramSubbodyFollows())
@@ -385,7 +441,7 @@ func programSubbody(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ProgramSubbodyFollows())
     return
   }
-  // compoundStatement(listing, tokens)
+  compoundStatement(listing, tokens)
   if t, ok = matchYank(tokens, lib.PERIOD); !ok {
     report(listing, ".", t)
     sync(tokens, lib.ProgramSubbodyFollows())
