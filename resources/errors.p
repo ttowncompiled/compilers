@@ -1,24 +1,20 @@
-program examplejpeg(input, output);
-var x, y: integer;
-x := 12345678901.0E0
-x := 0.123456E0
-x := 0.0E123
-x := 00.0E0
-x := 0.00E0
-x := 0.0E00
-x := 12345678901.0
-x := 0.123456
-x := 00.0
-x := 0.00
-x := 12345678901
-x := 00
-function gcd(a, b: integer): integer;
+program example(input, output);
+var a, b: integer;
+var d, e, f, g, h, i, j, k, l, m: real;
+var n: array[1...10] of integer;
+var o: array[1...10] of real;
+function idtoooooolong(a, b: integer): integer;
 begin
-  if b = 0.0E0 then gcd := a / b
-  else gcd := gcd(b, a mod b)
-end;
-
-begin
-  read(x, y);
-  write(gcd(x, y))
-end. #
+  a := 12345678901
+  b := 01
+  d := 123456.0E1
+  e := 1.123456E1
+  f := 1.1E123
+  g := 01.1E1
+  h := 1.10E1
+  i := 1.1E01
+  j := 123456.0
+  k := 1.123456
+  l := 01.0
+  m := 1.10
+end.

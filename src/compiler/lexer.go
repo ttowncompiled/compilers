@@ -82,7 +82,7 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
     return i, t
   }
-  if (strings.Index(lexeme, ".") > 10) {
+  if (strings.Index(lexeme, ".") > 5) {
     t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
     return i, t
@@ -137,7 +137,7 @@ func MatchReal(line lib.Line, index int) (int, lib.Token) {
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
     return i, t
   }
-  if (strings.Index(lexeme, ".") > 10) {
+  if (strings.Index(lexeme, ".") > 5) {
     t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
     return i, t
