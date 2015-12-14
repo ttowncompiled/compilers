@@ -1,17 +1,17 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
-example              22 (ID)              0xc82000bfb0
+example              22 (ID)              0xc820015ce0
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc8201480c0
+input                22 (ID)              0xc820015ef0
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc8201481b0
+output               22 (ID)              0xc820148120
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-a                    22 (ID)              0xc820148360
+a                    22 (ID)              0xc820148510
 ,                    35 (COMMA)           0  (NULL)
-b                    22 (ID)              0xc820148450
+b                    22 (ID)              0xc820148720
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
@@ -45,27 +45,25 @@ array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ..                   37 (RANGE)           0  (NULL)
-.                    36 (PERIOD)          0  (NULL)
 10                   13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-o                    22 (ID)              0xc82014b080
+o                    22 (ID)              0xc82014af00
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ..                   37 (RANGE)           0  (NULL)
-.                    36 (PERIOD)          0  (NULL)
 10                   13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc820149b00
+idtoooooolong        38 (LEXERR)          50 (ID_TOO_LONG)
 (                    31 (OPEN_PAREN)      0  (NULL)
 a                    22 (ID)              0xc820148510
 ,                    35 (COMMA)           0  (NULL)
@@ -112,7 +110,7 @@ l                    22 (ID)              0xc820149bf0
 01.0                 38 (LEXERR)          54 (LEADING_ZEROS)
 m                    22 (ID)              0xc820149e00
 :=                   28 (ASSIGNOP)        0  (NULL)
-1                    13 (NUM)             24 (INT)
+1.10                 38 (LEXERR)          55 (TRAILING_ZEROS)
 end                  7  (END)             0  (NULL)
 .                    36 (PERIOD)          0  (NULL)
                      -1 ($)               0  (NULL)

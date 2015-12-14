@@ -8,45 +8,46 @@
 
 5. var o: array[1..10] of real;
 
-6. function gcd(a, b: integer): integer;
+6. function idtoooooolong(a, b: integer): integer;
+LEXERR: EXTRA LONG ID: idtoooooolong
 
 7. begin
 
-8.   a := 1
+8.   a := 12345678901
+LEXERR: EXTRA LONG INTEGER: 12345678901
 
-9.   d := 1.2
+9.   b := 01
+LEXERR: LEADING ZEROS: 01
 
-10.   e := 1.2E2
+10.   d := 123456.0E1
+LEXERR: EXTRA LONG CHARACTERISTIC: 123456.0E1
 
-11.   if a < 1 then b := -1
+11.   e := 1.123456E1
+LEXERR: EXTRA LONG FRACTIONAL PART: 1.123456E1
 
-12.   if a > 1 then b := +2 else b := 1
+12.   f := 1.1E123
+LEXERR: EXTRA LONG EXPONENTIAL PART: 1.1E123
 
-13.   if b <= 0 then b := 0
+13.   g := 01.1E1
+LEXERR: LEADING ZEROS: 01.1E1
 
-14.   if b >= 1 then b := 1
+14.   h := 1.10E1
+LEXERR: TRAILING ZEROS: 1.10E1
 
-15.   while b <> 3 do b := b + 1
+15.   i := 1.1E01
+LEXERR: LEADING ZEROS: 1.1E01
 
-16.   if b = 3 then b := 0
+16.   j := 123456.0
+LEXERR: EXTRA LONG CHARACTERISTIC: 123456.0
 
-17.   a := a + 1
+17.   k := 1.123456
+LEXERR: EXTRA LONG FRACTIONAL PART: 1.123456
 
-18.   a := a - 1
+18.   l := 01.0
+LEXERR: LEADING ZEROS: 01.0
 
-19.   b := a or b
+19.   m := 1.10
+LEXERR: TRAILING ZEROS: 1.10
 
-20.   b := a mod 2
-
-21.   b := b div d
-
-22.   d := d * 2.0E1
-
-23.   d := d / 2.0E1
-
-24.   e := e and not 1
-
-25.   n[gcd(a, b)] := 1
-
-26. end.
+20. end.
 
