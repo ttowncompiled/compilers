@@ -181,6 +181,24 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
   declarationsPrime(listing, tokens)
 }
 
+func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.FUNCTION)
+  if ok {
+    // subprogramDeclaration(listing, tokens)
+    if t, ok = match(tokens, lib.SEMICOLON); !ok {
+      report(listing, ";", t)
+      sync(tokens, lib.SubprogramDeclarationsFollows())
+      return
+    }
+    subprogramDeclarationsPrime(listing, tokens)
+  }
+  if t, ok = match(tokens, lib.BEGIN); !ok {
+    report(listing, "function OR begin", t)
+    sync(tokens, lib.SubprogramDeclarationsFollows())
+    return
+  }
+}
+
 func subprogramDeclarations(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if !ok {
@@ -194,7 +212,7 @@ func subprogramDeclarations(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramDeclarationsFollows())
     return
   }
-  // subprogramDeclarationsPrime(listing, tokens)
+  subprogramDeclarationsPrime(listing, tokens)
 }
 
 func programSubbody(listing *list.List, tokens *list.List) {
