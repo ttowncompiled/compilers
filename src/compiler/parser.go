@@ -181,11 +181,36 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
   declarationsPrime(listing, tokens)
 }
 
+func programSubbody(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.FUNCTION)
+  if ok {
+    // subprogramDeclarations(listing, tokens)
+    // compoundStatement(listing, tokens)
+    if t, ok = match(tokens, lib.PERIOD); !ok {
+      report(listing, ".", t)
+      sync(tokens, lib.ProgramSubbodyFollows())
+      return
+    }
+  }
+  t, ok = match(tokens, lib.BEGIN)
+  if !ok {
+    report(listing, "function OR begin", t)
+    sync(tokens, lib.ProgramSubbodyFollows())
+    return
+  }
+  // compoundStatement(listing, tokens)
+  if t, ok = match(tokens, lib.PERIOD); !ok {
+    report(listing, ".", t)
+    sync(tokens, lib.ProgramSubbodyFollows())
+    return
+  }
+}
+
 func programBody(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.VAR)
   if ok {
     declarations(listing, tokens)
-    // programSubbody(listing, tokens)
+    programSubbody(listing, tokens)
     return
   }
   t, ok = match(tokens, lib.FUNCTION)
@@ -196,7 +221,7 @@ func programBody(listing *list.List, tokens *list.List) {
       sync(tokens, lib.ProgramBodyFollows())
     }
   }
-  // programSubbody(listing, tokens)
+  programSubbody(listing, tokens)
 }
 
 func program(listing *list.List, tokens *list.List) {
