@@ -1,7 +1,7 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
-examplejpeg          38 (LEXERR)          50 ()
+examplejpeg          38 (LEXERR)          50 (ID_TOO_LONG)
 (                    31 (OPEN_PAREN)      0  (NULL)
 input                22 (ID)              0xc82000bdd0
 ,                    35 (COMMA)           0  (NULL)
@@ -17,22 +17,22 @@ integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-12345678901.0E0      38 (LEXERR)          51 ()
+12345678901.0E0      38 (LEXERR)          51 (XX_TOO_LONG)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-0.123456E0           38 (LEXERR)          52 ()
+0.123456E0           38 (LEXERR)          52 (YY_TOO_LONG)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-0.0E123              38 (LEXERR)          53 ()
+0.0E123              38 (LEXERR)          53 (ZZ_TOO_LONG)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-12345678901.0        38 (LEXERR)          51 ()
+12345678901.0        38 (LEXERR)          51 (XX_TOO_LONG)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-0.123456             38 (LEXERR)          52 ()
+0.123456             38 (LEXERR)          52 (YY_TOO_LONG)
 x                    22 (ID)              0xc820148090
 :=                   28 (ASSIGNOP)        0  (NULL)
-12345678901          38 (LEXERR)          51 ()
+12345678901          38 (LEXERR)          51 (XX_TOO_LONG)
 function             8  (FUNCTION)        0  (NULL)
 gcd                  22 (ID)              0xc820148ea0
 (                    31 (OPEN_PAREN)      0  (NULL)
@@ -88,5 +88,5 @@ y                    22 (ID)              0xc820148180
 )                    32 (CLOSE_PAREN)     0  (NULL)
 end                  7  (END)             0  (NULL)
 .                    36 (PERIOD)          0  (NULL)
-#                    38 (LEXERR)          49 ()
+#                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
                      -1 ($)               0  (NULL)

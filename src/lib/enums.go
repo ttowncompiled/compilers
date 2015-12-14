@@ -56,6 +56,8 @@ const (
   XX_TOO_LONG = 51
   YY_TOO_LONG = 52
   ZZ_TOO_LONG = 53
+  LEADING_ZEROS = 54
+  TRAILING_ZEROS = 55
 )
 
 func Annotate(c int) string {
@@ -110,6 +112,13 @@ func Annotate(c int) string {
     case 46: return "(MINUS)"
     case 47: return "(ASTERISK)"
     case 48: return "(SLASH)"
+    case 49: return "(UNRECOGNIZED_SYMBOL)"
+    case 50: return "(ID_TOO_LONG)"
+    case 51: return "(XX_TOO_LONG)"
+    case 52: return "(YY_TOO_LONG)"
+    case 53: return "(ZZ_TOO_LONG)"
+    case 54: return "(LEADING_ZEROS)"
+    case 55: return "(TRAILING_ZEROS)"
   }
   return "()"
 }
