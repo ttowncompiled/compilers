@@ -3,7 +3,6 @@ package compiler
 import (
   "container/list"
   "lib"
-  "strings"
   "unicode"
 )
 
@@ -42,6 +41,9 @@ func MatchId(line lib.Line, index int, rwords map[string]int, symbols map[string
 
 func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
   l := line.Value
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
+  errorReasons := list.New()
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -49,16 +51,45 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
+  if i - index > 5 {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: EXTRA LONG CHARACTERISTIC: ")
+  }
+  if index+1 < len(l) && string(l[index]) == "0" && unicode.IsDigit(rune(l[index+1])) {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: LEADING ZEROS: ")
+  }
   if i >= len(l) || (string(l[i]) != "." && string(l[i]) != "E") {
     return index, lib.Token{}
   }
   if string(l[i]) == "." {
     i++
+    idx := i
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
       return index, lib.Token{}
     }
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
+    }
+    if i - idx > 5 {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.YY_TOO_LONG}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: EXTRA LONG FRACTIONAL PART: ")
+    }
+    if string(l[i-1]) == "0" && unicode.IsDigit(rune(l[i-2])) {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.TRAILING_ZEROS}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: TRAILING ZEROS: ")
     }
     if i >= len(l) || string(l[i]) != "E" {
       return index, lib.Token{}
@@ -69,59 +100,34 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
     if i <= len(l) && (string(l[i]) == "+" || string(l[i]) == "-") {
       i++
     }
+    idx := i
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
       return index, lib.Token{}
     }
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
     }
+    if i - idx > 2 {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.ZZ_TOO_LONG}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: EXTRA LONG EXPONENTIAL PART: ")
+    }
+    if idx+1 < len(l) && string(l[idx]) == "0" && unicode.IsDigit(rune(l[idx+1])) {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.LEADING_ZEROS}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: LEADING ZEROS: ")
+    }
   }
   lexeme := l[index:i]
-  t := lib.Token{-1, "", lib.NULL, lib.NULL}
-  errorFlag := false
-  if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-  }
-  if (strings.Index(lexeme, ".") > 5) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
-  }
-  if (strings.Index(lexeme, "E") - strings.Index(lexeme, ".") > 6) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG FRACTIONAL PART: " + lexeme, &t})
-  }
-  if (strings.Index(lexeme, ".")+2 < strings.Index(lexeme, "E") && string(lexeme[strings.Index(lexeme, "E")-1]) == "0" && unicode.IsDigit(rune(lexeme[strings.Index(lexeme, "E")-2]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: TRAILING ZEROS: " + t.Lexeme, &t})
-  }
-  if (len(lexeme) - strings.Index(lexeme, "E") > 3) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.ZZ_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG EXPONENTIAL PART: " + lexeme, &t})
-  }
-  if (strings.Index(lexeme, "E")+2 < len(lexeme) && string(lexeme[strings.Index(lexeme, "E")+1]) == "0" && unicode.IsDigit(rune(lexeme[strings.Index(lexeme, "E")+2]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-  }
   if errorFlag {
+    t.Lexeme = lexeme
+    for e := errorReasons.Front(); e != nil; e = e.Next() {
+      line.Errors.PushBack(lib.Error{e.Value.(string) + lexeme, &t})
+    }
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.LONG_REAL}
@@ -129,12 +135,29 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
 
 func MatchReal(line lib.Line, index int) (int, lib.Token) {
   l := line.Value
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
+  errorReasons := list.New()
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
   i := index
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
+  }
+  if i - index > 5 {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: EXTRA LONG CHARACTERISTIC: ")
+  }
+  if index+1 < len(l) && string(l[index]) == "0" && unicode.IsDigit(rune(l[index+1])) {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: LEADING ZEROS: ")
   }
   if i >= len(l) || string(l[i]) != "." {
     return index, lib.Token{}
@@ -144,42 +167,31 @@ func MatchReal(line lib.Line, index int) (int, lib.Token) {
     if i >= len(l) || !unicode.IsDigit(rune(l[i])) {
       return index, lib.Token{}
     }
+    idx := i
     for i < len(l) && unicode.IsDigit(rune(l[i])) {
       i++
     }
+    if i - idx > 5 {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.YY_TOO_LONG}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: EXTRA LONG FRACTIONAL PART: ")
+    }
+    if string(l[i-1]) == "0" && unicode.IsDigit(rune(l[i-2])) {
+      if !errorFlag {
+        t = lib.Token{line.Number, "", lib.LEXERR, lib.TRAILING_ZEROS}
+        errorFlag = true
+      }
+      errorReasons.PushBack("LEXERR: TRAILING ZEROS: ")
+    }
   }
   lexeme := l[index:i]
-  t := lib.Token{-1, "", lib.NULL, lib.NULL}
-  errorFlag := false
-  if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-  }
-  if (strings.Index(lexeme, ".") > 5) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
-  }
-  if (len(lexeme) - strings.Index(lexeme, ".") > 6) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG FRACTIONAL PART: " + lexeme, &t})
-  }
-  if (strings.Index(lexeme, ".")+2 < len(lexeme) && string(lexeme[len(lexeme)-1]) == "0" && unicode.IsDigit(rune(lexeme[len(lexeme)-2]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: TRAILING ZEROS: " + t.Lexeme, &t})
-  }
   if errorFlag {
+    t.Lexeme = lexeme
+    for e := errorReasons.Front(); e != nil; e = e.Next() {
+      line.Errors.PushBack(lib.Error{e.Value.(string) + lexeme, &t})
+    }
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.REAL}
@@ -187,6 +199,9 @@ func MatchReal(line lib.Line, index int) (int, lib.Token) {
 
 func MatchInt(line lib.Line, index int) (int, lib.Token) {
   l := line.Value
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
+  errorReasons := list.New()
   if !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
@@ -194,24 +209,26 @@ func MatchInt(line lib.Line, index int) (int, lib.Token) {
   for i < len(l) && unicode.IsDigit(rune(l[i])) {
     i++
   }
+  if i - index > 10 {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: EXTRA LONG INTEGER: ")
+  }
+  if index+1 < len(l) && string(l[index]) == "0" && unicode.IsDigit(rune(l[index+1])) {
+    if !errorFlag {
+      t = lib.Token{line.Number, "", lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
+    errorReasons.PushBack("LEXERR: LEADING ZEROS: ")
+  }
   lexeme := l[index:i]
-  t := lib.Token{-1, "", lib.NULL, lib.NULL}
-  errorFlag := false
-  if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-  }
-  if (len(lexeme) > 10) {
-    if !errorFlag {
-      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
-      errorFlag = true
-    }
-    line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG INTEGER: " + lexeme, &t})
-  }
   if errorFlag {
+    t.Lexeme = lexeme
+    for e := errorReasons.Front(); e != nil; e = e.Next() {
+      line.Errors.PushBack(lib.Error{e.Value.(string) + lexeme, &t})
+    }
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.INT}
