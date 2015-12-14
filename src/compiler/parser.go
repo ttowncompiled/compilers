@@ -306,16 +306,100 @@ func statementPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
+func expressionPrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.RELOP)
+  if ok {
+    // simpleExpression(listing, tokens)
+  }
+  t, ok = match(tokens, lib.ELSE)
+  if !ok {
+    t, ok = match(tokens, lib.SEMICOLON)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.END)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.THEN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.DO)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.CLOSE_BRACKET)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.CLOSE_PAREN)
+  }
+  if !ok {
+    report(listing, "= OR < OR <= OR > OR >= OR <> OR else OR ; OR end OR then OR do OR ] OR )", t)
+    sync(tokens, lib.ExpressionPrimeFollows())
+    return
+  }
+  // epsilon production
+} 
+
+func expression(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    t, ok = match(tokens, lib.NUM)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.OPEN_PAREN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.NOT)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.ASSIGNOP)
+    if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
+      report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
+      sync(tokens, lib.ExpressionFollows())
+      return
+    }
+  }
+  // simpleExpression(listing, tokens)
+  expressionPrime(listing, tokens)
+}
+
+func variablePrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.OPEN_BRACKET)
+  if ok {
+    expression(listing, tokens)
+    if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
+      report(listing, "]", t)
+      sync(tokens, lib.VariablePrimeFollows())
+      return
+    }
+  }
+  t, ok = match(tokens, lib.ASSIGNOP)
+  if !ok {
+    report(listing, "[ OR :=", t)
+    sync(tokens, lib.VariablePrimeFollows())
+    return
+  }
+  // epsilon production
+}
+
+func variable(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.ID)
+  if !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.VariableFollows())
+    return
+  }
+  variablePrime(listing, tokens)
+}
+
 func statement(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.ID)
   if ok {
-    // variable(listing, tokens)
+    variable(listing, tokens)
     if t, ok = matchYank(tokens, lib.ASSIGNOP); !ok {
       report(listing, ":=", t)
       sync(tokens, lib.StatementFollows())
       return
     }
-    // expression(listing, tokens)
+    expression(listing, tokens)
   }
   t, ok = match(tokens, lib.BEGIN)
   if ok {
@@ -323,7 +407,7 @@ func statement(listing *list.List, tokens *list.List) {
   }
   t, ok = matchYank(tokens, lib.IF)
   if ok {
-    // expression(listing, tokens)
+    expression(listing, tokens)
     if t, ok = matchYank(tokens, lib.THEN); !ok {
       report(listing, "then", t)
       sync(tokens, lib.StatementFollows())
@@ -338,7 +422,7 @@ func statement(listing *list.List, tokens *list.List) {
     sync(tokens, lib.StatementFollows())
     return
   }
-  // expression(listing, tokens)
+  expression(listing, tokens)
   if t, ok = matchYank(tokens, lib.DO); !ok {
     report(listing, "do", t)
     sync(tokens, lib.StatementFollows())
