@@ -64,10 +64,11 @@ func OutputListingFile(listing *list.List) {
   
   for e := listing.Front(); e != nil; e = e.Next() {
     l := e.Value.(lib.Line)
-    f.WriteString(string(l.Number) + " " + l.Value + "\n")
+    f.WriteString(fmt.Sprintf("%d. %s\n", l.Number, l.Value))
     for e1 := l.Errors.Front(); e1 != nil; e1 = e1.Next() {
-      f.WriteString(string(l.Number) + " " + e1.Value.(lib.Error).Reason + "\n")
+      f.WriteString(fmt.Sprintf("%s\n", e1.Value.(lib.Error).Reason))
     }
+    f.WriteString("\n")
   }
 }
 
@@ -78,15 +79,15 @@ func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token) {
   check(e1)
   defer f.Close()
   
-  f.WriteString(fmt.Sprintf("%-20s %-20s %-20s\n", "Lexeme", "Type", "Attribute"))
+  f.WriteString(fmt.Sprintf("%-20s %-20s %-s\n", "Lexeme", "Type", "Attribute"))
   f.WriteString("--------------------------------------------------------------\n")
   for e := tokens.Front(); e != nil; e = e.Next() {
     t := e.Value.(lib.Token)
     if t.Type == lib.ID {
       address := symbols[t.Lexeme]
-      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-20p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), address))
+      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), address))
     } else {
-      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-2d %-17s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr)))
+      f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-2d %-s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr)))
     }
   }
 }
@@ -110,14 +111,14 @@ func main() {
     fmt.Println("usage: go run compiler.go <pascal-file> <reserved-words-file>")
     os.Exit(1)
   }
-  fpath, e0 := filepath.Abs(os.Args[1])
-  check(e0)
-  listing := ReadSourceFile(fpath)
-  rpath, e1 := filepath.Abs(os.Args[2])
+  rpath, e1 := filepath.Abs(os.Args[1])
   check(e1)
   rwords := ReadReservedWordFile(rpath)
+  fpath, e0 := filepath.Abs(os.Args[2])
+  check(e0)
+  listing := ReadSourceFile(fpath)
   tokens, symbols := compiler.Tokenize(listing, rwords)
-  OutputListingFile(listing)
   OutputTokenFile(tokens, symbols)
   OutputSymbolFile(symbols)
+  OutputListingFile(listing)
 }

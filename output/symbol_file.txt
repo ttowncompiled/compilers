@@ -1,11 +1,11 @@
 Lexeme               Token               
 -----------------------------------------
-output               0xc82000be60        
-a                    0xc820148e40        
-b                    0xc820148f30        
-input                0xc82000bd70        
-y                    0xc820148120        
-gcd                  0xc820148d50        
-read                 0xc820149d10        
-write                0xc82014a060        
-x                    0xc820148030        
+read                 0xc820149e60        
+write                0xc82014a1b0        
+output               0xc82000bec0        
+y                    0xc820148180        
+a                    0xc820148f90        
+b                    0xc820149080        
+input                0xc82000bdd0        
+x                    0xc820148090        
+gcd                  0xc820148ea0        

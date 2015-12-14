@@ -1,27 +1,44 @@
- program examplejpeg(input, output);
- LEXERR: ID 'examplejpeg' can't be longer than 10 characters
- var x, y: integer;
- x := 12345678901.0E0
- LEXERR: characteristic of '12345678901.0E0' can't be longer than 10 digits
- x := 0.123456E0
- LEXERR: mantissa of '0.123456E0' can't be longer than 5 digits
- x := 0.0E123
- LEXERR: exponent of '0.0E123' can't be longer than 2 digits
- x := 12345678901.0
- LEXERR: characteristic of '12345678901.0' can't be longer than 10 digits
- x := 0.123456
- LEXERR: mantissa of '0.123456' can't be longer than 5 digits
- x := 12345678901
- LEXERR: Integer '12345678901' can't be longer than 10 digits
-	 function gcd(a, b: integer): integer;
+1. program examplejpeg(input, output);
+LEXERR: EXTRA LONG ID: examplejpeg
 
- begin
-   if b = 0.0E0 then gcd := a / b
-   else gcd := gcd(b, a mod b)
- end;
- 
- begin
-   read(x, y);
-   write(gcd(x, y))
- end. #
- LEXERR: unrecognized symbol '#'
+2. var x, y: integer;
+
+3. x := 12345678901.0E0
+LEXERR: EXTRA LONG CHARACTERISTIC: 12345678901.0E0
+
+4. x := 0.123456E0
+LEXERR: EXTRA LONG FRACTIONAL PART: 0.123456E0
+
+5. x := 0.0E123
+LEXERR: EXTRA LONG EXPONENTIAL PART: 0.0E123
+
+6. x := 12345678901.0
+LEXERR: EXTRA LONG CHARACTERISTIC: 12345678901.0
+
+7. x := 0.123456
+LEXERR: EXTRA LONG FRACTIONAL PART: 0.123456
+
+8. x := 12345678901
+LEXERR: EXTRA LONG INTEGER: 12345678901
+
+9. function gcd(a, b: integer): integer;
+
+10. begin
+
+11.   if b = 0.0E0 then gcd := a / b
+
+12.   else gcd := gcd(b, a mod b)
+
+13. end;
+
+14. 
+
+15. begin
+
+16.   read(x, y);
+
+17.   write(gcd(x, y))
+
+18. end. #
+LEXERR: unrecognized symbol '#'
+
