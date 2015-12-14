@@ -289,6 +289,99 @@ func subprogramHead(listing *list.List, tokens *list.List) {
   subprogramHeadPrime(listing, tokens)
 }
 
+func statementPrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.ELSE)
+  if ok {
+    statement(listing, tokens)
+  }
+  t, ok = match(tokens, lib.SEMICOLON)
+  if !ok {
+    t, ok = match(tokens, lib.END)
+    if !ok {
+      report(listing, "else OR ; OR end", t)
+      sync(tokens, lib.StatementPrimeFollows())
+      return
+    }
+  }
+  // epsilon production
+}
+
+func statement(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if ok {
+    // variable(listing, tokens)
+    if t, ok = matchYank(tokens, lib.ASSIGNOP); !ok {
+      report(listing, ":=", t)
+      sync(tokens, lib.StatementFollows())
+      return
+    }
+    // expression(listing, tokens)
+  }
+  t, ok = match(tokens, lib.BEGIN)
+  if ok {
+    compoundStatement(listing, tokens)
+  }
+  t, ok = matchYank(tokens, lib.IF)
+  if ok {
+    // expression(listing, tokens)
+    if t, ok = matchYank(tokens, lib.THEN); !ok {
+      report(listing, "then", t)
+      sync(tokens, lib.StatementFollows())
+      return
+    }
+    statement(listing, tokens)
+    statementPrime(listing, tokens)
+  }
+  t, ok = matchYank(tokens, lib.WHILE)
+  if !ok {
+    report(listing, "ID OR begin OR if OR while", t)
+    sync(tokens, lib.StatementFollows())
+    return
+  }
+  // expression(listing, tokens)
+  if t, ok = matchYank(tokens, lib.DO); !ok {
+    report(listing, "do", t)
+    sync(tokens, lib.StatementFollows())
+    return
+  }
+  statement(listing, tokens)
+}
+
+func statementListPrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.SEMICOLON)
+  if ok {
+    statement(listing, tokens)
+    statementListPrime(listing, tokens)
+  }
+  t, ok = match(tokens, lib.END)
+  if !ok {
+    report(listing, "; OR end", t)
+    sync(tokens, lib.StatementListPrimeFollows())
+    return
+  }
+  // epsilon production
+}
+
+func statementList(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    t, ok = match(tokens, lib.BEGIN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.IF)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.WHILE)
+  }
+  if !ok {
+    report(listing, "ID OR begin OR if OR while", t)
+    sync(tokens, lib.StatementListFollows())
+    return
+  }
+  statement(listing, tokens)
+  statementListPrime(listing, tokens)
+}
+
 func optionalStatements(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.ID)
   if !ok {
@@ -305,7 +398,7 @@ func optionalStatements(listing *list.List, tokens *list.List) {
     sync(tokens, lib.OptionalStatementsFollows())
     return
   }
-  // statementList(listing, tokens)
+  statementList(listing, tokens)
 }
 
 func compoundStatementPrime(listing *list.List, tokens *list.List) {
