@@ -189,10 +189,65 @@ func declarations(listing *list.List, tokens *list.List) {
   declarationsPrime(listing, tokens)
 }
 
+func parameterListPrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.SEMICOLON)
+  if ok {
+    if t, ok = matchYank(tokens, lib.ID); !ok {
+      report(listing, "ID", t)
+      sync(tokens, lib.ParameterListPrimeFollows())
+      return
+    }
+    if t, ok = matchYank(tokens, lib.COLON); !ok {
+      report(listing, ":", t)
+      sync(tokens, lib.ParameterListPrimeFollows())
+      return
+    }
+    type_(listing, tokens)
+    parameterListPrime(listing, tokens)
+  }
+  if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
+    report(listing, "; OR )", t)
+    sync(tokens, lib.ParameterListPrimeFollows())
+    return
+  }
+  // epsilon production
+}
+
+func parameterList(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.ID)
+  if !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.ParameterListFollows())
+    return
+  }
+  if t, ok = matchYank(tokens, lib.COLON); !ok {
+    report(listing, ":", t)
+    sync(tokens, lib.ParameterListFollows())
+    return
+  }
+  type_(listing, tokens)
+  parameterListPrime(listing, tokens)
+}
+
+func arguments(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.OPEN_PAREN)
+  if !ok {
+    report(listing, "(", t)
+    sync(tokens, lib.ArgumentsFollows())
+    return
+  }
+  // parameterList(listing, tokens)
+  if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
+    report(listing, ")", t)
+    sync(tokens, lib.ArgumentsFollows())
+    return
+  }
+}
+
 func subprogramHeadPrime(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.OPEN_PAREN)
   if ok {
-    // arguments(listing, tokens)
+    arguments(listing, tokens)
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.SubprogramHeadPrimeFollows())
