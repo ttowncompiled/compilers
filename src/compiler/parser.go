@@ -236,7 +236,7 @@ func arguments(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ArgumentsFollows())
     return
   }
-  // parameterList(listing, tokens)
+  parameterList(listing, tokens)
   if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
     sync(tokens, lib.ArgumentsFollows())
@@ -289,6 +289,39 @@ func subprogramHead(listing *list.List, tokens *list.List) {
   subprogramHeadPrime(listing, tokens)
 }
 
+func subprogramSubbody(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.FUNCTION)
+  if ok {
+    subprogramDeclarations(listing, tokens)
+    // compoundStatement(listing, tokens)
+  }
+  t, ok = match(tokens, lib.BEGIN)
+  if !ok {
+    report(listing, "function OR begin", t)
+    sync(tokens, lib.SubprogramSubbodyFollows())
+    return
+  }
+  // compoundStatement(listing, tokens)
+}
+
+func subprogramBody(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.VAR)
+  if ok {
+    declarations(listing, tokens)
+    subprogramSubbody(listing, tokens)
+  }
+  t, ok = match(tokens, lib.FUNCTION)
+  if !ok {
+    t, ok = match(tokens, lib.BEGIN)
+    if !ok {
+      report(listing, "var OR function OR begin", t)
+      sync(tokens, lib.SubprogramBodyFollows())
+      return
+    }
+  }
+  subprogramSubbody(listing, tokens)
+}
+
 func subprogramDeclaration(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.FUNCTION)
   if !ok {
@@ -297,7 +330,7 @@ func subprogramDeclaration(listing *list.List, tokens *list.List) {
     return
   }
   subprogramHead(listing, tokens)
-  // subprogramBody(listing, tokens)
+  subprogramBody(listing, tokens)
 }
 
 func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
