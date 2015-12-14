@@ -37,37 +37,56 @@ func sync(tokens *list.List, follows *list.List) bool {
   return false
 }
 
-func identifierList(listing *list.List, tokens *list.List) {
-  
-}
-
-func program(listing *list.List, tokens *list.List) {
-  follows := list.New()
-  t, ok := match(tokens, lib.PROGRAM)
+func identifierListPrime(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.COMMA)
   if !ok {
-    report(listing, "program", t)
-    sync(tokens, follows)
+    // epsilon production
     return
   }
   if t, ok = match(tokens, lib.ID); !ok {
     report(listing, "ID", t)
-    sync(tokens, follows)
+    sync(tokens, lib.IdentifierListPrimeFollows())
+    return
+  }
+  identifierListPrime(listing, tokens)
+}
+
+func identifierList(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.IdentifierListFollows())
+    return
+  }
+  identifierListPrime(listing, tokens)
+}
+
+func program(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.PROGRAM)
+  if !ok {
+    report(listing, "program", t)
+    sync(tokens, lib.ProgramFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.ID); !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.ProgramFollows())
     return
   }
   if t, ok = match(tokens, lib.OPEN_PAREN); !ok {
     report(listing, "(", t)
-    sync(tokens, follows)
+    sync(tokens, lib.ProgramFollows())
     return
   }
   identifierList(listing, tokens)
   if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
-    sync(tokens, follows)
+    sync(tokens, lib.ProgramFollows())
     return
   }
   if t, ok = match(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
-    sync(tokens, follows)
+    sync(tokens, lib.ProgramFollows())
     return
   }
 }
