@@ -3,42 +3,60 @@ Lexeme               Type                 Attribute
 program              17 (PROGRAM)         0  (NULL)
 examplejpeg          38 (LEXERR)          50 (ID_TOO_LONG)
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc82000bdd0
+input                22 (ID)              0xc820148030
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc82000bec0
+output               22 (ID)              0xc820148120
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 ,                    35 (COMMA)           0  (NULL)
-y                    22 (ID)              0xc820148180
+y                    22 (ID)              0xc8201483c0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 12345678901.0E0      38 (LEXERR)          51 (XX_TOO_LONG)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 0.123456E0           38 (LEXERR)          52 (YY_TOO_LONG)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 0.0E123              38 (LEXERR)          53 (ZZ_TOO_LONG)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+00.0E0               38 (LEXERR)          54 (LEADING_ZEROS)
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+0.00E0               38 (LEXERR)          55 (TRAILING_ZEROS)
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+0.0E00               38 (LEXERR)          54 (LEADING_ZEROS)
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 12345678901.0        38 (LEXERR)          51 (XX_TOO_LONG)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 0.123456             38 (LEXERR)          52 (YY_TOO_LONG)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+00.0                 38 (LEXERR)          54 (LEADING_ZEROS)
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+0.00                 38 (LEXERR)          55 (TRAILING_ZEROS)
+x                    22 (ID)              0xc8201482d0
 :=                   28 (ASSIGNOP)        0  (NULL)
 12345678901          38 (LEXERR)          51 (XX_TOO_LONG)
+x                    22 (ID)              0xc8201482d0
+:=                   28 (ASSIGNOP)        0  (NULL)
+00                   38 (LEXERR)          54 (LEADING_ZEROS)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc820148ea0
+gcd                  22 (ID)              0xc820149b00
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc820148f90
+a                    22 (ID)              0xc820149bf0
 ,                    35 (COMMA)           0  (NULL)
-b                    22 (ID)              0xc820149080
+b                    22 (ID)              0xc820149ce0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -47,43 +65,43 @@ integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
 if                   9  (IF)              0  (NULL)
-b                    22 (ID)              0xc820149080
+b                    22 (ID)              0xc820149ce0
 =                    25 (RELOP)           39 (EQ)
 0.0E0                13 (NUM)             23 (LONG_REAL)
 then                 19 (THEN)            0  (NULL)
-gcd                  22 (ID)              0xc820148ea0
+gcd                  22 (ID)              0xc820149b00
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc820148f90
+a                    22 (ID)              0xc820149bf0
 /                    27 (MULOP)           48 (SLASH)
-b                    22 (ID)              0xc820149080
+b                    22 (ID)              0xc820149ce0
 else                 6  (ELSE)            0  (NULL)
-gcd                  22 (ID)              0xc820148ea0
+gcd                  22 (ID)              0xc820149b00
 :=                   28 (ASSIGNOP)        0  (NULL)
-gcd                  22 (ID)              0xc820148ea0
+gcd                  22 (ID)              0xc820149b00
 (                    31 (OPEN_PAREN)      0  (NULL)
-b                    22 (ID)              0xc820149080
+b                    22 (ID)              0xc820149ce0
 ,                    35 (COMMA)           0  (NULL)
-a                    22 (ID)              0xc820148f90
+a                    22 (ID)              0xc820149bf0
 mod                  11 (MOD)             0  (NULL)
-b                    22 (ID)              0xc820149080
+b                    22 (ID)              0xc820149ce0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-read                 22 (ID)              0xc820149e60
+read                 22 (ID)              0xc82014aae0
 (                    31 (OPEN_PAREN)      0  (NULL)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 ,                    35 (COMMA)           0  (NULL)
-y                    22 (ID)              0xc820148180
+y                    22 (ID)              0xc8201483c0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-write                22 (ID)              0xc82014a1b0
+write                22 (ID)              0xc82014ae10
 (                    31 (OPEN_PAREN)      0  (NULL)
-gcd                  22 (ID)              0xc820148ea0
+gcd                  22 (ID)              0xc820149b00
 (                    31 (OPEN_PAREN)      0  (NULL)
-x                    22 (ID)              0xc820148090
+x                    22 (ID)              0xc8201482d0
 ,                    35 (COMMA)           0  (NULL)
-y                    22 (ID)              0xc820148180
+y                    22 (ID)              0xc8201483c0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 end                  7  (END)             0  (NULL)

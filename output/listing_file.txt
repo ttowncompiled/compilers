@@ -12,33 +12,51 @@ LEXERR: EXTRA LONG FRACTIONAL PART: 0.123456E0
 5. x := 0.0E123
 LEXERR: EXTRA LONG EXPONENTIAL PART: 0.0E123
 
-6. x := 12345678901.0
+6. x := 00.0E0
+LEXERR: LEADING ZEROS: 00.0E0
+
+7. x := 0.00E0
+LEXERR: TRAILING ZEROS: 0.00E0
+
+8. x := 0.0E00
+LEXERR: LEADING ZEROS: 0.0E00
+
+9. x := 12345678901.0
 LEXERR: EXTRA LONG CHARACTERISTIC: 12345678901.0
 
-7. x := 0.123456
+10. x := 0.123456
 LEXERR: EXTRA LONG FRACTIONAL PART: 0.123456
 
-8. x := 12345678901
+11. x := 00.0
+LEXERR: LEADING ZEROS: 00.0
+
+12. x := 0.00
+LEXERR: TRAILING ZEROS: 0.00
+
+13. x := 12345678901
 LEXERR: EXTRA LONG INTEGER: 12345678901
 
-9. function gcd(a, b: integer): integer;
+14. x := 00
+LEXERR: LEADING ZEROS: 00
 
-10. begin
+15. function gcd(a, b: integer): integer;
 
-11.   if b = 0.0E0 then gcd := a / b
+16. begin
 
-12.   else gcd := gcd(b, a mod b)
+17.   if b = 0.0E0 then gcd := a / b
 
-13. end;
+18.   else gcd := gcd(b, a mod b)
 
-14. 
+19. end;
 
-15. begin
+20. 
 
-16.   read(x, y);
+21. begin
 
-17.   write(gcd(x, y))
+22.   read(x, y);
 
-18. end. #
+23.   write(gcd(x, y))
+
+24. end. #
 LEXERR: unrecognized symbol '#'
 
