@@ -55,8 +55,8 @@ func ReadReservedWordFile(rpath string) map[string]int {
   return m
 }
 
-func OutputListingFile(listing *list.List) {
-  fpath, e0 := filepath.Abs("output/listing_file.txt")
+func OutputListingFile(listing *list.List, name string) {
+  fpath, e0 := filepath.Abs("output/" + name + "_listing_file.txt")
   check(e0)
   f, e1 := os.Create(fpath)
   check(e1)
@@ -72,8 +72,8 @@ func OutputListingFile(listing *list.List) {
   }
 }
 
-func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token) {
-  fpath, e0 := filepath.Abs("output/token_file.txt")
+func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token, name string) {
+  fpath, e0 := filepath.Abs("output/" + name + "_token_file.txt")
   check(e0)
   f, e1 := os.Create(fpath)
   check(e1)
@@ -92,8 +92,8 @@ func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token) {
   }
 }
 
-func OutputSymbolFile(symbols map[string]*lib.Token) {
-  fpath, e0 := filepath.Abs("output/symbol_file.txt")
+func OutputSymbolFile(symbols map[string]*lib.Token, name string) {
+  fpath, e0 := filepath.Abs("output/" + name + "_symbol_file.txt")
   check(e0)
   f, e1 := os.Create(fpath)
   check(e1)
@@ -107,8 +107,8 @@ func OutputSymbolFile(symbols map[string]*lib.Token) {
 }
 
 func main() {
-  if (len(os.Args) < 3) {
-    fmt.Println("usage: go run compiler.go <pascal-file> <reserved-words-file>")
+  if (len(os.Args) < 4) {
+    fmt.Println("usage: go run compiler.go <pascal-file> <reserved-words-file> <output-name>")
     os.Exit(1)
   }
   rpath, e1 := filepath.Abs(os.Args[1])
@@ -118,7 +118,7 @@ func main() {
   check(e0)
   listing := ReadSourceFile(fpath)
   tokens, symbols := compiler.Tokenize(listing, rwords)
-  OutputTokenFile(tokens, symbols)
-  OutputSymbolFile(symbols)
-  OutputListingFile(listing)
+  OutputTokenFile(tokens, symbols, os.Args[3])
+  OutputSymbolFile(symbols, os.Args[3])
+  OutputListingFile(listing, os.Args[3])
 }
