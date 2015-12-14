@@ -61,13 +61,26 @@ func identifierList(listing *list.List, tokens *list.List) {
   identifierListPrime(listing, tokens)
 }
 
+func standardType(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.INTEGER)
+  if ok {
+    return
+  }
+  t, ok = match(tokens, lib.REAL)
+  if !ok {
+    report(listing, "integer OR real", t)
+    sync(tokens, lib.StandardTypeFollows())
+    return
+  }
+}
+
 func type_(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.INTEGER)
   if !ok {
     t, ok = match(tokens, lib.REAL)
   }
   if ok {
-    // standardType(listing, tokens)
+    standardType(listing, tokens)
   }
   t, ok = match(tokens, lib.ARRAY)
   if !ok {
@@ -105,7 +118,7 @@ func type_(listing *list.List, tokens *list.List) {
     sync(tokens, lib.TypeFollows())
     return
   }
-  // standardType(listing, tokens)
+  standardType(listing, tokens)
 }
 
 func declarations(listing *list.List, tokens *list.List) {
@@ -125,7 +138,7 @@ func declarations(listing *list.List, tokens *list.List) {
     sync(tokens, lib.DeclarationsFollows())
     return
   }
-  // type_(listing, tokens)
+  type_(listing, tokens)
   if t, ok = match(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.DeclarationsFollows())
