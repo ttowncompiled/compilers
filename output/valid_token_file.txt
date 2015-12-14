@@ -1,6 +1,7 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 example              22 (ID)              0xc820015f50
@@ -19,25 +20,33 @@ example              22 (ID)              0xc820077c50
 =======
 example              22 (ID)              0xc82000bfb0
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+example              22 (ID)              0xc820077c50
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc8201480c0
+input                22 (ID)              0xc820077d40
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc8201481b0
+output               22 (ID)              0xc820077e30
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-a                    22 (ID)              0xc820148360
+a                    22 (ID)              0xc820168000
 ,                    35 (COMMA)           0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 b                    22 (ID)              0xc8201680f0
 >>>>>>> Adds matchYank.:output/token_file.txt
 =======
 b                    22 (ID)              0xc820148450
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+b                    22 (ID)              0xc8201680f0
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 d                    22 (ID)              0xc820148600
@@ -64,33 +73,41 @@ d                    22 (ID)              0xc820168300
 =======
 d                    22 (ID)              0xc820148660
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+d                    22 (ID)              0xc820168300
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 ,                    35 (COMMA)           0  (NULL)
-e                    22 (ID)              0xc820148750
+e                    22 (ID)              0xc8201683f0
 ,                    35 (COMMA)           0  (NULL)
-f                    22 (ID)              0xc820148840
+f                    22 (ID)              0xc8201684e0
 ,                    35 (COMMA)           0  (NULL)
-g                    22 (ID)              0xc820148930
+g                    22 (ID)              0xc8201685d0
 ,                    35 (COMMA)           0  (NULL)
-h                    22 (ID)              0xc820148a20
+h                    22 (ID)              0xc8201686c0
 ,                    35 (COMMA)           0  (NULL)
-i                    22 (ID)              0xc820148b10
+i                    22 (ID)              0xc8201687b0
 ,                    35 (COMMA)           0  (NULL)
-j                    22 (ID)              0xc820148c00
+j                    22 (ID)              0xc8201688a0
 ,                    35 (COMMA)           0  (NULL)
-k                    22 (ID)              0xc820148cf0
+k                    22 (ID)              0xc820168990
 ,                    35 (COMMA)           0  (NULL)
-l                    22 (ID)              0xc820148de0
+l                    22 (ID)              0xc820168a80
 ,                    35 (COMMA)           0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 m                    22 (ID)              0xc820168b70
 >>>>>>> Adds matchYank.:output/token_file.txt
 =======
 m                    22 (ID)              0xc820148ed0
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+m                    22 (ID)              0xc820168b70
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 n                    22 (ID)              0xc820149080
@@ -100,6 +117,9 @@ n                    22 (ID)              0xc820168d80
 =======
 n                    22 (ID)              0xc8201490e0
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+n                    22 (ID)              0xc820168d80
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -111,7 +131,7 @@ of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-o                    22 (ID)              0xc820149590
+o                    22 (ID)              0xc820169230
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -123,8 +143,9 @@ of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc820149a40
+gcd                  22 (ID)              0xc8201696e0
 (                    31 (OPEN_PAREN)      0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 a                    22 (ID)              0xc820148300
@@ -140,6 +161,11 @@ a                    22 (ID)              0xc820148360
 ,                    35 (COMMA)           0  (NULL)
 b                    22 (ID)              0xc820148450
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+a                    22 (ID)              0xc820168000
+,                    35 (COMMA)           0  (NULL)
+b                    22 (ID)              0xc8201680f0
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -147,6 +173,7 @@ integer              10 (INTEGER)         0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 a                    22 (ID)              0xc820148300
@@ -169,29 +196,37 @@ a                    22 (ID)              0xc820168000
 =======
 a                    22 (ID)              0xc820148360
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+a                    22 (ID)              0xc820168000
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
-d                    22 (ID)              0xc820148660
+d                    22 (ID)              0xc820168300
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2                  13 (NUM)             18 (REAL)
-e                    22 (ID)              0xc820148750
+e                    22 (ID)              0xc8201683f0
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2E2                13 (NUM)             23 (LONG_REAL)
 if                   9  (IF)              0  (NULL)
-a                    22 (ID)              0xc820148360
+a                    22 (ID)              0xc820168000
 <                    25 (RELOP)           41 (LT)
 1                    13 (NUM)             24 (INT)
 then                 19 (THEN)            0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 b                    22 (ID)              0xc8201680f0
 >>>>>>> Adds matchYank.:output/token_file.txt
 =======
 b                    22 (ID)              0xc820148450
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+b                    22 (ID)              0xc8201680f0
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :=                   28 (ASSIGNOP)        0  (NULL)
 -                    26 (ADDOP)           46 (MINUS)
 1                    13 (NUM)             24 (INT)
 if                   9  (IF)              0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 a                    22 (ID)              0xc820148300
@@ -213,10 +248,18 @@ a                    22 (ID)              0xc820148360
 then                 19 (THEN)            0  (NULL)
 b                    22 (ID)              0xc820148450
 >>>>>>> Finishes parameter-list, parameter-list-prime, arguments.:output/token_file.txt
+=======
+a                    22 (ID)              0xc820168000
+>                    25 (RELOP)           44 (GT)
+1                    13 (NUM)             24 (INT)
+then                 19 (THEN)            0  (NULL)
+b                    22 (ID)              0xc8201680f0
+>>>>>>> Finishes simple-expression, simple-expression-prime.:output/token_file.txt
 :=                   28 (ASSIGNOP)        0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
 2                    13 (NUM)             24 (INT)
 else                 6  (ELSE)            0  (NULL)
+<<<<<<< 86acfc47f2b6a1d1674bd746403814371f30772e:output/valid_token_file.txt
 <<<<<<< 9fea4b339f07c7b3952126311b7740693dee4204:output/valid_token_file.txt
 <<<<<<< ec18fad56f976044b28fb86b705579e701f8d256:output/valid_token_file.txt
 b                    22 (ID)              0xc8201483f0
@@ -299,7 +342,7 @@ not                  12 (NOT)             0  (NULL)
 1                    13 (NUM)             24 (INT)
 n                    22 (ID)              0xc820149080
 [                    29 (OPEN_BRACKET)    0  (NULL)
-gcd                  22 (ID)              0xc820149a40
+gcd                  22 (ID)              0xc8201696e0
 (                    31 (OPEN_PAREN)      0  (NULL)
 a                    22 (ID)              0xc820148300
 ,                    35 (COMMA)           0  (NULL)

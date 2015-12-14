@@ -306,10 +306,72 @@ func statementPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
+func simpleExpressionPrime(listing *list.List, tokens *list.List) {
+  t, ok := matchYank(tokens, lib.ADDOP)
+  if ok {
+    // term(listing, tokens)
+    simpleExpressionPrime(listing, tokens)
+  }
+  t, ok = match(tokens, lib.RELOP)
+  if !ok {
+    t, ok = match(tokens, lib.ELSE)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.SEMICOLON)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.END)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.THEN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.DO)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.CLOSE_BRACKET)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.CLOSE_PAREN)
+  }
+  if !ok {
+    report(listing, "ADDOP OR RELOP OR else OR ; OR end OR then OR do OR ] OR )", t)
+    sync(tokens, lib.SimpleExpressionPrimeFollows())
+    return
+  }
+  // epsilon production
+}
+
+func simpleExpression(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.ID)
+  if !ok {
+    t, ok = match(tokens, lib.NUM)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.OPEN_PAREN)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.NOT)
+  }
+  if ok {
+    // term(listing, tokens)
+    simpleExpressionPrime(listing, tokens)
+  }
+  t, ok = match(tokens, lib.ASSIGNOP)
+  if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
+    report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
+    sync(tokens, lib.SimpleExpressionFollows())
+    return
+  }
+  // sign(listing, tokens)
+  // term(listing, tokens)
+  simpleExpressionPrime(listing, tokens)
+}
+
 func expressionPrime(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.RELOP)
   if ok {
-    // simpleExpression(listing, tokens)
+    simpleExpression(listing, tokens)
   }
   t, ok = match(tokens, lib.ELSE)
   if !ok {
@@ -331,7 +393,7 @@ func expressionPrime(listing *list.List, tokens *list.List) {
     t, ok = match(tokens, lib.CLOSE_PAREN)
   }
   if !ok {
-    report(listing, "= OR < OR <= OR > OR >= OR <> OR else OR ; OR end OR then OR do OR ] OR )", t)
+    report(listing, "RELOP OR else OR ; OR end OR then OR do OR ] OR )", t)
     sync(tokens, lib.ExpressionPrimeFollows())
     return
   }
@@ -357,7 +419,7 @@ func expression(listing *list.List, tokens *list.List) {
       return
     }
   }
-  // simpleExpression(listing, tokens)
+  simpleExpression(listing, tokens)
   expressionPrime(listing, tokens)
 }
 
