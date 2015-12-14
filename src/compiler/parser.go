@@ -61,6 +61,24 @@ func identifierList(listing *list.List, tokens *list.List) {
   identifierListPrime(listing, tokens)
 }
 
+func programBody(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.VAR)
+  if ok {
+    // declarations(listing, tokens)
+    // programSubbody(listing, tokens)
+    return
+  }
+  t, ok = match(tokens, lib.FUNCTION)
+  if !ok {
+    t, ok = match(tokens, lib.BEGIN)
+    if !ok {
+      report(listing, "var OR function OR begin", t)
+      sync(tokens, lib.ProgramBodyFollows())
+    }
+  }
+  // programSubbody(listing, tokens)
+}
+
 func program(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.PROGRAM)
   if !ok {
