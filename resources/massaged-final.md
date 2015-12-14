@@ -1,160 +1,108 @@
 ## Massaged Productions (Final) - Ian Riley
 
-01.00 _program_ :=
-  1. **program id (** _identifier-list_ **) ;**
-    - _program-body_
+1 _program_ := **program id (** <_identifier-list_> **) ;** <_program-body_>
 
-01.01 _program-body_ :=
-  1. _declarations_
-    - _program-subbody_
-  2. _program-subbody_
+1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
+1.1 _program-body_ := <_program-subbody_>
 
-01.02 _program-subbody_ :=
-  1. _subprogram-declarations_
-    - _compound-statement_
-    - **.**
-  2. _compound-statement_
-    - **.**
+1.2 _program-subbody_ := <_subprogram-declarations_> <_compound-statement_> **.** <br>
+1.2 _program-subbody_ := <_compound-statement_> **.**
 
-02.00 _id_ :=
-  1. **id**
+3 _identifier-list_ := **id** <_identifier-list'_>
 
-03.00 _identifier-list_ :=
-  1. **id** _identifier-list'_
+3.1 _identifier-list'_ := **, id** <_identifier-list'_> <br>
+3.1 _identifier-list'_ := **epsilon**
 
-03.01 _identifier-list'_ :=
-  1. **, id** _identifier-list'_
-  2. **epsilon**
+4 _declarations_ := **var id :** <_type_> **;** <_declarations'_>
 
-04.00 _declarations_ :=
-  1. **var** _id_ **:** _type_ **;** _declarations'_
+4.1 _declarations'_ := **var id :** <_type_> **;** <_declarations'_> <br>
+4.1 _declarations'_ := **epsilon**
 
-04.01 _declarations'_ :=
-  1. **var** _id_ **:** _type_ **;** _declarations'_
-  2. **epsilon**
+5 _type_ := <_standard-type_> <br>
+5 _type_ := **array [ num .. num ] of** <_standard-type_>
 
-05.00 _type_ :=
-  1. _standard-type_
-  2. **array [ num .. num ] of** _standard-type_
+6 _standard-type_ := **integer** <br>
+6 _standard-type_ := **real**
 
-06.00 _standard-type_ :=
-  1. **integer**
-  2. **real**
+7 _subprogram-declarations_ := <_subprogram-declaration_> **;** <_subprogram-declarations'_>
 
-07.00 _subprogram-declarations_ :=
-  1. _subprogram-declaration_ **;** _subprogram-declarations'_
+7.1 _subprogram-declarations'_ := <_subprogram-declaration_> **;** <_subprogram-declarations'_> <br>
+7.1 _subprogram-declarations'_ := **epsilon**
 
-07.01 _subprogram-declarations'_ :=
-  1. _subprogram-declaration_ **;** _subprogram-declarations'_
-  2. **epsilon**
+8 _subprogram-declaration_ := <_subprogram-head_> <_subprogram-body_>
 
-08.00 _subprogram-declaration_ :=
-  1. _subprogram-head_
-    - _subprogram-body_
+8.1 _subprogram-body_ := <_declarations_> <_subprogram-subbody_> <br>
+8.1 _subprogram-body_ := <_subprogram-subbody_>
 
-08.01 _subprogram-body_ :=
-  1. _declarations_
-    - _subprogram-subbody_
-  2. _subprogram-subbody_
+8.2 _subprogram-subbody_ := <_subprogram-declarations_> <_compound-statement_> <br>
+8.2 _subprogram-subbody_ := <_compound-statement_>
 
-08.02 _subprogram-subbody_ :=
-  1. _subprogram-declarations_
-    - _compound-statement_
-  2. _compound-statement_
+9 _subprogram-head_ := **function id** <_subprogram-head'_>
 
-09.00 _subprogram-head_ :=
-  1. **function id** _subprogram-head'_
+9.1 _subprogram-head'_ := <_arguments_> **:** <_standard-type_> **;** <br>
+9.1 _subprogram-head'_ := **:** <_standard-type_> **;**
 
-09.01 _subprogram-head'_ :=
-  1. _arguments_ **:** _standard-type_ **;**
-  2. **:** _standard-type_ **;**
+10 _arguments_ := **(** <_parameter-list_> **)**
 
-10.00 _arguments_ :=
-  1. **(** _parameter-list_ **)**
+11 _parameter-list_ := **id :** <_type_> <_parameter-list'_>
 
-11.00 _parameter-list_ :=
-  1. _id_ **:** _type_ _parameter-list'_
+11.1 _parameter-list'_ := **; id :** <_type_> <_parameter-list'_> <br>
+11.1 _parameter-list'_ := **epsilon**
 
-11.01 _parameter-list'_ :=
-  1. **;** _id_ **:** _type_ _parameter-list'_
-  2. **epsilon**
+12 _compound-statement_ := **begin** <_compound-statement'_>
 
-12.00 _compound-statement_ :=
-  1. **begin**
-    - _compound-statement'_
+12.1 _compound-statement'_ := <_optional-statements_> **end** <br>
+12.1 _compound-statement'_ := **end**
 
-12.01 _compound-statement'_ :=
-  1. _optional-statements_
-    - **end**
-  2. **end**
+13 _optional-statements_ := <_statement-list_>
 
-13.00 _optional-statements_ :=
-  1. _statement-list_
+14 _statement-list_ := <_statement_> <_statement-list'_>
 
-14.00 _statement-list_ :=
-  1. _statement_ _statement-list'_
+14.1 _statement-list'_ := **;** <_statement_> <_statement-list'_> <br>
+14.1 _statement-list'_ := **epsilon**
 
-14.01 _statement-list'_ :=
-  1. **;** _statement_ _statement-list'_
-  2. **epsilon**
+15 _statement_ := <_variable_> **assignop** <_expression_> <br>
+15 _statement_ := <_compound-statement_> <br>
+15 _statement_ := **if** <_expression_> **then** <_statement_> <_statement'_> <br>
+15 _statement_ := **while** <_expression_> **do** <_statement_>
 
-15.00 _statement_ :=
-  1. _variable_ **assignop** _expression_
-  2. _compound-statement_
-  3. **if** _expression_ **then** _statement_ _statement'_
-  4. **while** _expression_ **do** _statement_
+15.1 _statement'_ := **else** <_statement_> <br>
+15.1 _statement'_ := **epsilon**
 
-15.01 _statement'_ :=
-  1. **else** _statement_
-  2. **epsilon**
+16 _variable_ := **id** <_variable'_>
 
-16.00 _variable_ :=
-  1. **id** _variable'_
+16.1 _variable'_ := **[** <_expression_> **]** <br>
+16.1 _variable'_ := **epsilon**
 
-16.01 _variable'_ :=
-  1. **[** _expression_ **]**
-  2. **epsilon**
+17 _expression-list_ := <_expression_> <_expression-list'_>
 
-17.00 _expression-list_ :=
-  1. _expression_ _expression-list'_
+17.1 _expression-list'_ := **,** <_expression_> <_expression-list'_> <br>
+17.1 _expression-list'_ := **epsilon**
 
-17.01 _expression-list'_ :=
-  1. **,** _expression_ _expression-list'_
-  2. **epsilon**
+18 _expression_ := <_simple-expression_> <_expression'_>
 
-18.00 _expression_ :=
-  1. _simple-expression_ _expression'_
+18.1 _expression'_ := **relop** <_simple-expression_> <br>
+18.1 _expression'_ := **epsilon**
 
-18.01 _expression'_ :=
-  1. **relop** _simple-expression_
-  2. **epsilon**
+19 _simple-expression_ := <_term_> <_simple-expression'_> <br>
+19 _simple-expression_ := <_sign_> <_term_> <_simple-expression'_>
 
-19.00 _simple-expression_ :=
-  1. _term_ _simple-expression'_
-  2. _sign_ _term_ _simple-expression'_
+19.1 _simple-expression'_ := **addop** <_term_> <_simple-expression'_> <br>
+19.1 _simple-expression'_ := **epsilon**
 
-19.01 _simple-expression'_ :=
-  1. **addop** _term_ _simple-expression'_
-  2. **epsilon**
+20 _term_ := <_factor_> <_term'_>
 
-20.00 _term_ :=
-  1. _factor_ _term'_
+20.1 _term'_ := **mulop** <_factor_> <_term'_> <br>
+20.1 _term'_ := **epsilon**
 
-20.01 _term'_ :=
-  1. **mulop** _factor_ _term'_
-  2. **epsilon**
+21 _factor_ := **id** <_factor'_> <br>
+21 _factor_ := **num** <br>
+21 _factor_ := **(** <_expression_> **)** <br>
+21 _factor_ := **not** <_factor_>
 
-21.00 _factor_ :=
-  1. **id** _factor'_
-  2. **num**
-  3. **(** _expression_ **)**
-  4. **not** _factor_
+21.1 _factor'_ := **(** <_expression-list_> **)** <br>
+21.1 _factor'_ := **[** <_expression_> **]** <br>
+21.1 _factor'_ := **epsilon**
 
-21.01 _factor'_ :=
-  1. **(** _expression-list_ **)**
-  2. **[** _expression_ **]**
-  3. **epsilon**
-
-22.00 _sign_ :=
-  1. **+** 
-  2. **-**
+22 _sign_ := **+** <br>
+22 _sign_ := **-**
