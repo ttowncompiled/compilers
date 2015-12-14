@@ -120,5 +120,6 @@ func main() {
   tokens, symbols := compiler.Tokenize(listing, rwords)
   OutputTokenFile(tokens, symbols, os.Args[3])
   OutputSymbolFile(symbols, os.Args[3])
+  compiler.Parse(listing, tokens, symbols)
   OutputListingFile(listing, os.Args[3])
 }
