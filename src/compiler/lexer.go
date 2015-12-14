@@ -65,7 +65,7 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
     }
     errorReasons.PushBack("LEXERR: LEADING ZEROS: ")
   }
-  if i >= len(l) || (string(l[i]) != "." && string(l[i]) != "E") {
+  if i >= len(l) || string(l[i]) != "." {
     return index, lib.Token{}
   }
   if string(l[i]) == "." {

@@ -29,7 +29,8 @@ E                    22 (ID)              0xc8201490b0
 +                    26 (ADDOP)           45 (PLUS)
 b                    22 (ID)              0xc820148300
 :=                   28 (ASSIGNOP)        0  (NULL)
-3E4                  13 (NUM)             23 (LONG_REAL)
+3                    13 (NUM)             24 (INT)
+E4                   22 (ID)              0xc820149650
 .                    36 (PERIOD)          0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
 c                    22 (ID)              0xc820148510
@@ -44,12 +45,12 @@ d                    22 (ID)              0xc820148720
 3                    13 (NUM)             24 (INT)
 .                    36 (PERIOD)          0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
-E4                   22 (ID)              0xc82014a7e0
+E4                   22 (ID)              0xc820149650
 e                    22 (ID)              0xc820148930
 :=                   28 (ASSIGNOP)        0  (NULL)
 3                    13 (NUM)             24 (INT)
 +                    26 (ADDOP)           45 (PLUS)
-E4                   22 (ID)              0xc82014a7e0
+E4                   22 (ID)              0xc820149650
 .                    36 (PERIOD)          0  (NULL)
 $                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
 @                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
