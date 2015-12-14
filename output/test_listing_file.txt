@@ -1,0 +1,23 @@
+1. program example(input, output);
+
+2. var a, b, c, d, e: real;
+
+3. begin
+
+4.   a := 3.4E+
+
+5.   b := 3E4.+
+
+6.   c := 3+4E+
+
+7.   d := 3.+E4
+
+8.   e := 3+E4.
+
+9.   $@#
+LEXERR: unrecognized symbol '$'
+LEXERR: unrecognized symbol '@'
+LEXERR: unrecognized symbol '#'
+
+10. end.
+

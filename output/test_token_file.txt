@@ -1,0 +1,59 @@
+Lexeme               Type                 Attribute
+--------------------------------------------------------------
+program              17 (PROGRAM)         0  (NULL)
+example              22 (ID)              0xc8200158c0
+(                    31 (OPEN_PAREN)      0  (NULL)
+input                22 (ID)              0xc820015ad0
+,                    35 (COMMA)           0  (NULL)
+output               22 (ID)              0xc820015ce0
+)                    32 (CLOSE_PAREN)     0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+var                  20 (VAR)             0  (NULL)
+a                    22 (ID)              0xc8201480f0
+,                    35 (COMMA)           0  (NULL)
+b                    22 (ID)              0xc820148300
+,                    35 (COMMA)           0  (NULL)
+c                    22 (ID)              0xc820148510
+,                    35 (COMMA)           0  (NULL)
+d                    22 (ID)              0xc820148720
+,                    35 (COMMA)           0  (NULL)
+e                    22 (ID)              0xc820148930
+:                    34 (COLON)           0  (NULL)
+real                 18 (REAL)            0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+begin                3  (BEGIN)           0  (NULL)
+a                    22 (ID)              0xc8201480f0
+:=                   28 (ASSIGNOP)        0  (NULL)
+3.4                  13 (NUM)             18 (REAL)
+E                    22 (ID)              0xc8201490b0
++                    26 (ADDOP)           45 (PLUS)
+b                    22 (ID)              0xc820148300
+:=                   28 (ASSIGNOP)        0  (NULL)
+3E4                  13 (NUM)             23 (LONG_REAL)
+.                    36 (PERIOD)          0  (NULL)
++                    26 (ADDOP)           45 (PLUS)
+c                    22 (ID)              0xc820148510
+:=                   28 (ASSIGNOP)        0  (NULL)
+3                    13 (NUM)             24 (INT)
++                    26 (ADDOP)           45 (PLUS)
+4                    13 (NUM)             24 (INT)
+E                    22 (ID)              0xc8201490b0
++                    26 (ADDOP)           45 (PLUS)
+d                    22 (ID)              0xc820148720
+:=                   28 (ASSIGNOP)        0  (NULL)
+3                    13 (NUM)             24 (INT)
+.                    36 (PERIOD)          0  (NULL)
++                    26 (ADDOP)           45 (PLUS)
+E4                   22 (ID)              0xc82014a7e0
+e                    22 (ID)              0xc820148930
+:=                   28 (ASSIGNOP)        0  (NULL)
+3                    13 (NUM)             24 (INT)
++                    26 (ADDOP)           45 (PLUS)
+E4                   22 (ID)              0xc82014a7e0
+.                    36 (PERIOD)          0  (NULL)
+$                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
+@                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
+#                    38 (LEXERR)          49 (UNRECOGNIZED_SYMBOL)
+end                  7  (END)             0  (NULL)
+.                    36 (PERIOD)          0  (NULL)
+                     -1 ($)               0  (NULL)
