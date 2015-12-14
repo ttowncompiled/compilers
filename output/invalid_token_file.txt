@@ -1,0 +1,118 @@
+Lexeme               Type                 Attribute
+--------------------------------------------------------------
+program              17 (PROGRAM)         0  (NULL)
+example              22 (ID)              0xc820015ce0
+(                    31 (OPEN_PAREN)      0  (NULL)
+input                22 (ID)              0xc820015dd0
+,                    35 (COMMA)           0  (NULL)
+output               22 (ID)              0xc820015ec0
+)                    32 (CLOSE_PAREN)     0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+var                  20 (VAR)             0  (NULL)
+a                    22 (ID)              0xc820148090
+,                    35 (COMMA)           0  (NULL)
+b                    22 (ID)              0xc820148180
+:                    34 (COLON)           0  (NULL)
+integer              10 (INTEGER)         0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+var                  20 (VAR)             0  (NULL)
+d                    22 (ID)              0xc820148390
+,                    35 (COMMA)           0  (NULL)
+e                    22 (ID)              0xc820148480
+,                    35 (COMMA)           0  (NULL)
+f                    22 (ID)              0xc820148570
+,                    35 (COMMA)           0  (NULL)
+g                    22 (ID)              0xc820148660
+,                    35 (COMMA)           0  (NULL)
+h                    22 (ID)              0xc820148750
+,                    35 (COMMA)           0  (NULL)
+i                    22 (ID)              0xc820148840
+,                    35 (COMMA)           0  (NULL)
+j                    22 (ID)              0xc820148930
+,                    35 (COMMA)           0  (NULL)
+k                    22 (ID)              0xc820148a20
+,                    35 (COMMA)           0  (NULL)
+l                    22 (ID)              0xc820148b10
+,                    35 (COMMA)           0  (NULL)
+m                    22 (ID)              0xc820148c00
+:                    34 (COLON)           0  (NULL)
+real                 18 (REAL)            0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+var                  20 (VAR)             0  (NULL)
+n                    22 (ID)              0xc820148e10
+:                    34 (COLON)           0  (NULL)
+array                2  (ARRAY)           0  (NULL)
+[                    29 (OPEN_BRACKET)    0  (NULL)
+1                    13 (NUM)             24 (INT)
+..                   37 (RANGE)           0  (NULL)
+.                    36 (PERIOD)          0  (NULL)
+10                   13 (NUM)             24 (INT)
+]                    30 (CLOSE_BRACKET)   0  (NULL)
+of                   14 (OF)              0  (NULL)
+integer              10 (INTEGER)         0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+var                  20 (VAR)             0  (NULL)
+o                    22 (ID)              0xc820149380
+:                    34 (COLON)           0  (NULL)
+array                2  (ARRAY)           0  (NULL)
+[                    29 (OPEN_BRACKET)    0  (NULL)
+1                    13 (NUM)             24 (INT)
+..                   37 (RANGE)           0  (NULL)
+.                    36 (PERIOD)          0  (NULL)
+10                   13 (NUM)             24 (INT)
+]                    30 (CLOSE_BRACKET)   0  (NULL)
+of                   14 (OF)              0  (NULL)
+real                 18 (REAL)            0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+function             8  (FUNCTION)        0  (NULL)
+idtoooooolong        38 (LEXERR)          50 (ID_TOO_LONG)
+(                    31 (OPEN_PAREN)      0  (NULL)
+a                    22 (ID)              0xc820148090
+,                    35 (COMMA)           0  (NULL)
+b                    22 (ID)              0xc820148180
+:                    34 (COLON)           0  (NULL)
+integer              10 (INTEGER)         0  (NULL)
+)                    32 (CLOSE_PAREN)     0  (NULL)
+:                    34 (COLON)           0  (NULL)
+integer              10 (INTEGER)         0  (NULL)
+;                    33 (SEMICOLON)       0  (NULL)
+begin                3  (BEGIN)           0  (NULL)
+a                    22 (ID)              0xc820148090
+:=                   28 (ASSIGNOP)        0  (NULL)
+12345678901          38 (LEXERR)          51 (XX_TOO_LONG)
+b                    22 (ID)              0xc820148180
+:=                   28 (ASSIGNOP)        0  (NULL)
+01                   38 (LEXERR)          54 (LEADING_ZEROS)
+d                    22 (ID)              0xc820148390
+:=                   28 (ASSIGNOP)        0  (NULL)
+123456.0E1           38 (LEXERR)          51 (XX_TOO_LONG)
+e                    22 (ID)              0xc820148480
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.123456E1           38 (LEXERR)          52 (YY_TOO_LONG)
+f                    22 (ID)              0xc820148570
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.1E123              38 (LEXERR)          53 (ZZ_TOO_LONG)
+g                    22 (ID)              0xc820148660
+:=                   28 (ASSIGNOP)        0  (NULL)
+01.1E1               38 (LEXERR)          54 (LEADING_ZEROS)
+h                    22 (ID)              0xc820148750
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.10E1               38 (LEXERR)          55 (TRAILING_ZEROS)
+i                    22 (ID)              0xc820148840
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.1E01               38 (LEXERR)          54 (LEADING_ZEROS)
+j                    22 (ID)              0xc820148930
+:=                   28 (ASSIGNOP)        0  (NULL)
+123456.0             38 (LEXERR)          51 (XX_TOO_LONG)
+k                    22 (ID)              0xc820148a20
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.123456             38 (LEXERR)          52 (YY_TOO_LONG)
+l                    22 (ID)              0xc820148b10
+:=                   28 (ASSIGNOP)        0  (NULL)
+01.0                 38 (LEXERR)          54 (LEADING_ZEROS)
+m                    22 (ID)              0xc820148c00
+:=                   28 (ASSIGNOP)        0  (NULL)
+1.10                 38 (LEXERR)          55 (TRAILING_ZEROS)
+end                  7  (END)             0  (NULL)
+.                    36 (PERIOD)          0  (NULL)
+                     -1 ($)               0  (NULL)

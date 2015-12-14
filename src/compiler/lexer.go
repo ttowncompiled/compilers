@@ -77,34 +77,51 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
     }
   }
   lexeme := l[index:i]
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
   if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, ".") > 5) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, "E") - strings.Index(lexeme, ".") > 6) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG FRACTIONAL PART: " + lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, ".")+2 < strings.Index(lexeme, "E") && string(lexeme[strings.Index(lexeme, "E")-1]) == "0" && unicode.IsDigit(rune(lexeme[strings.Index(lexeme, "E")-2]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: TRAILING ZEROS: " + t.Lexeme, &t})
-    return i, t
   }
   if (len(lexeme) - strings.Index(lexeme, "E") > 3) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.ZZ_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.ZZ_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG EXPONENTIAL PART: " + lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, "E")+2 < len(lexeme) && string(lexeme[strings.Index(lexeme, "E")+1]) == "0" && unicode.IsDigit(rune(lexeme[strings.Index(lexeme, "E")+2]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
+  }
+  if errorFlag {
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.LONG_REAL}
@@ -132,24 +149,37 @@ func MatchReal(line lib.Line, index int) (int, lib.Token) {
     }
   }
   lexeme := l[index:i]
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
   if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, ".") > 5) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG CHARACTERISTIC: " + lexeme, &t})
-    return i, t
   }
   if (len(lexeme) - strings.Index(lexeme, ".") > 6) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.YY_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG FRACTIONAL PART: " + lexeme, &t})
-    return i, t
   }
   if (strings.Index(lexeme, ".")+2 < len(lexeme) && string(lexeme[len(lexeme)-1]) == "0" && unicode.IsDigit(rune(lexeme[len(lexeme)-2]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.TRAILING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: TRAILING ZEROS: " + t.Lexeme, &t})
+  }
+  if errorFlag {
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.REAL}
@@ -165,14 +195,23 @@ func MatchInt(line lib.Line, index int) (int, lib.Token) {
     i++
   }
   lexeme := l[index:i]
+  t := lib.Token{-1, "", lib.NULL, lib.NULL}
+  errorFlag := false
   if (len(lexeme) > 1 && string(lexeme[0]) == "0" && unicode.IsDigit(rune(lexeme[1]))) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.LEADING_ZEROS}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: LEADING ZEROS: " + t.Lexeme, &t})
-    return i, t
   }
   if (len(lexeme) > 10) {
-    t := lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+    if !errorFlag {
+      t = lib.Token{line.Number, lexeme, lib.LEXERR, lib.XX_TOO_LONG}
+      errorFlag = true
+    }
     line.Errors.PushBack(lib.Error{"LEXERR: EXTRA LONG INTEGER: " + lexeme, &t})
+  }
+  if errorFlag {
     return i, t
   }
   return i, lib.Token{line.Number, lexeme, lib.NUM, lib.INT}
