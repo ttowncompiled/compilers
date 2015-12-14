@@ -4,9 +4,9 @@
 
 3. var d, e, f, g, h, i, j, k, l, m: real;
 
-4. var n: array[1...10] of integer;
+4. var n: array[1..10] of integer;
 
-5. var o: array[1...10] of real;
+5. var o: array[1..10] of real;
 
 6. function gcd(a, b: integer): integer;
 

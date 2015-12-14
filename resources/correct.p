@@ -1,8 +1,8 @@
 program example(input, output);
 var a, b: integer;
 var d, e, f, g, h, i, j, k, l, m: real;
-var n: array[1...10] of integer;
-var o: array[1...10] of real;
+var n: array[1..10] of integer;
+var o: array[1..10] of real;
 function gcd(a, b: integer): integer;
 begin
   a := 1

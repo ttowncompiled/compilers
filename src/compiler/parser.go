@@ -61,10 +61,117 @@ func identifierList(listing *list.List, tokens *list.List) {
   identifierListPrime(listing, tokens)
 }
 
+func type_(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.INTEGER)
+  if !ok {
+    t, ok = match(tokens, lib.REAL)
+  }
+  if ok {
+    // standardType(listing, tokens)
+  }
+  t, ok = match(tokens, lib.ARRAY)
+  if !ok {
+    report(listing, "integer OR real OR array", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.OPEN_BRACKET); !ok {
+    report(listing, "[", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.NUM); !ok {
+    report(listing, "NUM", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.RANGE); !ok {
+    report(listing, "..", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.NUM); !ok {
+    report(listing, "NUM", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.CLOSE_BRACKET); !ok {
+    report(listing, "]", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.OF); !ok {
+    report(listing, "of", t)
+    sync(tokens, lib.TypeFollows())
+    return
+  }
+  // standardType(listing, tokens)
+}
+
+func declarations(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.VAR)
+  if !ok {
+    report(listing, "var", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.ID); !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.COLON); !ok {
+    report(listing, ":", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  // type_(listing, tokens)
+  if t, ok = match(tokens, lib.SEMICOLON); !ok {
+    report(listing, ";", t)
+    sync(tokens, lib.DeclarationsFollows())
+    return
+  }
+  declarationsPrime(listing, tokens)
+}
+
+func declarationsPrime(listing *list.List, tokens *list.List) {
+  t, ok := match(tokens, lib.VAR)
+  if !ok {
+    if t, ok = match(tokens, lib.FUNCTION); ok {
+      // epsilon production
+      return
+    }
+    if t, ok = match(tokens, lib.BEGIN); ok {
+      // epsilon production
+      return
+    }
+    report(listing, "var OR function OR begin", t)
+    sync(tokens, lib.DeclarationsPrimeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.ID); !ok {
+    report(listing, "ID", t)
+    sync(tokens, lib.DeclarationsPrimeFollows())
+    return
+  }
+  if t, ok = match(tokens, lib.COLON); !ok {
+    report(listing, ":", t)
+    sync(tokens, lib.DeclarationsPrimeFollows())
+    return
+  }
+  type_(listing, tokens)
+  if t, ok = match(tokens, lib.SEMICOLON); !ok {
+    report(listing, ";", t)
+    sync(tokens, lib.DeclarationsPrimeFollows())
+    return
+  }
+  declarationsPrime(listing, tokens)
+}
+
 func programBody(listing *list.List, tokens *list.List) {
   t, ok := match(tokens, lib.VAR)
   if ok {
-    // declarations(listing, tokens)
+    declarations(listing, tokens)
     // programSubbody(listing, tokens)
     return
   }

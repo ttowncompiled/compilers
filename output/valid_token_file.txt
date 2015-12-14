@@ -45,7 +45,6 @@ array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ..                   37 (RANGE)           0  (NULL)
-.                    36 (PERIOD)          0  (NULL)
 10                   13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 of                   14 (OF)              0  (NULL)
@@ -58,14 +57,13 @@ array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ..                   37 (RANGE)           0  (NULL)
-.                    36 (PERIOD)          0  (NULL)
 10                   13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc820149aa0
+gcd                  22 (ID)              0xc820149a40
 (                    31 (OPEN_PAREN)      0  (NULL)
 a                    22 (ID)              0xc820148300
 ,                    35 (COMMA)           0  (NULL)
@@ -185,7 +183,7 @@ not                  12 (NOT)             0  (NULL)
 1                    13 (NUM)             24 (INT)
 n                    22 (ID)              0xc820149080
 [                    29 (OPEN_BRACKET)    0  (NULL)
-gcd                  22 (ID)              0xc820149aa0
+gcd                  22 (ID)              0xc820149a40
 (                    31 (OPEN_PAREN)      0  (NULL)
 a                    22 (ID)              0xc820148300
 ,                    35 (COMMA)           0  (NULL)
