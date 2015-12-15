@@ -1,6 +1,6 @@
 ## Type Decorations - Ian Riley
 
-1 _program_ := **program id (** <_identifier-list_> **) ;** <_program-body_>
+1 _program_ := **program id (** <_identifier-list_> **) ;** _{ id.type := program }_ <_program-body_>
 
 1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
 1.1 _program-body_ := <_program-subbody_>
@@ -8,9 +8,9 @@
 1.2 _program-subbody_ := <_subprogram-declarations_> <_compound-statement_> **.** <br>
 1.2 _program-subbody_ := <_compound-statement_> **.**
 
-3 _identifier-list_ := **id** _{ id.type := null }_ <_identifier-list'_>
+3 _identifier-list_ := **id** _{ id.type := parg }_ <_identifier-list'_>
 
-3.1 _identifier-list'_ := **, id** _{ id.type := null }_ <_identifier-list'_> <br>
+3.1 _identifier-list'_ := **, id** _{ id.type := parg }_ <_identifier-list'_> <br>
 3.1 _identifier-list'_ := **epsilon**
 
 4 _declarations_ := **var id :** <_type_> _{ id.type := type.type }_ **;** <_declarations'_>

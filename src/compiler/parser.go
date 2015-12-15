@@ -974,6 +974,6 @@ func program(listing *list.List, tokens *list.List) {
   }
 }
 
-func Parse(listing *list.List, tokens *list.List, symbols map[string]*lib.Token) {
+func Parse(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   program(listing, tokens)
 }

@@ -74,7 +74,7 @@ func OutputListingFile(listing *list.List, name string) {
   }
 }
 
-func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token, name string) {
+func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Symbol, name string) {
   fpath, e0 := filepath.Abs("output/" + name + "_token_file.txt")
   check(e0)
   f, e1 := os.Create(fpath)
@@ -86,7 +86,7 @@ func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token, name stri
   for e := tokens.Front(); e != nil; e = e.Next() {
     t := e.Value.(lib.Token)
     if t.Type == lib.ID {
-      address := symbols[t.Lexeme]
+      address := symbols[t.Lexeme].Token
       f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-p\n", t.Lexeme, t.Type, lib.Annotate(t.Type), address))
     } else {
       f.WriteString(fmt.Sprintf("%-20s %-2d %-17s %-2d %-s\n", t.Lexeme, t.Type, lib.Annotate(t.Type), t.Attr, lib.Annotate(t.Attr)))
@@ -94,7 +94,7 @@ func OutputTokenFile(tokens *list.List, symbols map[string]*lib.Token, name stri
   }
 }
 
-func OutputSymbolFile(symbols map[string]*lib.Token, name string) {
+func OutputSymbolFile(symbols map[string]*lib.Symbol, name string) {
   fpath, e0 := filepath.Abs("output/" + name + "_symbol_file.txt")
   check(e0)
   f, e1 := os.Create(fpath)
@@ -104,7 +104,7 @@ func OutputSymbolFile(symbols map[string]*lib.Token, name string) {
   f.WriteString(fmt.Sprintf("%-20s %-20s\n", "Lexeme", "Token"))
   f.WriteString("-----------------------------------------\n")
   for k, v := range symbols {
-    f.WriteString(fmt.Sprintf("%-20s %-20p\n", k, v))
+    f.WriteString(fmt.Sprintf("%-20s %-20p\n", k, v.Token))
   }
 }
 

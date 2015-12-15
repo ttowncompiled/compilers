@@ -58,6 +58,8 @@ const (
   ZZ_TOO_LONG = 53
   LEADING_ZEROS = 54
   TRAILING_ZEROS = 55
+  PARG = 56
+  FARG = 57
 )
 
 func Annotate(c int) string {
