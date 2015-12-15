@@ -91,17 +91,15 @@
 12.00 F(_compound-statement_) := {
   **.**,
   **;**,
-  **else**,
-  **;**,
-  **end**
+  **end**,
+  **else**
 }
 
 12.01 F(_compound-statement'_) := {
   **.**,
   **;**,
-  **else**,
-  **;**,
   **end**
+  **else**
 }
 
 13.00 F(_optional-statements_) := {
@@ -117,15 +115,15 @@
 }
 
 15.00 F(_statement_) := {
-  **else**,
   **;**,
-  **end**
+  **end**,
+  **else**
 }
 
 15.01 F(_statement'_) := {
-  **else**,
   **;**,
-  **end**
+  **end**,
+  **else**
 }
 
 16.00 F(_variable_) := {
@@ -145,68 +143,74 @@
 }
 
 18.00 F(_expression_) := {
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**
   **)**
 }
 
 18.01 F(_expression'_) := {
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**
   **)**
 }
 
 19.00 F(_simple-expression_) := {
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 
 19.01 F(_simple-expression'_) := {
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 
 20.00 F(_term_) := {
   **addop**,
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 
 20.01 F(_term'_) := {
   **addop**,
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 
@@ -214,12 +218,13 @@
   **mulop**,
   **addop**,
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 
@@ -227,12 +232,13 @@
   **mulop**,
   **addop**,
   **relop**,
-  **else**,
   **;**,
   **end**,
+  **else**,
   **then**,
   **do**,
   **]**,
+  **,**,
   **)**
 }
 

@@ -405,6 +405,9 @@ func factorPrime(listing *list.List, tokens *list.List) {
     t, ok = match(tokens, lib.CLOSE_BRACKET)
   }
   if !ok {
+    t, ok = match(tokens, lib.COMMA)
+  }
+  if !ok {
     t, ok = match(tokens, lib.CLOSE_PAREN)
   }
   if !ok {
@@ -474,6 +477,9 @@ func termPrime(listing *list.List, tokens *list.List) {
     t, ok = match(tokens, lib.CLOSE_BRACKET)
   }
   if !ok {
+    t, ok = match(tokens, lib.COMMA)
+  }
+  if !ok {
     t, ok = match(tokens, lib.CLOSE_PAREN)
   }
   if !ok {
@@ -529,6 +535,9 @@ func simpleExpressionPrime(listing *list.List, tokens *list.List) {
   }
   if !ok {
     t, ok = match(tokens, lib.CLOSE_BRACKET)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.COMMA)
   }
   if !ok {
     t, ok = match(tokens, lib.CLOSE_PAREN)
@@ -598,6 +607,9 @@ func expressionPrime(listing *list.List, tokens *list.List) {
   }
   if !ok {
     t, ok = match(tokens, lib.CLOSE_BRACKET)
+  }
+  if !ok {
+    t, ok = match(tokens, lib.COMMA)
   }
   if !ok {
     t, ok = match(tokens, lib.CLOSE_PAREN)

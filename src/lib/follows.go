@@ -208,6 +208,7 @@ func ExpressionFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -220,6 +221,7 @@ func ExpressionPrimeFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -233,6 +235,7 @@ func SimpleExpressionFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -246,6 +249,7 @@ func SimpleExpressionPrimeFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -260,6 +264,7 @@ func TermFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -274,6 +279,7 @@ func TermPrimeFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -289,6 +295,7 @@ func FactorFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
@@ -304,6 +311,7 @@ func FactorPrimeFollows() *list.List {
   follows.PushBack(THEN)
   follows.PushBack(DO)
   follows.PushBack(CLOSE_BRACKET)
+  follows.PushBack(COMMA)
   follows.PushBack(CLOSE_PAREN)
   return follows
 }
