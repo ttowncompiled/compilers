@@ -1,5 +1,6 @@
 Lexeme               Token               
 -----------------------------------------
+<<<<<<< 3a0242d740ecdbe9a4792928c79b8660286f99b6
 <<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 e                    0xc8201760c0        
 output               0xc82016c0c0        
@@ -23,3 +24,15 @@ n                    0xc82014b4a0
 o                    0xc82014c150        
 gcd                  0xc82014cde0        
 >>>>>>> Adds initial id entry updates.
+=======
+b                    0xc82016c900        
+n                    0xc82016d1a0        
+gcd                  0xc82016eae0        
+o                    0xc82016de30        
+e                    0xc8201760c0        
+example              0xc820077c80        
+input                0xc820077e90        
+output               0xc82016c0c0        
+a                    0xc82016c4b0        
+d                    0xc82016cd50        
+>>>>>>> Adds pointer to previous type decoration to keep track of the history.

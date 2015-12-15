@@ -34,8 +34,7 @@ func MatchId(line lib.Line, index int, rwords map[string]lib.Rword, symbols map[
   }
   t := lib.Token{line.Number, lex, lib.ID, lib.NULL}
   if _, ok := symbols[lex]; !ok {
-    d := lib.Decoration{lib.NULL}
-    symbols[lex] = &lib.Symbol{&t, &d}
+    symbols[lex] = &lib.Symbol{&t, lib.Decoration{lib.NULL, nil}}
   }
   return i, t
 }

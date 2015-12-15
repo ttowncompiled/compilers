@@ -57,8 +57,8 @@ func identifierListPrime(listing *list.List, tokens *list.List, symbols map[stri
       sync(tokens, lib.IdentifierListPrimeFollows())
       return
     }
-    symbols[t.Lexeme].Decoration = &lib.Decoration{lib.PARG}
-    fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.Type))
+    symbols[t.Lexeme].Decoration = lib.Decoration{lib.PARG, &(symbols[t.Lexeme].Decoration)}
+    fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.TypeD()))
     identifierListPrime(listing, tokens, symbols)
     return
   }
@@ -78,8 +78,8 @@ func identifierList(listing *list.List, tokens *list.List, symbols map[string]*l
     sync(tokens, lib.IdentifierListFollows())
     return
   }
-  symbols[t.Lexeme].Decoration = &lib.Decoration{lib.PARG}
-  fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.Type))
+  symbols[t.Lexeme].Decoration = lib.Decoration{lib.PARG, &(symbols[t.Lexeme].Decoration)}
+  fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.TypeD()))
   identifierListPrime(listing, tokens, symbols)
 }
 
@@ -972,8 +972,8 @@ func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symb
     sync(tokens, lib.ProgramFollows())
     return
   }
-  symbols[id.Lexeme].Decoration = &lib.Decoration{lib.PROGRAM}
-  fmt.Println(id.Lexeme, lib.Annotate(symbols[id.Lexeme].Decoration.Type))
+  symbols[id.Lexeme].Decoration = lib.Decoration{lib.PROGRAM, &(symbols[id.Lexeme].Decoration)}
+  fmt.Println(id.Lexeme, lib.Annotate(symbols[id.Lexeme].Decoration.TypeD()))
   programBody(listing, tokens)
   if t, ok = matchYank(tokens, lib.EOF); !ok {
     report(listing, "EOF", t)
