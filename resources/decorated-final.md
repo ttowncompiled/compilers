@@ -84,11 +84,11 @@
 18.1 _expression'_ := **relop** <_simple-expression_> _{ expression'.type := **if** expression'.in = simple-expression.type **then** boolean **else** type-error* }_ <br>
 18.1 _expression'_ := **epsilon** _{ expression'.type := expression'.in }_
 
-19 _simple-expression_ := <_term_> <_simple-expression'_> <br>
-19 _simple-expression_ := <_sign_> <_term_> <_simple-expression'_>
+19 _simple-expression_ := <_term_> _{ simple-expression'.in := term.type }_ <_simple-expression'_> _{ simple-expression.type := simple-expression'.type }_ <br>
+19 _simple-expression_ := <_sign_> <_term_> _{ simple-expression'.in := term.type }_ <_simple-expression'_> _{ simple-expression.type := simple-expression'.type }_
 
-19.1 _simple-expression'_ := **addop** <_term_> <_simple-expression'_> <br>
-19.1 _simple-expression'_ := **epsilon**
+19.1 _simple-expression'_ := **addop** <_term_> _{ simple-expression1'.in := **if** simple-expression'.in = term.type **then** term.type **else** type-error* }_ <_simple-expression1'_> _{ simple-expression'.type := simple-expression1'.type }_ <br>
+19.1 _simple-expression'_ := **epsilon** _{ simple-expression'.type := simple-expression'.in }_
 
 20 _term_ := <_factor_> <_term'_>
 
