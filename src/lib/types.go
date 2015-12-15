@@ -13,6 +13,11 @@ type Error struct {
   Value *Token
 }
 
+type Rword struct {
+  Type int
+  Attr int
+}
+
 type Token struct {
   LineNumber int
   Lexeme string

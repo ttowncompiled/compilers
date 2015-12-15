@@ -1,21 +1,21 @@
-and 1
-array 2
-begin 3
-div 4
-do 5
-else 6
-end 7
-function 8
-if 9
-integer 10
-mod 11
-not 12
-num 13
-of 14
-or 15
-procedure 16
-program 17
-real 18
-then 19
-var 20
-while 21
+and 27 1
+array 2 0
+begin 3 0
+div 27 4
+do 5 0
+else 6 0
+end 7 0
+function 8 0
+if 9 0
+integer 10 0
+mod 27 11
+not 12 0
+num 13 0
+of 14 0
+or 26 15
+procedure 16 0
+program 17 0
+real 18 0
+then 19 0
+var 20 0
+while 21 0

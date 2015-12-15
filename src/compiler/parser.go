@@ -23,6 +23,9 @@ func matchYank(tokens *list.List, expectedType int) (lib.Token, bool) {
 }
 
 func report(listing *list.List, expected string, t lib.Token) {
+  if t.Type == lib.EOF {
+    return
+  }
   e := listing.Front()
   for i := 1; i < t.LineNumber; i++ {
     e = e.Next()
@@ -47,16 +50,22 @@ func sync(tokens *list.List, follows *list.List) bool {
 
 func identifierListPrime(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.COMMA)
-  if !ok {
-    // epsilon production
+  if ok {
+    if t, ok = matchYank(tokens, lib.ID); !ok {
+      report(listing, "ID", t)
+      sync(tokens, lib.IdentifierListPrimeFollows())
+      return
+    }
+    identifierListPrime(listing, tokens)
     return
   }
-  if t, ok = matchYank(tokens, lib.ID); !ok {
-    report(listing, "ID", t)
+  t, ok = match(tokens, lib.CLOSE_PAREN)
+  if !ok {
+    report(listing, ", OR )", t)
     sync(tokens, lib.IdentifierListPrimeFollows())
     return
   }
-  identifierListPrime(listing, tokens)
+  // epsilon production
 }
 
 func identifierList(listing *list.List, tokens *list.List) {
@@ -89,6 +98,7 @@ func type_(listing *list.List, tokens *list.List) {
   }
   if ok {
     standardType(listing, tokens)
+    return
   }
   t, ok = matchYank(tokens, lib.ARRAY)
   if !ok {
@@ -131,36 +141,36 @@ func type_(listing *list.List, tokens *list.List) {
 
 func declarationsPrime(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.VAR)
+  if ok {
+    if t, ok = matchYank(tokens, lib.ID); !ok {
+      report(listing, "ID", t)
+      sync(tokens, lib.DeclarationsPrimeFollows())
+      return
+    }
+    if t, ok = matchYank(tokens, lib.COLON); !ok {
+      report(listing, ":", t)
+      sync(tokens, lib.DeclarationsPrimeFollows())
+      return
+    }
+    type_(listing, tokens)
+    if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
+      report(listing, ";", t)
+      sync(tokens, lib.DeclarationsPrimeFollows())
+      return
+    }
+    declarationsPrime(listing, tokens)
+    return
+  }
+  t, ok = match(tokens, lib.FUNCTION)
   if !ok {
-    if t, ok = match(tokens, lib.FUNCTION); ok {
-      // epsilon production
-      return
-    }
-    if t, ok = match(tokens, lib.BEGIN); ok {
-      // epsilon production
-      return
-    }
+    t, ok = match(tokens, lib.BEGIN)
+  }
+  if !ok {
     report(listing, "var OR function OR begin", t)
     sync(tokens, lib.DeclarationsPrimeFollows())
     return
   }
-  if t, ok = matchYank(tokens, lib.ID); !ok {
-    report(listing, "ID", t)
-    sync(tokens, lib.DeclarationsPrimeFollows())
-    return
-  }
-  if t, ok = matchYank(tokens, lib.COLON); !ok {
-    report(listing, ":", t)
-    sync(tokens, lib.DeclarationsPrimeFollows())
-    return
-  }
-  type_(listing, tokens)
-  if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
-    report(listing, ";", t)
-    sync(tokens, lib.DeclarationsPrimeFollows())
-    return
-  }
-  declarationsPrime(listing, tokens)
+  // epsilon production
 }
 
 func declarations(listing *list.List, tokens *list.List) {
@@ -204,6 +214,7 @@ func parameterListPrime(listing *list.List, tokens *list.List) {
     }
     type_(listing, tokens)
     parameterListPrime(listing, tokens)
+    return
   }
   if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, "; OR )", t)
@@ -259,6 +270,7 @@ func subprogramHeadPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.SubprogramHeadPrimeFollows())
       return
     }
+    return
   }
   t, ok = matchYank(tokens, lib.COLON)
   if !ok {
@@ -293,6 +305,7 @@ func statementPrime(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.ELSE)
   if ok {
     statement(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.SEMICOLON)
   if !ok {
@@ -311,6 +324,7 @@ func expressionListPrime(listing *list.List, tokens *list.List) {
   if ok {
     expression(listing, tokens)
     expressionListPrime(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.CLOSE_PAREN)
   if !ok {
@@ -353,6 +367,7 @@ func factorPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.FactorPrimeFollows())
       return
     }
+    return
   }
   t, ok = matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
@@ -362,6 +377,7 @@ func factorPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.FactorPrimeFollows())
       return
     }
+    return
   }
   t, ok = match(tokens, lib.MULOP)
   if !ok {
@@ -403,6 +419,7 @@ func factor(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.ID)
   if ok {
     factorPrime(listing, tokens)
+    return
   }
   t, ok = matchYank(tokens, lib.NUM)
   if ok {
@@ -432,6 +449,7 @@ func termPrime(listing *list.List, tokens *list.List) {
   if ok {
     factor(listing, tokens)
     termPrime(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.ADDOP)
   if !ok {
@@ -491,6 +509,7 @@ func simpleExpressionPrime(listing *list.List, tokens *list.List) {
   if ok {
     term(listing, tokens)
     simpleExpressionPrime(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.RELOP)
   if !ok {
@@ -545,6 +564,7 @@ func simpleExpression(listing *list.List, tokens *list.List) {
   if ok {
     term(listing, tokens)
     simpleExpressionPrime(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.ADDOP)
   if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
@@ -561,6 +581,7 @@ func expressionPrime(listing *list.List, tokens *list.List) {
   t, ok := matchYank(tokens, lib.RELOP)
   if ok {
     simpleExpression(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.ELSE)
   if !ok {
@@ -621,6 +642,7 @@ func variablePrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.VariablePrimeFollows())
       return
     }
+    return
   }
   t, ok = match(tokens, lib.ASSIGNOP)
   if !ok {
@@ -651,10 +673,12 @@ func statement(listing *list.List, tokens *list.List) {
       return
     }
     expression(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.BEGIN)
   if ok {
     compoundStatement(listing, tokens)
+    return
   }
   t, ok = matchYank(tokens, lib.IF)
   if ok {
@@ -666,6 +690,7 @@ func statement(listing *list.List, tokens *list.List) {
     }
     statement(listing, tokens)
     statementPrime(listing, tokens)
+    return
   }
   t, ok = matchYank(tokens, lib.WHILE)
   if !ok {
@@ -687,6 +712,7 @@ func statementListPrime(listing *list.List, tokens *list.List) {
   if ok {
     statement(listing, tokens)
     statementListPrime(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.END)
   if !ok {
@@ -754,6 +780,7 @@ func compoundStatementPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.CompoundStatementPrimeFollows())
       return
     }
+    return
   }
   t, ok = matchYank(tokens, lib.END)
   if !ok {
@@ -778,6 +805,7 @@ func subprogramSubbody(listing *list.List, tokens *list.List) {
   if ok {
     subprogramDeclarations(listing, tokens)
     compoundStatement(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.BEGIN)
   if !ok {
@@ -793,6 +821,7 @@ func subprogramBody(listing *list.List, tokens *list.List) {
   if ok {
     declarations(listing, tokens)
     subprogramSubbody(listing, tokens)
+    return
   }
   t, ok = match(tokens, lib.FUNCTION)
   if !ok {
@@ -827,6 +856,7 @@ func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
       return
     }
     subprogramDeclarationsPrime(listing, tokens)
+    return
   }
   if t, ok = match(tokens, lib.BEGIN); !ok {
     report(listing, "function OR begin", t)
@@ -862,6 +892,7 @@ func programSubbody(listing *list.List, tokens *list.List) {
       sync(tokens, lib.ProgramSubbodyFollows())
       return
     }
+    return
   }
   t, ok = match(tokens, lib.BEGIN)
   if !ok {
@@ -923,6 +954,7 @@ func program(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ProgramFollows())
     return
   }
+  programBody(listing, tokens)
 }
 
 func Parse(listing *list.List, tokens *list.List, symbols map[string]*lib.Token) {

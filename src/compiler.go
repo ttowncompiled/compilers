@@ -37,19 +37,21 @@ func ReadSourceFile(fpath string) *list.List {
   return listing
 }
 
-func ReadReservedWordFile(rpath string) map[string]int {
+func ReadReservedWordFile(rpath string) map[string]lib.Rword {
   f, e1 := os.Open(rpath)
   check(e1)
   defer f.Close()
   reader := bufio.NewReader(f)
-  m := make(map[string]int)
+  m := make(map[string]lib.Rword)
   line, _, e2 := reader.ReadLine()
   for e2 != io.EOF {
     check(e2)
     l := regexp.MustCompile(" ").Split(string(line), -1)
-    value, e3 := strconv.ParseInt(l[1], 10, 64)
+    typeEnum, e3 := strconv.ParseInt(l[1], 10, 64)
     check(e3)
-    m[l[0]] = int(value)
+    attrEnum, e4 := strconv.ParseInt(l[2], 10, 64)
+    check(e4)
+    m[l[0]] = lib.Rword{int(typeEnum), int(attrEnum)}
     line, _, e2 = reader.ReadLine()
   }
   return m
