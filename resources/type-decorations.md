@@ -1,4 +1,4 @@
-## Massaged Productions (Final) - Ian Riley
+## Type Decorations - Ian Riley
 
 1 _program_ := **program id (** <_identifier-list_> **) ;** <_program-body_>
 
