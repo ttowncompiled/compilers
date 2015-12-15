@@ -1,8 +1,8 @@
 ## Scope Decorations - Ian Riley
 
-1 _program_ := **program id** _{ addGreenNode(id.entry, program, null) }_ **(** <_identifier-list_> **) ;** <_program-body_>
+1 _program_ := **program id** _{ addGreenNode(id.entry, program, null) }_ **(** <_identifier-list_> **) ;** <_program-body_> _{ popGreenNode }_
 
-1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
+1.1 _program-body_ := <_declarations_> <_program-subbody_> _{ freeBlueNodes }_ <br>
 1.1 _program-body_ := <_program-subbody_>
 
 1.2 _program-subbody_ := <_subprogram-declarations_> <_compound-statement_> **.** <br>
@@ -24,14 +24,14 @@
 6 _standard-type_ := **integer** <br>
 6 _standard-type_ := **real**
 
-7 _subprogram-declarations_ := <_subprogram-declaration_> **;** <_subprogram-declarations'_>
+7 _subprogram-declarations_ := <_subprogram-declaration_> **;** _{ popGreenNode }_ <_subprogram-declarations'_>
 
-7.1 _subprogram-declarations'_ := <_subprogram-declaration_> **;** <_subprogram-declarations'_> <br>
+7.1 _subprogram-declarations'_ := <_subprogram-declaration_> **;** _{ popGreenNode }_ <_subprogram-declarations'_> <br>
 7.1 _subprogram-declarations'_ := **epsilon**
 
-8 _subprogram-declaration_ := <_subprogram-head_> <_subprogram-body_>
+8 _subprogram-declaration_ := <_subprogram-head_> <_subprogram-body_> _{ freeGreenNodes }_
 
-8.1 _subprogram-body_ := <_declarations_> <_subprogram-subbody_> <br>
+8.1 _subprogram-body_ := <_declarations_> <_subprogram-subbody_> _{ freeBlueNodes }_ <br>
 8.1 _subprogram-body_ := <_subprogram-subbody_>
 
 8.2 _subprogram-subbody_ := <_subprogram-declarations_> <_compound-statement_> <br>
