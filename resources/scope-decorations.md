@@ -1,6 +1,6 @@
 ## Scope Decorations - Ian Riley
 
-1 _program_ := **program id** _{ addGreenNode(id, program, null) }_ **(** <_identifier-list_> **) ;** <_program-body_>
+1 _program_ := **program id** _{ addGreenNode(id.entry, program, null) }_ **(** <_identifier-list_> **) ;** <_program-body_>
 
 1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
 1.1 _program-body_ := <_program-subbody_>
@@ -8,14 +8,14 @@
 1.2 _program-subbody_ := <_subprogram-declarations_> <_compound-statement_> **.** <br>
 1.2 _program-subbody_ := <_compound-statement_> **.**
 
-3 _identifier-list_ := **id** _{ addBlueNode(id, parg, null) }_ <_identifier-list'_>
+3 _identifier-list_ := **id** _{ addBlueNode(id.entry, parg, null) }_ <_identifier-list'_>
 
-3.1 _identifier-list'_ := **, id** _{ addBlueNode(id, parg, null) }_ <_identifier-list'_> <br>
+3.1 _identifier-list'_ := **, id** _{ addBlueNode(id.entry, parg, null) }_ <_identifier-list'_> <br>
 3.1 _identifier-list'_ := **epsilon**
 
-4 _declarations_ := **var id :** <_type_> **;** _{ addBlueNode(id, var, type.type) }_ <_declarations'_>
+4 _declarations_ := **var id :** <_type_> **;** _{ addBlueNode(id.entry, var, type.type) }_ <_declarations'_>
 
-4.1 _declarations'_ := **var id :** <_type_> **;** _{ addBlueNode(id, var, type.type) }_ <_declarations'_> <br>
+4.1 _declarations'_ := **var id :** <_type_> **;** _{ addBlueNode(id.entry, var, type.type) }_ <_declarations'_> <br>
 4.1 _declarations'_ := **epsilon**
 
 5 _type_ := <_standard-type_> <br>
@@ -37,16 +37,16 @@
 8.2 _subprogram-subbody_ := <_subprogram-declarations_> <_compound-statement_> <br>
 8.2 _subprogram-subbody_ := <_compound-statement_>
 
-9 _subprogram-head_ := **function id** _{ addGreenNode(id, function, void) }_ <_subprogram-head'_>
+9 _subprogram-head_ := **function id** _{ addGreenNode(id.entry, function, void) }_ <_subprogram-head'_>
 
 9.1 _subprogram-head'_ := <_arguments_> **:** <_standard-type_> **;** _{ modifyGreenNode(standard-type.type) }_ <br>
 9.1 _subprogram-head'_ := **:** <_standard-type_> **;** _{ modifyGreenNode(standard-type.type) }_
 
 10 _arguments_ := **(** <_parameter-list_> **)**
 
-11 _parameter-list_ := **id :** <_type_> _{ addBlueNode(id, farg, type.type) }_ <_parameter-list'_>
+11 _parameter-list_ := **id :** <_type_> _{ addBlueNode(id.entry, farg, type.type) }_ <_parameter-list'_>
 
-11.1 _parameter-list'_ := **; id :** <_type_> _{ addBlueNode(id, farg, type.type) }_ <_parameter-list'_> <br>
+11.1 _parameter-list'_ := **; id :** <_type_> _{ addBlueNode(id.entry, farg, type.type) }_ <_parameter-list'_> <br>
 11.1 _parameter-list'_ := **epsilon**
 
 12 _compound-statement_ := **begin** <_compound-statement'_>
@@ -69,7 +69,7 @@
 15.1 _statement'_ := **else** <_statement_> <br>
 15.1 _statement'_ := **epsilon**
 
-16 _variable_ := **id** <_variable'_>
+16 _variable_ := **id** _{ checkLocalScope(id.entry) }_ <_variable'_>
 
 16.1 _variable'_ := **[** <_expression_> **]** <br>
 16.1 _variable'_ := **epsilon**
@@ -95,7 +95,7 @@
 20.1 _term'_ := **mulop** <_factor_> <_term'_> <br>
 20.1 _term'_ := **epsilon**
 
-21 _factor_ := **id** <_factor'_> <br>
+21 _factor_ := **id** _{ checkLocalScope(id.entry) }_ <_factor'_> <br>
 21 _factor_ := **num** <br>
 21 _factor_ := **(** <_expression_> **)** <br>
 21 _factor_ := **not** <_factor_>
