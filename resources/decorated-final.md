@@ -69,10 +69,10 @@
 15.1 _statement'_ := **else** <_statement_> <br>
 15.1 _statement'_ := **epsilon**
 
-16 _variable_ := **id** <_variable'_>
+16 _variable_ := **id** _{ id.type := lookup(id.entry); variable'.in := id.type }_ <_variable'_> _{ variable.type := variable'.type }_
 
-16.1 _variable'_ := **[** <_expression_> **]** <br>
-16.1 _variable'_ := **epsilon**
+16.1 _variable'_ := **[** <_expression_> **]** _{ variable'.type := **if** expression.type = integer **and** variable'.in = array(s, t) **then** t **else** type_error* }_<br>
+16.1 _variable'_ := **epsilon** _{ variable'.type := variable'.in }_
 
 17 _expression-list_ := <_expression_> <_expression-list'_>
 
@@ -92,7 +92,7 @@
 
 20 _term_ := <_factor_> <_term'_>
 
-20.1 _term'_ := **mulop** <_factor_> <_term'_> <br>
+20.1 _term'_ := **mulop** _{factor.in := term'.type}_ <_factor_> _{}_ <_term'_> <br>
 20.1 _term'_ := **epsilon**
 
 21 _factor_ := **id** _{factor'.in := id.type}_ <_factor'_> _{factor.type := factor'.type}_<br>
