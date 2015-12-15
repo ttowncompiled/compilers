@@ -79,10 +79,10 @@
 17.1 _expression-list'_ := **,** <_expression_> <_expression-list'_> <br>
 17.1 _expression-list'_ := **epsilon**
 
-18 _expression_ := <_simple-expression_> <_expression'_>
+18 _expression_ := <_simple-expression_> _{ expression'.in := simple-expression.type }_ <_expression'_> _{ expression.type := expression'.type }_
 
-18.1 _expression'_ := **relop** <_simple-expression_> <br>
-18.1 _expression'_ := **epsilon**
+18.1 _expression'_ := **relop** <_simple-expression_> _{ expression'.type := **if** expression'.in = simple-expression.type **then** boolean **else** type-error* }_ <br>
+18.1 _expression'_ := **epsilon** _{ expression'.type := expression'.in }_
 
 19 _simple-expression_ := <_term_> <_simple-expression'_> <br>
 19 _simple-expression_ := <_sign_> <_term_> <_simple-expression'_>
