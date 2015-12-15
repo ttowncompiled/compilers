@@ -74,10 +74,10 @@
 16.1 _variable'_ := **[** <_expression_> **]** _{ variable'.type := **if** expression.type = integer **and** variable'.in = array(s, t) **then** t **else** type-error* }_ <br>
 16.1 _variable'_ := **epsilon** _{ variable'.type := variable'.in }_
 
-17 _expression-list_ := <_expression_> <_expression-list'_>
+17 _expression-list_ := <_expression_> _{ expression-list'.in := **if** expression = expression-list.in[i] **then** expression-list.in **else** type-error* }_ <_expression-list'_> _{ expression-list.type := expression-list'.type }_
 
-17.1 _expression-list'_ := **,** <_expression_> <_expression-list'_> <br>
-17.1 _expression-list'_ := **epsilon**
+17.1 _expression-list'_ := **,** <_expression_> _{ expression-list1'.in := **if** expression = expression-list'.in[i] **then** expression-list'.in **else** type-error* }_ <_expression-list1'_> _{ expression-list'.type := expression-list1'.type }_ <br>
+17.1 _expression-list'_ := **epsilon** _{ expression-list'.type := expression-list'.in }_
 
 18 _expression_ := <_simple-expression_> _{ expression'.in := simple-expression.type }_ <_expression'_> _{ expression.type := expression'.type }_
 
@@ -100,8 +100,8 @@
 21 _factor_ := **(** <_expression_> **)** _{ factor.type := expression.type }_ <br>
 21 _factor_ := **not** <_factor1_> _{ factor.type := **if** factor1.type = boolean **then** boolean **else** type-error* }_ 
 
-21.1 _factor'_ := **(** <_expression-list_> **)** _{ factor'.type := **if** expression-list.type = s **and** factor'.in = s -> t **then** t **else** type-error* }_ <br>
-21.1 _factor'_ := **[** <_expression_> **]** _{ factor'.type := **if** expression.type = interger **and** factor'.in = array(s, t) **then** t **else** type-error* }_ <br>
+21.1 _factor'_ := **(** _{ expression-list.in := **if** factor'.in = s -> t **then** s **else** type-error }_ <_expression-list_> **)** _{ factor'.type := **if** expression-list.type = s **and** factor'.in = s -> t **then** t **else** type-error* }_ <br>
+21.1 _factor'_ := **[** <_expression_> **]** _{ factor'.type := **if** expression.type = integer **and** factor'.in = array(s, t) **then** t **else** type-error* }_ <br>
 21.1 _factor'_ := **epsilon** _{ factor'.type := factor'.in }_
 
 22 _sign_ := **+** <br>
