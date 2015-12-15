@@ -1,4 +1,4 @@
-## Massaged Productions (Final) - Ian Riley
+## Massaged Productions (Left factoring) - Ian Riley
 
 1 _program_ := **program id (** <_identifier-list_> **) ;** <_program-body_>
 
