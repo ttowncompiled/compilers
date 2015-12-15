@@ -90,19 +90,19 @@
 19.1 _simple-expression'_ := **addop** <_term_> _{ simple-expression1'.in := **if** simple-expression'.in = term.type **then** term.type **else** type-error* }_ <_simple-expression1'_> _{ simple-expression'.type := simple-expression1'.type }_ <br>
 19.1 _simple-expression'_ := **epsilon** _{ simple-expression'.type := simple-expression'.in }_
 
-20 _term_ := <_factor_> <_term'_>
+20 _term_ := <_factor_> _{ term'.in := factor.type }_ <_term'_> _{ term.type := term'.type }_
 
-20.1 _term'_ := **mulop** _{factor.in := term'.type}_ <_factor_> _{}_ <_term'_> <br>
-20.1 _term'_ := **epsilon**
+20.1 _term'_ := **mulop** <_factor_> _{ term1'.in := **if** term'.in = factor.type **then** factor.type **else** type-error* }_ <_term1'_> _{ term'.type := term1'.type }_ <br>
+20.1 _term'_ := **epsilon** _{ term'.type := term'.in }_
 
-21 _factor_ := **id** _{factor'.in := id.type}_ <_factor'_> _{factor.type := factor'.type}_<br>
-21 _factor_ := **num** _{factor.type := num.type}_ <br>
-21 _factor_ := **(** <_expression_> **)** _{factor.type := expression.type}_ <br>
-21 _factor_ := **not** <_factor1_> _{factor1.type == BOOLEAN; factor.type := factor1.type}_ 
+21 _factor_ := **id** _{ id.type := lookup(id.entry); factor'.in := id.type }_ <_factor'_> _{ factor.type := factor'.type }_ <br>
+21 _factor_ := **num** _{ factor.type := num.type }_ <br>
+21 _factor_ := **(** <_expression_> **)** _{ factor.type := expression.type }_ <br>
+21 _factor_ := **not** <_factor1_> _{ factor.type := **if** factor1.type = boolean **then** boolean **else** type-error* }_ 
 
-21.1 _factor'_ := _{factor'.in.type == FUNCTION}_ **(** _{expression-list.in := factor'.in.params}_ <_expression-list_> **)** _{factor'.type := factor'.in.return.type}_<br>
-21.1 _factor'_ := _{factor'.in.type == ARRAY}_ **[** _{expression.in := INT}_ <_expression_> **]** _{factor'.type := factor'.in.val.type}_<br>
-21.1 _factor'_ := **epsilon** _{factor'.type := factor'.in.type}_
+21.1 _factor'_ := **(** <_expression-list_> **)** _{ factor'.type := **if** expression-list.type = s **and** factor'.in = s -> t **then** t **else** type-error* }_ <br>
+21.1 _factor'_ := **[** <_expression_> **]** _{ factor'.type := **if** expression.type = interger **and** factor'.in = array(s, t) **then** t **else** type-error* }_ <br>
+21.1 _factor'_ := **epsilon** _{ factor'.type := factor'.in }_
 
 22 _sign_ := **+** <br>
 22 _sign_ := **-**
