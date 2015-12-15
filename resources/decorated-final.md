@@ -61,17 +61,17 @@
 14.1 _statement-list'_ := **;** <_statement_> <_statement-list'_> <br>
 14.1 _statement-list'_ := **epsilon**
 
-15 _statement_ := <_variable_> **assignop** <_expression_> <br>
-15 _statement_ := <_compound-statement_> <br>
-15 _statement_ := **if** <_expression_> **then** <_statement_> <_statement'_> <br>
-15 _statement_ := **while** <_expression_> **do** <_statement_>
+15 _statement_ := <_variable_> **assignop** <_expression_> _{ statement.type := **if** variable.type = expression.type **then** void **else** type-error* }_ <br>
+15 _statement_ := <_compound-statement_> _{ statement.type := compound-statement.type }_<br>
+15 _statement_ := **if** <_expression_> **then** <_statement1_> _{ statement'.in := statement1.type }_ <_statement'_> _{ statement.type := **if** expression.type = boolean **then** statement'.type **else** type-error* }_<br>
+15 _statement_ := **while** <_expression_> **do** <_statement1_> _{ statement.type := **if** expression.type = boolean **then** statement1.type **else** type-error* }_
 
-15.1 _statement'_ := **else** <_statement_> <br>
-15.1 _statement'_ := **epsilon**
+15.1 _statement'_ := **else** <_statement_> _{ statement'.type := **if** statement'.in = statement.type != type-error **then** void **else** type-error }_ <br>
+15.1 _statement'_ := **epsilon** _{ statement'.type := statement'.in }_
 
 16 _variable_ := **id** _{ id.type := lookup(id.entry); variable'.in := id.type }_ <_variable'_> _{ variable.type := variable'.type }_
 
-16.1 _variable'_ := **[** <_expression_> **]** _{ variable'.type := **if** expression.type = integer **and** variable'.in = array(s, t) **then** t **else** type_error* }_<br>
+16.1 _variable'_ := **[** <_expression_> **]** _{ variable'.type := **if** expression.type = integer **and** variable'.in = array(s, t) **then** t **else** type-error* }_<br>
 16.1 _variable'_ := **epsilon** _{ variable'.type := variable'.in }_
 
 17 _expression-list_ := <_expression_> <_expression-list'_>
