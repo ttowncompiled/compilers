@@ -2,6 +2,7 @@ package compiler
 
 import (
   "container/list"
+  "fmt"
   "lib"
 )
 
@@ -48,7 +49,7 @@ func sync(tokens *list.List, follows *list.List) bool {
   return false
 }
 
-func identifierListPrime(listing *list.List, tokens *list.List) {
+func identifierListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.COMMA)
   if ok {
     if t, ok = matchYank(tokens, lib.ID); !ok {
@@ -56,7 +57,9 @@ func identifierListPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.IdentifierListPrimeFollows())
       return
     }
-    identifierListPrime(listing, tokens)
+    symbols[t.Lexeme].Decoration = &lib.Decoration{lib.PARG}
+    fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.Type))
+    identifierListPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.CLOSE_PAREN)
@@ -68,14 +71,16 @@ func identifierListPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func identifierList(listing *list.List, tokens *list.List) {
+func identifierList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
     sync(tokens, lib.IdentifierListFollows())
     return
   }
-  identifierListPrime(listing, tokens)
+  symbols[t.Lexeme].Decoration = &lib.Decoration{lib.PARG}
+  fmt.Println(t.Lexeme, lib.Annotate(symbols[t.Lexeme].Decoration.Type))
+  identifierListPrime(listing, tokens, symbols)
 }
 
 func standardType(listing *list.List, tokens *list.List) {
@@ -938,7 +943,7 @@ func programBody(listing *list.List, tokens *list.List) {
   programSubbody(listing, tokens)
 }
 
-func program(listing *list.List, tokens *list.List) {
+func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.PROGRAM)
   if !ok {
     report(listing, "program", t)
@@ -950,12 +955,13 @@ func program(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ProgramFollows())
     return
   }
+  id := t
   if t, ok = matchYank(tokens, lib.OPEN_PAREN); !ok {
     report(listing, "(", t)
     sync(tokens, lib.ProgramFollows())
     return
   }
-  identifierList(listing, tokens)
+  identifierList(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
     sync(tokens, lib.ProgramFollows())
@@ -966,6 +972,8 @@ func program(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ProgramFollows())
     return
   }
+  symbols[id.Lexeme].Decoration = &lib.Decoration{lib.PROGRAM}
+  fmt.Println(id.Lexeme, lib.Annotate(symbols[id.Lexeme].Decoration.Type))
   programBody(listing, tokens)
   if t, ok = matchYank(tokens, lib.EOF); !ok {
     report(listing, "EOF", t)
@@ -975,5 +983,5 @@ func program(listing *list.List, tokens *list.List) {
 }
 
 func Parse(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
-  program(listing, tokens)
+  program(listing, tokens, symbols)
 }

@@ -1,6 +1,7 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 example              22 (ID)              0xc820015f50
 (                    31 (OPEN_PAREN)      0  (NULL)
@@ -13,42 +14,61 @@ var                  20 (VAR)             0  (NULL)
 a                    22 (ID)              0xc82014a780
 =======
 example              22 (ID)              0xc820077c80
+=======
+example              22 (ID)              0xc820015f80
+>>>>>>> Adds initial id entry updates.
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc820077e90
+input                22 (ID)              0xc82014a1b0
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc82016c0c0
+output               22 (ID)              0xc82014a3c0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 a                    22 (ID)              0xc82016c4b0
 >>>>>>> Adds type decorations structs.
+=======
+a                    22 (ID)              0xc82014a7b0
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 b                    22 (ID)              0xc82014abd0
 =======
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 d                    22 (ID)              0xc82014b020
 =======
 d                    22 (ID)              0xc82016cd50
 >>>>>>> Adds type decorations structs.
+=======
+d                    22 (ID)              0xc82014b050
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 n                    22 (ID)              0xc82014b470
 =======
 n                    22 (ID)              0xc82016d1a0
 >>>>>>> Adds type decorations structs.
+=======
+n                    22 (ID)              0xc82014b4a0
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -60,11 +80,15 @@ of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 o                    22 (ID)              0xc82014c120
 =======
 o                    22 (ID)              0xc82016de30
 >>>>>>> Adds type decorations structs.
+=======
+o                    22 (ID)              0xc82014c150
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -76,6 +100,7 @@ of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 gcd                  22 (ID)              0xc82014cdb0
 (                    31 (OPEN_PAREN)      0  (NULL)
@@ -86,13 +111,20 @@ integer              10 (INTEGER)         0  (NULL)
 b                    22 (ID)              0xc82014abd0
 =======
 gcd                  22 (ID)              0xc82016eae0
+=======
+gcd                  22 (ID)              0xc82014cde0
+>>>>>>> Adds initial id entry updates.
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -100,6 +132,7 @@ integer              10 (INTEGER)         0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 a                    22 (ID)              0xc82014a780
 :=                   28 (ASSIGNOP)        0  (NULL)
@@ -112,19 +145,27 @@ d                    22 (ID)              0xc82014b020
 d                    22 (ID)              0xc82014b020
 =======
 a                    22 (ID)              0xc82016c4b0
+=======
+a                    22 (ID)              0xc82014a7b0
+>>>>>>> Adds initial id entry updates.
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2                  13 (NUM)             18 (REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 d                    22 (ID)              0xc82016cd50
 >>>>>>> Adds type decorations structs.
+=======
+d                    22 (ID)              0xc82014b050
+>>>>>>> Adds initial id entry updates.
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2E2                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 a                    22 (ID)              0xc82014a780
 <                    25 (RELOP)           41 (LT)
@@ -138,11 +179,19 @@ a                    22 (ID)              0xc82016c4b0
 then                 19 (THEN)            0  (NULL)
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+a                    22 (ID)              0xc82014a7b0
+<                    25 (RELOP)           41 (LT)
+1                    13 (NUM)             24 (INT)
+then                 19 (THEN)            0  (NULL)
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 :=                   28 (ASSIGNOP)        0  (NULL)
 -                    26 (ADDOP)           46 (MINUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 a                    22 (ID)              0xc82014a780
 >                    25 (RELOP)           44 (GT)
@@ -156,19 +205,31 @@ a                    22 (ID)              0xc82016c4b0
 then                 19 (THEN)            0  (NULL)
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+a                    22 (ID)              0xc82014a7b0
+>                    25 (RELOP)           44 (GT)
+1                    13 (NUM)             24 (INT)
+then                 19 (THEN)            0  (NULL)
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 :=                   28 (ASSIGNOP)        0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
 2                    13 (NUM)             24 (INT)
 else                 6  (ELSE)            0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 b                    22 (ID)              0xc82014abd0
 =======
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 while                21 (WHILE)           0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 b                    22 (ID)              0xc82014abd0
 <>                   25 (RELOP)           40 (NEQ)
@@ -179,17 +240,25 @@ b                    22 (ID)              0xc82014abd0
 b                    22 (ID)              0xc82014abd0
 =======
 b                    22 (ID)              0xc82016c900
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 <>                   25 (RELOP)           40 (NEQ)
 3                    13 (NUM)             24 (INT)
 do                   5  (DO)              0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 :=                   28 (ASSIGNOP)        0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 +                    26 (ADDOP)           45 (PLUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 b                    22 (ID)              0xc82014abd0
 =                    25 (RELOP)           39 (EQ)
@@ -246,63 +315,71 @@ e                    22 (ID)              0xc820154390
 e                    22 (ID)              0xc820154390
 =======
 b                    22 (ID)              0xc82016c900
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 =                    25 (RELOP)           39 (EQ)
 3                    13 (NUM)             24 (INT)
 then                 19 (THEN)            0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 :=                   28 (ASSIGNOP)        0  (NULL)
 0                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 +                    26 (ADDOP)           45 (PLUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 -                    26 (ADDOP)           46 (MINUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 or                   26 (ADDOP)           15 (OR)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 mod                  27 (MULOP)           11 (MOD)
 2                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 :=                   28 (ASSIGNOP)        0  (NULL)
-b                    22 (ID)              0xc82016c900
+b                    22 (ID)              0xc82014ac00
 div                  27 (MULOP)           4  (DIV)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 :=                   28 (ASSIGNOP)        0  (NULL)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 *                    27 (MULOP)           47 (ASTERISK)
 2.0E1                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 :=                   28 (ASSIGNOP)        0  (NULL)
-d                    22 (ID)              0xc82016cd50
+d                    22 (ID)              0xc82014b050
 /                    27 (MULOP)           48 (SLASH)
 2.0E1                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-e                    22 (ID)              0xc8201760c0
+e                    22 (ID)              0xc8201543c0
 :=                   28 (ASSIGNOP)        0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 e                    22 (ID)              0xc8201760c0
 >>>>>>> Adds type decorations structs.
+=======
+e                    22 (ID)              0xc8201543c0
+>>>>>>> Adds initial id entry updates.
 and                  27 (MULOP)           1  (AND)
 not                  12 (NOT)             0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 <<<<<<< 318c5461aa9035ca905ffd735c0d6af9c9cefac6
 n                    22 (ID)              0xc82014b470
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -313,13 +390,20 @@ a                    22 (ID)              0xc82014a780
 b                    22 (ID)              0xc82014abd0
 =======
 n                    22 (ID)              0xc82016d1a0
+=======
+n                    22 (ID)              0xc82014b4a0
+>>>>>>> Adds initial id entry updates.
 [                    29 (OPEN_BRACKET)    0  (NULL)
-gcd                  22 (ID)              0xc82016eae0
+gcd                  22 (ID)              0xc82014cde0
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82016c4b0
+a                    22 (ID)              0xc82014a7b0
 ,                    35 (COMMA)           0  (NULL)
+<<<<<<< 12dda9abd084ed47ae544f8827616d067a04a07b
 b                    22 (ID)              0xc82016c900
 >>>>>>> Adds type decorations structs.
+=======
+b                    22 (ID)              0xc82014ac00
+>>>>>>> Adds initial id entry updates.
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 :=                   28 (ASSIGNOP)        0  (NULL)

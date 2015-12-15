@@ -121,6 +121,8 @@ func Annotate(c int) string {
     case 53: return "(ZZ_TOO_LONG)"
     case 54: return "(LEADING_ZEROS)"
     case 55: return "(TRAILING_ZEROS)"
+    case 56: return "(PARG)"
+    case 57: return "(FARG)"
   }
   return "()"
 }
