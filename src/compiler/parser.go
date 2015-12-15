@@ -83,7 +83,7 @@ func identifierList(listing *list.List, tokens *list.List, symbols map[string]*l
   identifierListPrime(listing, tokens, symbols)
 }
 
-func standardType(listing *list.List, tokens *list.List) {
+func standardType(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.INTEGER)
   if ok {
     return
@@ -96,13 +96,13 @@ func standardType(listing *list.List, tokens *list.List) {
   }
 }
 
-func type_(listing *list.List, tokens *list.List) {
+func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.INTEGER)
   if !ok {
     t, ok = match(tokens, lib.REAL)
   }
   if ok {
-    standardType(listing, tokens)
+    standardType(listing, tokens, symbols)
     return
   }
   t, ok = matchYank(tokens, lib.ARRAY)
@@ -141,10 +141,10 @@ func type_(listing *list.List, tokens *list.List) {
     sync(tokens, lib.TypeFollows())
     return
   }
-  standardType(listing, tokens)
+  standardType(listing, tokens, symbols)
 }
 
-func declarationsPrime(listing *list.List, tokens *list.List) {
+func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.VAR)
   if ok {
     if t, ok = matchYank(tokens, lib.ID); !ok {
@@ -157,13 +157,13 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.DeclarationsPrimeFollows())
       return
     }
-    type_(listing, tokens)
+    type_(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.DeclarationsPrimeFollows())
       return
     }
-    declarationsPrime(listing, tokens)
+    declarationsPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.FUNCTION)
@@ -178,7 +178,7 @@ func declarationsPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func declarations(listing *list.List, tokens *list.List) {
+func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.VAR)
   if !ok {
     report(listing, "var", t)
@@ -195,16 +195,16 @@ func declarations(listing *list.List, tokens *list.List) {
     sync(tokens, lib.DeclarationsFollows())
     return
   }
-  type_(listing, tokens)
+  type_(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.DeclarationsFollows())
     return
   }
-  declarationsPrime(listing, tokens)
+  declarationsPrime(listing, tokens, symbols)
 }
 
-func parameterListPrime(listing *list.List, tokens *list.List) {
+func parameterListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.SEMICOLON)
   if ok {
     if t, ok = matchYank(tokens, lib.ID); !ok {
@@ -217,8 +217,8 @@ func parameterListPrime(listing *list.List, tokens *list.List) {
       sync(tokens, lib.ParameterListPrimeFollows())
       return
     }
-    type_(listing, tokens)
-    parameterListPrime(listing, tokens)
+    type_(listing, tokens, symbols)
+    parameterListPrime(listing, tokens, symbols)
     return
   }
   if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
@@ -229,7 +229,7 @@ func parameterListPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func parameterList(listing *list.List, tokens *list.List) {
+func parameterList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
@@ -241,18 +241,18 @@ func parameterList(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ParameterListFollows())
     return
   }
-  type_(listing, tokens)
-  parameterListPrime(listing, tokens)
+  type_(listing, tokens, symbols)
+  parameterListPrime(listing, tokens, symbols)
 }
 
-func arguments(listing *list.List, tokens *list.List) {
+func arguments(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.OPEN_PAREN)
   if !ok {
     report(listing, "(", t)
     sync(tokens, lib.ArgumentsFollows())
     return
   }
-  parameterList(listing, tokens)
+  parameterList(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
     sync(tokens, lib.ArgumentsFollows())
@@ -260,16 +260,16 @@ func arguments(listing *list.List, tokens *list.List) {
   }
 }
 
-func subprogramHeadPrime(listing *list.List, tokens *list.List) {
+func subprogramHeadPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.OPEN_PAREN)
   if ok {
-    arguments(listing, tokens)
+    arguments(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.SubprogramHeadPrimeFollows())
       return
     }
-    standardType(listing, tokens)
+    standardType(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.SubprogramHeadPrimeFollows())
@@ -283,7 +283,7 @@ func subprogramHeadPrime(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramHeadPrimeFollows())
     return
   }
-  standardType(listing, tokens)
+  standardType(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.SubprogramHeadPrimeFollows())
@@ -291,7 +291,7 @@ func subprogramHeadPrime(listing *list.List, tokens *list.List) {
   }
 }
 
-func subprogramHead(listing *list.List, tokens *list.List) {
+func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.FUNCTION)
   if !ok {
     report(listing, "function", t)
@@ -303,13 +303,13 @@ func subprogramHead(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramHeadFollows())
     return
   }
-  subprogramHeadPrime(listing, tokens)
+  subprogramHeadPrime(listing, tokens, symbols)
 }
 
-func statementPrime(listing *list.List, tokens *list.List) {
+func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ELSE)
   if ok {
-    statement(listing, tokens)
+    statement(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.SEMICOLON)
@@ -324,11 +324,11 @@ func statementPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func expressionListPrime(listing *list.List, tokens *list.List) {
+func expressionListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.COMMA)
   if ok {
-    expression(listing, tokens)
-    expressionListPrime(listing, tokens)
+    expression(listing, tokens, symbols)
+    expressionListPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.CLOSE_PAREN)
@@ -340,7 +340,7 @@ func expressionListPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func expressionList(listing *list.List, tokens *list.List) {
+func expressionList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -359,14 +359,14 @@ func expressionList(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ExpressionListFollows())
     return
   }
-  expression(listing, tokens)
-  expressionListPrime(listing, tokens)
+  expression(listing, tokens, symbols)
+  expressionListPrime(listing, tokens, symbols)
 }
 
-func factorPrime(listing *list.List, tokens *list.List) {
+func factorPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.OPEN_PAREN)
   if ok {
-    expressionList(listing, tokens)
+    expressionList(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
       report(listing, ")", t)
       sync(tokens, lib.FactorPrimeFollows())
@@ -376,7 +376,7 @@ func factorPrime(listing *list.List, tokens *list.List) {
   }
   t, ok = matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
-    expression(listing, tokens)
+    expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
       report(listing, "]", t)
       sync(tokens, lib.FactorPrimeFollows())
@@ -423,10 +423,10 @@ func factorPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func factor(listing *list.List, tokens *list.List) {
+func factor(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ID)
   if ok {
-    factorPrime(listing, tokens)
+    factorPrime(listing, tokens, symbols)
     return
   }
   t, ok = matchYank(tokens, lib.NUM)
@@ -435,7 +435,7 @@ func factor(listing *list.List, tokens *list.List) {
   }
   t, ok = matchYank(tokens, lib.OPEN_PAREN)
   if ok {
-    expression(listing, tokens)
+    expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
       report(listing, ")", t)
       sync(tokens, lib.FactorFollows())
@@ -449,14 +449,14 @@ func factor(listing *list.List, tokens *list.List) {
     sync(tokens, lib.FactorFollows())
     return
   }
-  factor(listing, tokens)
+  factor(listing, tokens, symbols)
 }
 
-func termPrime(listing *list.List, tokens *list.List) {
+func termPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.MULOP)
   if ok {
-    factor(listing, tokens)
-    termPrime(listing, tokens)
+    factor(listing, tokens, symbols)
+    termPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.ADDOP)
@@ -495,7 +495,7 @@ func termPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func term(listing *list.List, tokens *list.List) {
+func term(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -511,15 +511,15 @@ func term(listing *list.List, tokens *list.List) {
     sync(tokens, lib.TermFollows())
     return
   }
-  factor(listing, tokens)
-  termPrime(listing, tokens)
+  factor(listing, tokens, symbols)
+  termPrime(listing, tokens, symbols)
 }
 
-func simpleExpressionPrime(listing *list.List, tokens *list.List) {
+func simpleExpressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ADDOP)
   if ok {
-    term(listing, tokens)
-    simpleExpressionPrime(listing, tokens)
+    term(listing, tokens, symbols)
+    simpleExpressionPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.RELOP)
@@ -555,7 +555,7 @@ func simpleExpressionPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func sign(listing *list.List, tokens *list.List) {
+func sign(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ADDOP)
   if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
     report(listing, "+ OR -", t)
@@ -564,7 +564,7 @@ func sign(listing *list.List, tokens *list.List) {
   }
 }
 
-func simpleExpression(listing *list.List, tokens *list.List) {
+func simpleExpression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -576,8 +576,8 @@ func simpleExpression(listing *list.List, tokens *list.List) {
     t, ok = match(tokens, lib.NOT)
   }
   if ok {
-    term(listing, tokens)
-    simpleExpressionPrime(listing, tokens)
+    term(listing, tokens, symbols)
+    simpleExpressionPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.ADDOP)
@@ -586,15 +586,15 @@ func simpleExpression(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SimpleExpressionFollows())
     return
   }
-  sign(listing, tokens)
-  term(listing, tokens)
-  simpleExpressionPrime(listing, tokens)
+  sign(listing, tokens, symbols)
+  term(listing, tokens, symbols)
+  simpleExpressionPrime(listing, tokens, symbols)
 }
 
-func expressionPrime(listing *list.List, tokens *list.List) {
+func expressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.RELOP)
   if ok {
-    simpleExpression(listing, tokens)
+    simpleExpression(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.ELSE)
@@ -627,7 +627,7 @@ func expressionPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 } 
 
-func expression(listing *list.List, tokens *list.List) {
+func expression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -646,14 +646,14 @@ func expression(listing *list.List, tokens *list.List) {
       return
     }
   }
-  simpleExpression(listing, tokens)
-  expressionPrime(listing, tokens)
+  simpleExpression(listing, tokens, symbols)
+  expressionPrime(listing, tokens, symbols)
 }
 
-func variablePrime(listing *list.List, tokens *list.List) {
+func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
-    expression(listing, tokens)
+    expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
       report(listing, "]", t)
       sync(tokens, lib.VariablePrimeFollows())
@@ -670,43 +670,43 @@ func variablePrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func variable(listing *list.List, tokens *list.List) {
+func variable(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
     sync(tokens, lib.VariableFollows())
     return
   }
-  variablePrime(listing, tokens)
+  variablePrime(listing, tokens, symbols)
 }
 
-func statement(listing *list.List, tokens *list.List) {
+func statement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if ok {
-    variable(listing, tokens)
+    variable(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.ASSIGNOP); !ok {
       report(listing, ":=", t)
       sync(tokens, lib.StatementFollows())
       return
     }
-    expression(listing, tokens)
+    expression(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.BEGIN)
   if ok {
-    compoundStatement(listing, tokens)
+    compoundStatement(listing, tokens, symbols)
     return
   }
   t, ok = matchYank(tokens, lib.IF)
   if ok {
-    expression(listing, tokens)
+    expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.THEN); !ok {
       report(listing, "then", t)
       sync(tokens, lib.StatementFollows())
       return
     }
-    statement(listing, tokens)
-    statementPrime(listing, tokens)
+    statement(listing, tokens, symbols)
+    statementPrime(listing, tokens, symbols)
     return
   }
   t, ok = matchYank(tokens, lib.WHILE)
@@ -715,20 +715,20 @@ func statement(listing *list.List, tokens *list.List) {
     sync(tokens, lib.StatementFollows())
     return
   }
-  expression(listing, tokens)
+  expression(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.DO); !ok {
     report(listing, "do", t)
     sync(tokens, lib.StatementFollows())
     return
   }
-  statement(listing, tokens)
+  statement(listing, tokens, symbols)
 }
 
-func statementListPrime(listing *list.List, tokens *list.List) {
+func statementListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.SEMICOLON)
   if ok {
-    statement(listing, tokens)
-    statementListPrime(listing, tokens)
+    statement(listing, tokens, symbols)
+    statementListPrime(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.END)
@@ -740,7 +740,7 @@ func statementListPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func statementList(listing *list.List, tokens *list.List) {
+func statementList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -756,11 +756,11 @@ func statementList(listing *list.List, tokens *list.List) {
     sync(tokens, lib.StatementListFollows())
     return
   }
-  statement(listing, tokens)
-  statementListPrime(listing, tokens)
+  statement(listing, tokens, symbols)
+  statementListPrime(listing, tokens, symbols)
 }
 
-func optionalStatements(listing *list.List, tokens *list.List) {
+func optionalStatements(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -776,10 +776,10 @@ func optionalStatements(listing *list.List, tokens *list.List) {
     sync(tokens, lib.OptionalStatementsFollows())
     return
   }
-  statementList(listing, tokens)
+  statementList(listing, tokens, symbols)
 }
 
-func compoundStatementPrime(listing *list.List, tokens *list.List) {
+func compoundStatementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -791,7 +791,7 @@ func compoundStatementPrime(listing *list.List, tokens *list.List) {
     t, ok = match(tokens, lib.WHILE)
   }
   if ok {
-    optionalStatements(listing, tokens)
+    optionalStatements(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.END); !ok {
       report(listing, "end", t)
       sync(tokens, lib.CompoundStatementPrimeFollows())
@@ -807,21 +807,21 @@ func compoundStatementPrime(listing *list.List, tokens *list.List) {
   }
 }
 
-func compoundStatement(listing *list.List, tokens *list.List) {
+func compoundStatement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := matchYank(tokens, lib.BEGIN)
   if !ok {
     report(listing, "begin", t)
     sync(tokens, lib.CompoundStatementFollows())
     return
   }
-  compoundStatementPrime(listing, tokens)
+  compoundStatementPrime(listing, tokens, symbols)
 }
 
-func subprogramSubbody(listing *list.List, tokens *list.List) {
+func subprogramSubbody(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
-    subprogramDeclarations(listing, tokens)
-    compoundStatement(listing, tokens)
+    subprogramDeclarations(listing, tokens, symbols)
+    compoundStatement(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.BEGIN)
@@ -830,14 +830,14 @@ func subprogramSubbody(listing *list.List, tokens *list.List) {
     sync(tokens, lib.SubprogramSubbodyFollows())
     return
   }
-  compoundStatement(listing, tokens)
+  compoundStatement(listing, tokens, symbols)
 }
 
-func subprogramBody(listing *list.List, tokens *list.List) {
+func subprogramBody(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.VAR)
   if ok {
-    declarations(listing, tokens)
-    subprogramSubbody(listing, tokens)
+    declarations(listing, tokens, symbols)
+    subprogramSubbody(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.FUNCTION)
@@ -849,30 +849,30 @@ func subprogramBody(listing *list.List, tokens *list.List) {
       return
     }
   }
-  subprogramSubbody(listing, tokens)
+  subprogramSubbody(listing, tokens, symbols)
 }
 
-func subprogramDeclaration(listing *list.List, tokens *list.List) {
+func subprogramDeclaration(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.FUNCTION)
   if !ok {
     report(listing, "function", t)
     sync(tokens, lib.SubprogramDeclarationFollows())
     return
   }
-  subprogramHead(listing, tokens)
-  subprogramBody(listing, tokens)
+  subprogramHead(listing, tokens, symbols)
+  subprogramBody(listing, tokens, symbols)
 }
 
-func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
+func subprogramDeclarationsPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
-    subprogramDeclaration(listing, tokens)
+    subprogramDeclaration(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.SubprogramDeclarationsPrimeFollows())
       return
     }
-    subprogramDeclarationsPrime(listing, tokens)
+    subprogramDeclarationsPrime(listing, tokens, symbols)
     return
   }
   if t, ok = match(tokens, lib.BEGIN); !ok {
@@ -883,27 +883,27 @@ func subprogramDeclarationsPrime(listing *list.List, tokens *list.List) {
   // epsilon production
 }
 
-func subprogramDeclarations(listing *list.List, tokens *list.List) {
+func subprogramDeclarations(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.FUNCTION)
   if !ok {
     report(listing, "function", t)
     sync(tokens, lib.SubprogramDeclarationsFollows())
     return
   }
-  subprogramDeclaration(listing, tokens)
+  subprogramDeclaration(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.SubprogramDeclarationsFollows())
     return
   }
-  subprogramDeclarationsPrime(listing, tokens)
+  subprogramDeclarationsPrime(listing, tokens, symbols)
 }
 
-func programSubbody(listing *list.List, tokens *list.List) {
+func programSubbody(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.FUNCTION)
   if ok {
-    subprogramDeclarations(listing, tokens)
-    compoundStatement(listing, tokens)
+    subprogramDeclarations(listing, tokens, symbols)
+    compoundStatement(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.PERIOD); !ok {
       report(listing, ".", t)
       sync(tokens, lib.ProgramSubbodyFollows())
@@ -917,7 +917,7 @@ func programSubbody(listing *list.List, tokens *list.List) {
     sync(tokens, lib.ProgramSubbodyFollows())
     return
   }
-  compoundStatement(listing, tokens)
+  compoundStatement(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.PERIOD); !ok {
     report(listing, ".", t)
     sync(tokens, lib.ProgramSubbodyFollows())
@@ -925,11 +925,11 @@ func programSubbody(listing *list.List, tokens *list.List) {
   }
 }
 
-func programBody(listing *list.List, tokens *list.List) {
+func programBody(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
   t, ok := match(tokens, lib.VAR)
   if ok {
-    declarations(listing, tokens)
-    programSubbody(listing, tokens)
+    declarations(listing, tokens, symbols)
+    programSubbody(listing, tokens, symbols)
     return
   }
   t, ok = match(tokens, lib.FUNCTION)
@@ -940,7 +940,7 @@ func programBody(listing *list.List, tokens *list.List) {
       sync(tokens, lib.ProgramBodyFollows())
     }
   }
-  programSubbody(listing, tokens)
+  programSubbody(listing, tokens, symbols)
 }
 
 func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
