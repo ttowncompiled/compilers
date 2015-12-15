@@ -2,57 +2,53 @@
 
 2. var a : integer;
 
-3. var d : real;
+3. var b: integer;
 
-4. var n: array[1..10] of integer;
+4. var d : real;
 
-5. var o: array[1..10] of real;
+5. var n: array[1..10] of integer;
 
-6. function gcd(a: integer; b: integer): integer;
+6. var o: array[1..10] of real;
 
-7. begin
+7. function gcd(a: integer; b: integer): integer;
 
-8.   a := 1;
+8. begin
 
-9.   d := 1.2;
+9.   a := 1;
 
-10.   e := 1.2E2;
+10.   d := 1.2;
 
-11.   if a < 1 then b := -1;
+11.   d := 1.2E2;
 
-12.   if a > 1 then b := +2 else b := 1;
+12.   if a < 1 then b := -1;
 
-13.   if b <= 0 then b := 0;
+13.   if a > 1 then b := +2 else b := 1;
 
-14.   if b >= 1 then b := 1;
+14.   while b <> 3 do b := b + 1;
 
-15.   while b <> 3 do b := b + 1;
+15.   if b = 3 then b := 0;
 
-16.   if b = 3 then b := 0;
+16.   a := a + 1;
 
-17.   a := a + 1;
+17.   a := a - 1;
 
-18.   a := a - 1;
+18.   b := a or b;
 
-19.   b := a or b;
+19.   b := a mod 2;
 
-20.   b := a mod 2;
+20.   b := b div d;
 
-21.   b := b div d;
+21.   d := d * 2.0E1;
 
-22.   d := d * 2.0E1;
+22.   d := d / 2.0E1;
 
-23.   d := d / 2.0E1;
+23.   e := e and not 1;
 
-24.   e := e and not 1;
+24.   n[gcd(a, b)] := 1
 
-25.   n[gcd(a, b)] := 1;
-SYNERR: EXPECTED: ID OR NUM OR ( OR not OR + OR - RECEIVED: a
+25. end;
 
-26. end;
-SYNERR: EXPECTED: ID OR begin OR if OR while RECEIVED: end
+26. begin
 
-27. begin
-
-28. end.
+27. end.
 

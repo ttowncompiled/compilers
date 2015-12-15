@@ -349,7 +349,7 @@ func expressionList(listing *list.List, tokens *list.List) {
   if !ok {
     t, ok = match(tokens, lib.ADDOP)
   }
-  if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
+  if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
     report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
     sync(tokens, lib.ExpressionListFollows())
     return
@@ -576,7 +576,7 @@ func simpleExpression(listing *list.List, tokens *list.List) {
     return
   }
   t, ok = match(tokens, lib.ADDOP)
-  if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
+  if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
     report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
     sync(tokens, lib.SimpleExpressionFollows())
     return
@@ -635,7 +635,7 @@ func expression(listing *list.List, tokens *list.List) {
   }
   if !ok {
     t, ok = match(tokens, lib.ADDOP)
-    if !ok || (t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
+    if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
       report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
       sync(tokens, lib.ExpressionFollows())
       return
