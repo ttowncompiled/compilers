@@ -974,7 +974,7 @@ func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symb
   }
   symbols[id.Lexeme].Decoration = lib.Decoration{lib.PROGRAM, &(symbols[id.Lexeme].Decoration)}
   fmt.Println(id.Lexeme, lib.Annotate(symbols[id.Lexeme].Decoration.TypeD()))
-  programBody(listing, tokens)
+  programBody(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.EOF); !ok {
     report(listing, "EOF", t)
     sync(tokens, lib.ProgramFollows())
