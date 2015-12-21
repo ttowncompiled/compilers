@@ -19,7 +19,7 @@
 4.1 _declarations'_ := **epsilon**
 
 5 _type_ := <_standard-type_> _{ type.type := standard-type.type }_ <br>
-5 _type_ := **array [ num1 .. num2 ] of** <_standard-type_> _{ type.type := array(num2-num1, standard-type.type) }_
+5 _type_ := **array [ num1 .. num2 ] of** <_standard-type_> _{ type.type := array(num2.lexval - num1.lexval, standard-type.type) }_
 
 6 _standard-type_ := **integer** _{ standard-type.type := integer }_ <br>
 6 _standard-type_ := **real** _{ standard-type.type := real }_

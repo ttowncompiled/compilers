@@ -4,11 +4,17 @@ import (
   "container/list"
   "fmt"
   "lib"
+  "strconv"
 )
 
-func addType(lex string, t int, symbols map[string]*lib.Symbol) {
-  symbols[lex].Decoration = lib.Decoration{t, &(symbols[lex].Decoration)}
-  fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
+func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
+  ttype.SetPrevTypeD(symbols[lex].Decoration)
+  symbols[lex].Decoration = ttype
+  if ttype.TypeD() == lib.ARRAY {
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val))
+  } else {
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
+  }
 }
 
 func match(tokens *list.List, expectedType int) (lib.Token, bool) {
@@ -62,7 +68,7 @@ func identifierListPrime(listing *list.List, tokens *list.List, symbols map[stri
       sync(tokens, lib.IdentifierListPrimeFollows())
       return
     }
-    addType(t.Lexeme, lib.PARG, symbols)
+    addType(t.Lexeme, lib.Decoration{lib.PARG, nil}, symbols)
     identifierListPrime(listing, tokens, symbols)
     return
   }
@@ -82,7 +88,7 @@ func identifierList(listing *list.List, tokens *list.List, symbols map[string]*l
     sync(tokens, lib.IdentifierListFollows())
     return
   }
-  addType(t.Lexeme, lib.PARG, symbols)
+  addType(t.Lexeme, lib.Decoration{lib.PARG, nil}, symbols)
   identifierListPrime(listing, tokens, symbols)
 }
 
@@ -100,52 +106,54 @@ func standardType(listing *list.List, tokens *list.List, symbols map[string]*lib
   return lib.Decoration{lib.REAL, nil}
 }
 
-func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.INTEGER)
   if !ok {
     t, ok = match(tokens, lib.REAL)
   }
   if ok {
-    standardType(listing, tokens, symbols)
-    return
+    return standardType(listing, tokens, symbols)
   }
   t, ok = matchYank(tokens, lib.ARRAY)
   if !ok {
     report(listing, "integer OR real OR array", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   if t, ok = matchYank(tokens, lib.OPEN_BRACKET); !ok {
     report(listing, "[", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   if t, ok = matchYank(tokens, lib.NUM); !ok {
     report(listing, "NUM", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
+  num1, _ := strconv.ParseInt(t.Lexeme, 64, 10)
   if t, ok = matchYank(tokens, lib.RANGE); !ok {
     report(listing, "..", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   if t, ok = matchYank(tokens, lib.NUM); !ok {
     report(listing, "NUM", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
+  num2, _ := strconv.ParseInt(t.Lexeme, 64, 10)
   if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
     report(listing, "]", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   if t, ok = matchYank(tokens, lib.OF); !ok {
     report(listing, "of", t)
     sync(tokens, lib.TypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  standardType(listing, tokens, symbols)
+  valType := standardType(listing, tokens, symbols)
+  return lib.ArrayD{int(num2 - num1), valType.TypeD(), nil}
 }
 
 func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -156,12 +164,14 @@ func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string
       sync(tokens, lib.DeclarationsPrimeFollows())
       return
     }
+    id := t
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.DeclarationsPrimeFollows())
       return
     }
-    type_(listing, tokens, symbols)
+    ttype := type_(listing, tokens, symbols)
+    addType(id.Lexeme, ttype, symbols)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.DeclarationsPrimeFollows())
@@ -194,12 +204,14 @@ func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib
     sync(tokens, lib.DeclarationsFollows())
     return
   }
+  id := t
   if t, ok = matchYank(tokens, lib.COLON); !ok {
     report(listing, ":", t)
     sync(tokens, lib.DeclarationsFollows())
     return
   }
-  type_(listing, tokens, symbols)
+  ttype := type_(listing, tokens, symbols)
+  addType(id.Lexeme, ttype, symbols)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.DeclarationsFollows())
@@ -960,7 +972,7 @@ func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symb
     return
   }
   id := t
-  addType(id.Lexeme, lib.PROGRAM, symbols)
+  addType(id.Lexeme, lib.Decoration{lib.PROGRAM, nil}, symbols)
   if t, ok = matchYank(tokens, lib.OPEN_PAREN); !ok {
     report(listing, "(", t)
     sync(tokens, lib.ProgramFollows())
