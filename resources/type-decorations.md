@@ -1,6 +1,6 @@
 ## Type Decorations - Ian Riley
 
-1 _program_ := **program id (** <_identifier-list_> **) ;** _{ addType(id.lex, PROGRAM) }_ <_program-body_>
+1 _program_ := **program id** _{ addType(id.lex, PROGRAM) }_ **(** <_identifier-list_> **) ;** <_program-body_>
 
 1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
 1.1 _program-body_ := <_program-subbody_>
