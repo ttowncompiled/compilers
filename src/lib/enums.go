@@ -60,6 +60,7 @@ const (
   TRAILING_ZEROS = 55
   PARG = 56
   FARG = 57
+  ERR = 58
 )
 
 func Annotate(c int) string {
@@ -123,6 +124,7 @@ func Annotate(c int) string {
     case 55: return "(TRAILING_ZEROS)"
     case 56: return "(PARG)"
     case 57: return "(FARG)"
+    case 58: return "(ERR)"
   }
   return "()"
 }

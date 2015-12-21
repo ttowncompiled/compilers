@@ -86,17 +86,18 @@ func identifierList(listing *list.List, tokens *list.List, symbols map[string]*l
   identifierListPrime(listing, tokens, symbols)
 }
 
-func standardType(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func standardType(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.INTEGER)
   if ok {
-    return
+    return lib.Decoration{lib.INTEGER, nil}
   }
   t, ok = matchYank(tokens, lib.REAL)
   if !ok {
     report(listing, "integer OR real", t)
     sync(tokens, lib.StandardTypeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
+  return lib.Decoration{lib.REAL, nil}
 }
 
 func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
