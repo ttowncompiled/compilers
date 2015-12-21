@@ -1,12 +1,12 @@
 Lexeme               Token               
 -----------------------------------------
-a                    0xc82016c4b0        
-o                    0xc82016de30        
-e                    0xc8201760c0        
-example              0xc820077c80        
-output               0xc82016c0c0        
-d                    0xc82016cd50        
-n                    0xc82016d1a0        
-gcd                  0xc82016eae0        
-input                0xc820077e90        
-b                    0xc82016c900        
+n                    0xc82014b470        
+o                    0xc82014c120        
+output               0xc82014a390        
+a                    0xc82014a780        
+b                    0xc82014abd0        
+gcd                  0xc82014cdb0        
+e                    0xc820154390        
+example              0xc820015f50        
+input                0xc82014a180        
+d                    0xc82014b020        

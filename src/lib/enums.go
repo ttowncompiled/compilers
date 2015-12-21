@@ -61,6 +61,7 @@ const (
   PARG = 56
   FARG = 57
   ERR = 58
+  VOID = 59
 )
 
 func Annotate(c int) string {
@@ -125,6 +126,7 @@ func Annotate(c int) string {
     case 56: return "(PARG)"
     case 57: return "(FARG)"
     case 58: return "(ERR)"
+    case 59: return "(VOID)"
   }
   return "()"
 }

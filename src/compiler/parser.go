@@ -228,12 +228,14 @@ func parameterListPrime(listing *list.List, tokens *list.List, symbols map[strin
       sync(tokens, lib.ParameterListPrimeFollows())
       return
     }
+    id := t
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.ParameterListPrimeFollows())
       return
     }
-    type_(listing, tokens, symbols)
+    ttype := type_(listing, tokens, symbols)
+    addType(id.Lexeme, ttype, symbols)
     parameterListPrime(listing, tokens, symbols)
     return
   }
@@ -252,12 +254,14 @@ func parameterList(listing *list.List, tokens *list.List, symbols map[string]*li
     sync(tokens, lib.ParameterListFollows())
     return
   }
+  id := t
   if t, ok = matchYank(tokens, lib.COLON); !ok {
     report(listing, ":", t)
     sync(tokens, lib.ParameterListFollows())
     return
   }
-  type_(listing, tokens, symbols)
+  ttype := type_(listing, tokens, symbols)
+  addType(id.Lexeme, ttype, symbols)
   parameterListPrime(listing, tokens, symbols)
 }
 

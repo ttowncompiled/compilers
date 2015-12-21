@@ -37,7 +37,7 @@
 8.2 _subprogram-subbody_ := <_subprogram-declarations_> <_compound-statement_> <br>
 8.2 _subprogram-subbody_ := <_compound-statement_>
 
-9 _subprogram-head_ := **function id** <_subprogram-head'_> _{ id.type := subprogram-head'.type }_
+9 _subprogram-head_ := **function id** _{ addType(id.lex, void -> void) }_ <_subprogram-head'_> _{ modifyType(id.lex, subprogram-head'.type) }_
 
 9.1 _subprogram-head'_ := <_arguments_> **:** <_standard-type_> **;** _{ subprogram-head'.type := arguments.type -> standard-type.type }_ <br>
 9.1 _subprogram-head'_ := **:** <_standard-type_> **;** _{ subprogram-head'.type := void -> standard-type.type }_
