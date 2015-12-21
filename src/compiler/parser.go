@@ -967,6 +967,11 @@ func program(listing *list.List, tokens *list.List) {
     return
   }
   programBody(listing, tokens)
+  if t, ok = matchYank(tokens, lib.EOF); !ok {
+    report(listing, "EOF", t)
+    sync(tokens, lib.ProgramFollows())
+    return
+  }
 }
 
 func Parse(listing *list.List, tokens *list.List, symbols map[string]*lib.Token) {
