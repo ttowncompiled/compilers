@@ -1,53 +1,32 @@
 1. program example(input, output);
 
-2. var a, b: integer;
+2. var a : integer;
 
-3. var d, e, f, g, h, i, j, k, l, m: real;
+3. var b: integer;
 
-4. var n: array[1..10] of integer;
+4. var d : real;
 
-5. var o: array[1..10] of real;
+5. var n: array[1..10] of integer;
 
-6. function idtoooooolong(a, b: integer): integer;
-LEXERR: EXTRA LONG ID: idtoooooolong
+6. var o: array[1..10] of real;
 
-7. begin
+7. function gcd(a: integer; b: integer, c: integer): integer;
+SYNERR: EXPECTED: ; OR ) RECEIVED: ,
 
-8.   a := 12345678901
-LEXERR: EXTRA LONG INTEGER: 12345678901
+8. begin
 
-9.   b := 01
-LEXERR: LEADING ZEROS: 01
+9.   a := 1;
 
-10.   d := 123456.0E1
-LEXERR: EXTRA LONG CHARACTERISTIC: 123456.0E1
+10.   d := 1.2
 
-11.   e := 1.123456E1
-LEXERR: EXTRA LONG FRACTIONAL PART: 1.123456E1
+11.   d := 1.2E2
+SYNERR: EXPECTED: MULOP OR ADDOP OR RELOP OR else OR ; OR end OR then OR do OR ] OR ) RECEIVED: d
 
-12.   f := 1.1E123
-LEXERR: EXTRA LONG EXPONENTIAL PART: 1.1E123
+12. end;
 
-13.   g := 01.1E1
-LEXERR: LEADING ZEROS: 01.1E1
+13. begin;
+SYNERR: EXPECTED: ID OR begin OR if OR while OR end RECEIVED: ;
+SYNERR: EXPECTED: . RECEIVED: ;
 
-14.   h := 1.10E1
-LEXERR: TRAILING ZEROS: 1.10E1
-
-15.   i := 1.1E01
-LEXERR: LEADING ZEROS: 1.1E01
-
-16.   j := 123456.0
-LEXERR: EXTRA LONG CHARACTERISTIC: 123456.0
-
-17.   k := 1.123456
-LEXERR: EXTRA LONG FRACTIONAL PART: 1.123456
-
-18.   l := 01.0
-LEXERR: LEADING ZEROS: 01.0
-
-19.   m := 1.10
-LEXERR: TRAILING ZEROS: 1.10
-
-20. end.
+14. end.
 

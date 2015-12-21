@@ -1,30 +1,30 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
-example              22 (ID)              0xc820015a10
+example              22 (ID)              0xc820015b30
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc820015c20
+input                22 (ID)              0xc820015d40
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc820015e30
+output               22 (ID)              0xc820015f50
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-a                    22 (ID)              0xc82014a240
+a                    22 (ID)              0xc82014a360
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-b                    22 (ID)              0xc82014a690
+b                    22 (ID)              0xc82014a7b0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-d                    22 (ID)              0xc82014aae0
+d                    22 (ID)              0xc82014ac00
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-n                    22 (ID)              0xc82014af30
+n                    22 (ID)              0xc82014b050
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -36,7 +36,7 @@ of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-o                    22 (ID)              0xc82014bbc0
+o                    22 (ID)              0xc82014bce0
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -48,17 +48,13 @@ of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc82014c870
+gcd                  22 (ID)              0xc82014c990
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014a240
+a                    22 (ID)              0xc82014a360
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014a690
-:                    34 (COLON)           0  (NULL)
-integer              10 (INTEGER)         0  (NULL)
-,                    35 (COMMA)           0  (NULL)
-c                    22 (ID)              0xc82014d260
+b                    22 (ID)              0xc82014a7b0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -66,16 +62,41 @@ integer              10 (INTEGER)         0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014a240
+a                    22 (ID)              0xc82014a360
+:=                   28 (ASSIGNOP)        0  (NULL)
+12345678901          38 (LEXERR)          51 (XX_TOO_LONG)
+;                    33 (SEMICOLON)       0  (NULL)
+b                    22 (ID)              0xc82014a7b0
+:=                   28 (ASSIGNOP)        0  (NULL)
+01                   38 (LEXERR)          54 (LEADING_ZEROS)
+d                    22 (ID)              0xc82014ac00
+:=                   28 (ASSIGNOP)        0  (NULL)
+123456.0E1           38 (LEXERR)          51 (XX_TOO_LONG)
+;                    33 (SEMICOLON)       0  (NULL)
+if                   9  (IF)              0  (NULL)
+a                    22 (ID)              0xc82014a360
+<                    25 (RELOP)           41 (LT)
+1                    13 (NUM)             24 (INT)
+then                 19 (THEN)            0  (NULL)
+b                    22 (ID)              0xc82014a7b0
+:=                   28 (ASSIGNOP)        0  (NULL)
+-                    26 (ADDOP)           46 (MINUS)
+1                    13 (NUM)             24 (INT)
+;                    33 (SEMICOLON)       0  (NULL)
+if                   9  (IF)              0  (NULL)
+a                    22 (ID)              0xc82014a360
+>                    25 (RELOP)           44 (GT)
+1                    13 (NUM)             24 (INT)
+then                 19 (THEN)            0  (NULL)
+b                    22 (ID)              0xc82014a7b0
+:=                   28 (ASSIGNOP)        0  (NULL)
++                    26 (ADDOP)           45 (PLUS)
+2                    13 (NUM)             24 (INT)
+else                 6  (ELSE)            0  (NULL)
+b                    22 (ID)              0xc82014a7b0
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82014aae0
-:=                   28 (ASSIGNOP)        0  (NULL)
-1.2                  13 (NUM)             18 (REAL)
-d                    22 (ID)              0xc82014aae0
-:=                   28 (ASSIGNOP)        0  (NULL)
-1.2E2                13 (NUM)             23 (LONG_REAL)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)

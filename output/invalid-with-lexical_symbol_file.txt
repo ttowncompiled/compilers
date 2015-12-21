@@ -1,0 +1,11 @@
+Lexeme               Token               
+-----------------------------------------
+a                    0xc82014a360        
+d                    0xc82014ac00        
+n                    0xc82014b050        
+example              0xc820015b30        
+input                0xc820015d40        
+output               0xc820015f50        
+b                    0xc82014a7b0        
+o                    0xc82014bce0        
+gcd                  0xc82014c990        
