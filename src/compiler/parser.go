@@ -50,18 +50,18 @@ func getType(lex string, symbols map[string]*lib.Symbol) lib.TypeD {
   return symbols[lex].Decoration
 }
 
-func checkTypeAndReport(listing *list.List, t lib.Token, left lib.TypeD, right int) bool {
-  fmt.Println("check", lib.Annotate(left.TypeD()), lib.Annotate(right))
-  if left.TypeD() == lib.ERR || right == lib.ERR {
+func checkTypeAndReport(listing *list.List, t lib.Token, left int, right int) bool {
+  fmt.Println("check", lib.Annotate(left), lib.Annotate(right))
+  if left == lib.ERR || right == lib.ERR {
     return false
   }
-  if left.TypeD() != right {
+  if left != right {
     e := listing.Front()
     for i := 1; i < t.LineNumber; i++ {
       e = e.Next()
     }
     line := e.Value.(lib.Line)
-    line.Errors.PushBack(lib.Error{"TYPE_ERR: EXPECTED TYPE: " + lib.Annotate(left.TypeD()) + " RECEIVED TYPE: " + lib.Annotate(right), &t})
+    line.Errors.PushBack(lib.Error{"TYPE_ERR: EXPECTED TYPE: " + lib.Annotate(left) + " RECEIVED TYPE: " + lib.Annotate(right), &t})
     return false
   }
   return true
@@ -550,18 +550,20 @@ func factor(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbo
     return lib.Decoration{lib.ERR, nil}
   }
   ftype := factor(listing, tokens, symbols)
-  if !checkTypeAndReport(listing, t, ftype, lib.BOOLEAN) {
+  if !checkTypeAndReport(listing, t, ftype.TypeD(), lib.BOOLEAN) {
     return lib.Decoration{lib.ERR, nil}
   }
   return lib.Decoration{lib.BOOLEAN, nil}
 }
 
-func termPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func termPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.MULOP)
   if ok {
-    factor(listing, tokens, symbols)
-    termPrime(listing, tokens, symbols)
-    return
+    ftype := factor(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, in.TypeD(), ftype.TypeD()) {
+      return termPrime(listing, tokens, symbols, lib.Decoration{lib.ERR, nil})
+    }
+    return termPrime(listing, tokens, symbols, ftype)
   }
   t, ok = match(tokens, lib.ADDOP)
   if !ok {
@@ -594,12 +596,13 @@ func termPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Sy
   if !ok {
     report(listing, "MULOP OR ADDOP OR RELOP OR else OR ; OR end OR then OR do OR ] OR )", t)
     sync(tokens, lib.TermPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  return in
 }
 
-func term(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func term(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -613,10 +616,10 @@ func term(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol)
   if !ok {
     report(listing, "ID OR NUM OR ( OR not", t)
     sync(tokens, lib.TermFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  factor(listing, tokens, symbols)
-  termPrime(listing, tokens, symbols)
+  ftype := factor(listing, tokens, symbols)
+  return termPrime(listing, tokens, symbols, ftype)
 }
 
 func simpleExpressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -770,7 +773,7 @@ func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*li
     //  ttype := lib.Decoration{lib.ERR, nil}
       // err*
     //}
-    if !checkTypeAndReport(listing, t, in, lib.ARRAY) {
+    if !checkTypeAndReport(listing, t, in.TypeD(), lib.ARRAY) {
       flag = true
       ttype = lib.Decoration{lib.ERR, nil}
     }
