@@ -50,9 +50,21 @@ func getType(lex string, symbols map[string]*lib.Symbol) lib.TypeD {
   return symbols[lex].Decoration
 }
 
-func checkType(left lib.TypeD, right int) bool {
+func checkTypeAndReport(listing *list.List, t lib.Token, left lib.TypeD, right int) bool {
   fmt.Println("check", lib.Annotate(left.TypeD()), lib.Annotate(right))
-  return left.TypeD() == right
+  if left.TypeD() == lib.ERR || right == lib.ERR {
+    return false
+  }
+  if left.TypeD() != right {
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"TYPE_ERR: EXPECTED TYPE: " + lib.Annotate(left.TypeD()) + " RECEIVED TYPE: " + lib.Annotate(right), &t})
+    return false
+  }
+  return true
 }
 
 func match(tokens *list.List, expectedType int) (lib.Token, bool) {
@@ -753,10 +765,9 @@ func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*li
     //  ttype := lib.Decoration{lib.ERR, nil}
       // err*
     //}
-    if checkType(in, lib.ARRAY) {
+    if checkTypeAndReport(listing, t, in, lib.ARRAY) {
       flag = true
       ttype = lib.Decoration{lib.ERR, nil}
-      // err*
     }
     if !flag {
       ttype = in.(lib.ArrayD).Val
