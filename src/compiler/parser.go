@@ -147,8 +147,25 @@ func modifyType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
   }
 }
 
-func getType(lex string, symbols map[string]*lib.Symbol) lib.TypeD {
+func checkScope(lex string, listing *list.List, t lib.Token, symbols map[string]*lib.Symbol) bool {
+  fmt.Println("check scope", lex)
+  if (symbols[lex].Decoration.TypeD() == lib.NULL) {
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"SCOPE_ERR: " + lex + " NOT DECLARED WITHIN THE CURRENT SCOPE", &t})
+    return false
+  }
+  return true
+}
+
+func getType(lex string, listing *list.List, t lib.Token, symbols map[string]*lib.Symbol) lib.TypeD {
   fmt.Println("get type", lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
+  if !checkScope(lex, listing, t, symbols) {
+    return &lib.Decoration{lib.ERR, nil}
+  }
   return symbols[lex].Decoration
 }
 
@@ -307,7 +324,7 @@ func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol
     return &lib.Decoration{lib.ERR, nil}
   }
   valType := standardType(listing, tokens, symbols)
-  return &lib.ArrayD{int(num2 - num1), valType, nil}
+  return &lib.ArrayD{int(num2 - num1+1), valType, nil}
 }
 
 func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, stack *list.List, addresses *list.List, loc int) {
@@ -720,7 +737,7 @@ func factorPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.
 func factor(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.ID)
   if ok {
-    idType := getType(t.Lexeme, symbols)
+    idType := getType(t.Lexeme, listing, t, symbols)
     return factorPrime(listing, tokens, symbols, idType)
   }
   t, ok = matchYank(tokens, lib.NUM)
@@ -1000,7 +1017,7 @@ func variable(listing *list.List, tokens *list.List, symbols map[string]*lib.Sym
     sync(tokens, lib.VariableFollows())
     return &lib.Decoration{lib.ERR, nil}
   }
-  idType := getType(t.Lexeme, symbols)
+  idType := getType(t.Lexeme, listing, t, symbols)
   return variablePrime(listing, tokens, symbols, idType)
 }
 

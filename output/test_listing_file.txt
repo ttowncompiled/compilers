@@ -6,7 +6,7 @@
 
 4.   var c : array [1..2] of integer;
 
-5. 
+5.   var d : real;
 
 6.   function fun1(x:integer; y:real; 
 
@@ -34,7 +34,7 @@
 
 18.      var e: real;
 
-19. 
+19.      var f: integer;
 
 20.      function fun3(n: integer; z: real) : integer;
 
@@ -80,13 +80,44 @@
 
 41. begin
 
-42.   b:= fun2(c[4], c[5]);
+42.   b:= fun2(c[4], c[5,5]);
+SYNERR: EXPECTED: ] RECEIVED: ,
+SYNERR: EXPECTED: , OR ) RECEIVED: ]
 
-43.   b:= fun2(c[4],2);
+43.   b:= fun2(c[4], c[5],5);
+TYPE_ERR: EXPECTED TYPE: (VOID) RECEIVED TYPE: (INTEGER)
 
-44.   if (a < 2) then a:= 1 else a := a + 2;
+44.   b:= fun2(c[4], c);
+TYPE_ERR: EXPECTED TYPE: (INTEGER) RECEIVED TYPE: (ARRAY)
 
-45.   if (b > 4.2) then a := c[a]
+45.   b:= fun2(c[4]);
+TYPE_ERR: NOT ENOUGH ARGUMENTS
 
-46. end.
+46.   b:= fun2();
+SYNERR: EXPECTED: ID OR NUM OR ( OR not OR + OR - RECEIVED: )
+
+47.   b:= fun2;
+TYPE_ERR: EXPECTED TYPE: (REAL) RECEIVED TYPE: (FUNCTION)
+
+48.   b:= fun3(c[4], c[5]);
+SCOPE_ERR: fun3 NOT DECLARED WITHIN THE CURRENT SCOPE
+
+49.   b:= fun4(c[4], c[5]);
+SCOPE_ERR: fun4 NOT DECLARED WITHIN THE CURRENT SCOPE
+
+50.   b:= fun2(c[4], c[5]);
+
+51.   b:= fun2(c[4], c[5]);
+
+52.   b:= fun2(c[4], c[5]);
+
+53.   b:= fun2(c[4], c[5]);
+
+54.   b:= fun2(c[4],2);
+
+55.   if (a < 2) then a:= 1 else a := a + 2;
+
+56.   if (b > 4.2) then a := c[a]
+
+57. end.
 
