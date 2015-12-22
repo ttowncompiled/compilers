@@ -108,6 +108,21 @@ func OutputSymbolFile(symbols map[string]*lib.Symbol, name string) {
   }
 }
 
+func OutputAddressFile(addresses *list.List, name string) {
+  fpath, e0 := filepath.Abs("output/" + name + "_address_file.txt")
+  check(e0)
+  f, e1 := os.Create(fpath)
+  check(e1)
+  defer f.Close()
+  
+  f.WriteString(fmt.Sprintf("%-20s %-20s\n", "Lexeme", "Address"))
+  f.WriteString("-----------------------------------------\n")
+  for e := addresses.Front(); e != nil; e = e.Next() {
+    address := e.Value.(lib.Address)
+    f.WriteString(fmt.Sprintf("%-20s %-20d\n", address.Lexeme, address.Loc))
+  }
+}
+
 func main() {
   if (len(os.Args) < 4) {
     fmt.Println("usage: go run compiler.go <pascal-file> <reserved-words-file> <output-name>")
@@ -126,5 +141,6 @@ func main() {
   addresses := list.New()
   loc := 0
   compiler.Parse(listing, tokens, symbols, stack, addresses, loc)
+  OutputAddressFile(addresses, os.Args[3])
   OutputListingFile(listing, os.Args[3])
 }

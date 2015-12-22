@@ -1,25 +1,25 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
-test                 22 (ID)              0xc82014a7b0
+test                 22 (ID)              0xc82016a4e0
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc82014a9c0
+input                22 (ID)              0xc82016a6f0
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc82014abd0
+output               22 (ID)              0xc82016a900
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -31,17 +31,17 @@ of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-fun1                 22 (ID)              0xc82014c510
+fun1                 22 (ID)              0xc82016e240
 (                    31 (OPEN_PAREN)      0  (NULL)
-x                    22 (ID)              0xc82014c720
+x                    22 (ID)              0xc82016e450
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-y                    22 (ID)              0xc82014cb10
+y                    22 (ID)              0xc82016e840
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-z                    22 (ID)              0xc82014cf00
+z                    22 (ID)              0xc82016ec30
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -52,7 +52,7 @@ array                2  (ARRAY)           0  (NULL)
 of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-q                    22 (ID)              0xc82014db30
+q                    22 (ID)              0xc82016f860
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -60,45 +60,45 @@ real                 18 (REAL)            0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-d                    22 (ID)              0xc82014e300
+d                    22 (ID)              0xc820170030
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
 2                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-z                    22 (ID)              0xc82014cf00
+z                    22 (ID)              0xc82016ec30
 [                    29 (OPEN_BRACKET)    0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 :=                   28 (ASSIGNOP)        0  (NULL)
 4                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 2                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 :=                   28 (ASSIGNOP)        0  (NULL)
 3                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-fun1                 22 (ID)              0xc82014c510
+fun1                 22 (ID)              0xc82016e240
 :=                   28 (ASSIGNOP)        0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-fun2                 22 (ID)              0xc820150810
+fun2                 22 (ID)              0xc820172540
 (                    31 (OPEN_PAREN)      0  (NULL)
-x                    22 (ID)              0xc82014c720
+x                    22 (ID)              0xc82016e450
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-y                    22 (ID)              0xc82014cb10
+y                    22 (ID)              0xc82016e840
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -106,18 +106,18 @@ integer              10 (INTEGER)         0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-fun3                 22 (ID)              0xc820151a10
+fun3                 22 (ID)              0xc820173740
 (                    31 (OPEN_PAREN)      0  (NULL)
-n                    22 (ID)              0xc820151c20
+n                    22 (ID)              0xc820173950
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-z                    22 (ID)              0xc82014cf00
+z                    22 (ID)              0xc82016ec30
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -125,92 +125,92 @@ real                 18 (REAL)            0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 ;                    33 (SEMICOLON)       0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 :=                   28 (ASSIGNOP)        0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-fun3                 22 (ID)              0xc820151a10
+fun3                 22 (ID)              0xc820173740
 :=                   28 (ASSIGNOP)        0  (NULL)
 3                    13 (NUM)             24 (INT)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
-fun1                 22 (ID)              0xc82014c510
+fun1                 22 (ID)              0xc82016e240
 (                    31 (OPEN_PAREN)      0  (NULL)
-x                    22 (ID)              0xc82014c720
+x                    22 (ID)              0xc82016e450
 ,                    35 (COMMA)           0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 ,                    35 (COMMA)           0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 ,                    35 (COMMA)           0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-x                    22 (ID)              0xc82014c720
+x                    22 (ID)              0xc82016e450
 :=                   28 (ASSIGNOP)        0  (NULL)
-fun3                 22 (ID)              0xc820151a10
+fun3                 22 (ID)              0xc820173740
 (                    31 (OPEN_PAREN)      0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 1                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 ,                    35 (COMMA)           0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 :=                   28 (ASSIGNOP)        0  (NULL)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 +                    26 (ADDOP)           45 (PLUS)
 4.44                 13 (NUM)             18 (REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 mod                  27 (MULOP)           11 (MOD)
-y                    22 (ID)              0xc82014cb10
+y                    22 (ID)              0xc82016e840
 )                    32 (CLOSE_PAREN)     0  (NULL)
 div                  27 (MULOP)           4  (DIV)
-x                    22 (ID)              0xc82014c720
+x                    22 (ID)              0xc82016e450
 ;                    33 (SEMICOLON)       0  (NULL)
 while                21 (WHILE)           0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 >=                   25 (RELOP)           43 (GEQ)
 4                    13 (NUM)             24 (INT)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 and                  27 (MULOP)           1  (AND)
 (                    31 (OPEN_PAREN)      0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 <=                   25 (RELOP)           42 (LEQ)
-e                    22 (ID)              0xc8201515c0
+e                    22 (ID)              0xc8201732f0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 or                   26 (ADDOP)           15 (OR)
 (                    31 (OPEN_PAREN)      0  (NULL)
 not                  12 (NOT)             0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 =                    25 (RELOP)           39 (EQ)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -218,42 +218,42 @@ a                    22 (ID)              0xc82014afc0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 do                   5  (DO)              0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
 1                    13 (NUM)             24 (INT)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-fun2                 22 (ID)              0xc820150810
+fun2                 22 (ID)              0xc820172540
 :=                   28 (ASSIGNOP)        0  (NULL)
 2.5                  13 (NUM)             18 (REAL)
 end                  7  (END)             0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 :=                   28 (ASSIGNOP)        0  (NULL)
-fun2                 22 (ID)              0xc820150810
+fun2                 22 (ID)              0xc820172540
 (                    31 (OPEN_PAREN)      0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 4                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 ,                    35 (COMMA)           0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 5                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 :=                   28 (ASSIGNOP)        0  (NULL)
-fun2                 22 (ID)              0xc820150810
+fun2                 22 (ID)              0xc820172540
 (                    31 (OPEN_PAREN)      0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
 4                    13 (NUM)             24 (INT)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
@@ -263,33 +263,33 @@ c                    22 (ID)              0xc82014b860
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 <                    25 (RELOP)           41 (LT)
 2                    13 (NUM)             24 (INT)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 then                 19 (THEN)            0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 else                 6  (ELSE)            0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 +                    26 (ADDOP)           45 (PLUS)
 2                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
 (                    31 (OPEN_PAREN)      0  (NULL)
-b                    22 (ID)              0xc82014b410
+b                    22 (ID)              0xc82016b140
 >                    25 (RELOP)           44 (GT)
 4.2                  13 (NUM)             18 (REAL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
 then                 19 (THEN)            0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 :=                   28 (ASSIGNOP)        0  (NULL)
-c                    22 (ID)              0xc82014b860
+c                    22 (ID)              0xc82016b590
 [                    29 (OPEN_BRACKET)    0  (NULL)
-a                    22 (ID)              0xc82014afc0
+a                    22 (ID)              0xc82016acf0
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 end                  7  (END)             0  (NULL)
 .                    36 (PERIOD)          0  (NULL)
