@@ -69,7 +69,7 @@
 15.1 _statement'_ := **else** <_statement_> _{ statement'.type := statement.type }_ <br>
 15.1 _statement'_ := **epsilon** _{ statement'.type := void }_
 
-16 _variable_ := **id** _{ variable'.in := lookup(id.entry) }_ <_variable'_> _{ variable.type := variable'.type }_
+16 _variable_ := **id** _{ variable'.in := getType(id.lex) }_ <_variable'_> _{ variable.type := variable'.type }_
 
 16.1 _variable'_ := **[** <_expression_> **]** _{ variable'.type := **if** expression.type = integer **and** variable'.in = array(s, t) **then** t **else** type-error* }_ <br>
 16.1 _variable'_ := **epsilon** _{ variable'.type := variable'.in }_

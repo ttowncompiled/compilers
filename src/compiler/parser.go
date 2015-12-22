@@ -45,6 +45,16 @@ func modifyType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
   }
 }
 
+func getType(lex string, symbols map[string]*lib.Symbol) lib.TypeD {
+  fmt.Println("get", lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
+  return symbols[lex].Decoration
+}
+
+func checkType(left lib.TypeD, right int) bool {
+  fmt.Println("check", lib.Annotate(left.TypeD()), lib.Annotate(right))
+  return left.TypeD() == right
+}
+
 func match(tokens *list.List, expectedType int) (lib.Token, bool) {
   t := tokens.Front().Value.(lib.Token)
   if (t.Type == expectedType) {
@@ -727,34 +737,51 @@ func expression(listing *list.List, tokens *list.List, symbols map[string]*lib.S
   expressionPrime(listing, tokens, symbols)
 }
 
-func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
     expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
       report(listing, "]", t)
       sync(tokens, lib.VariablePrimeFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    return
+    var ttype lib.TypeD
+    flag := false
+    //if etype.TypeD() != lib.INTEGER {
+    //  flag = true
+    //  ttype := lib.Decoration{lib.ERR, nil}
+      // err*
+    //}
+    if checkType(in, lib.ARRAY) {
+      flag = true
+      ttype = lib.Decoration{lib.ERR, nil}
+      // err*
+    }
+    if !flag {
+      ttype = lib.Decoration{in.(lib.ArrayD).Val, nil}
+    }
+    return ttype
   }
   t, ok = match(tokens, lib.ASSIGNOP)
   if !ok {
     report(listing, "[ OR :=", t)
     sync(tokens, lib.VariablePrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  return in
 }
 
-func variable(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func variable(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
     sync(tokens, lib.VariableFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  variablePrime(listing, tokens, symbols)
+  idType := getType(t.Lexeme, symbols)
+  return variablePrime(listing, tokens, symbols, idType)
 }
 
 func statement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
