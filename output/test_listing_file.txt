@@ -25,7 +25,6 @@
 13.       c[2] := 3;
 
 14.       fun1 := c[1]
-TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (INTEGER)
 
 15.      end;
 
@@ -48,7 +47,6 @@ TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (INTEGER)
 24.          e:= c[e];
 
 25.          fun3 := 3
-TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (INTEGER)
 
 26.        end;
 
@@ -75,7 +73,6 @@ TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (INTEGER)
 37.          end;
 
 38.        fun2 := 2.5 
-TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (REAL)
 
 39.      end;
 

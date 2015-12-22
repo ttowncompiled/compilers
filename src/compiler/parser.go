@@ -1014,8 +1014,14 @@ func statement(listing *list.List, tokens *list.List, symbols map[string]*lib.Sy
       return &lib.Decoration{lib.ERR, nil}
     }
     etype := expression(listing, tokens, symbols)
-    if !checkTypeAndReport(listing, t, vtype.TypeD(), etype.TypeD()) {
-      return &lib.Decoration{lib.ERR, nil}
+    if vtype.TypeD() == lib.FUNCTION {
+      if !checkTypeAndReport(listing, t, vtype.(*lib.FunctionD).Return.TypeD(), etype.TypeD()) {
+        return &lib.Decoration{lib.ERR, nil}
+      }
+    } else {
+      if !checkTypeAndReport(listing, t, vtype.TypeD(), etype.TypeD()) {
+        return &lib.Decoration{lib.ERR, nil}
+      }
     }
     return &lib.Decoration{lib.VOID, nil}
   }

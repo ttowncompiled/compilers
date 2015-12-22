@@ -61,7 +61,7 @@
 14.1 _statement-list'_ := **;** <_statement_> <_statement-list'_> _{ statement-list'.type := **if** statement.type = statement-list'.type = void **then** void **else** type-error }_ <br>
 14.1 _statement-list'_ := **epsilon** _{ statement-list'.type := void }_
 
-15 _statement_ := <_variable_> **assignop** <_expression_> _{ statement.type := **if** variable.type = expression.type **then** void **else** type-error* }_ <br>
+15 _statement_ := <_variable_> **assignop** <_expression_> _{ statement.type := **if** variable.type = s -> t then if variable.type = expression.type **then** void **else** type-error* else if expression.type = t **then** void **else** type-error* }_ <br>
 15 _statement_ := <_compound-statement_> _{ statement.type := compound-statement.type }_ <br>
 15 _statement_ := **if** <_expression_> **then** <_statement1_> <_statement'_> _{ statement.type := **if** expression.type = boolean **then** **if** statement1.type = statement'.type = void **then** void **else** type-error **else** type-error* }_ <br>
 15 _statement_ := **while** <_expression_> **do** <_statement1_> _{ statement.type := **if** expression.type = boolean **then** statement1.type **else** type-error* }_
