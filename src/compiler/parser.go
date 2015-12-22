@@ -7,7 +7,7 @@ import (
   "strconv"
 )
 
-func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int, attr int) {
+func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int) {
   for stackNode := stack.Front(); stackNode != nil; stackNode = stackNode.Next() {
     if stackNode.Value.(lib.GreenNode).Lexeme == lex {
       e := listing.Front()
@@ -30,13 +30,13 @@ func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex st
       }
     }
   }
-  greenNode := lib.GreenNode{lex, ttype, attr, list.New()}
+  greenNode := lib.GreenNode{lex, ttype, list.New()}
   peek := stack.Front().Value.(lib.GreenNode)
   peek.Children.PushBack(greenNode)
   stack.PushFront(greenNode)
 }
 
-func checkAddBlueNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int, attr int) {
+func checkAddBlueNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int) {
   peek := stack.Front()
   if peek.Value.(lib.GreenNode).Lexeme == lex {
     e := listing.Front()
@@ -58,8 +58,22 @@ func checkAddBlueNode(listing *list.List, t lib.Token, stack *list.List, lex str
       return
     }
   }
-  blueNode := lib.BlueNode{lex, ttype, attr}
+  blueNode := lib.BlueNode{lex, ttype}
   peek.Value.(lib.GreenNode).Children.PushBack(blueNode)
+}
+
+func popGreenNode(symbols map[string]*lib.Symbol, stack *list.List) {
+  if stack.Len() == 0 {
+    return
+  }
+  top := stack.Front()
+  stack.Remove(top)
+  greenNode := top.Value.(lib.GreenNode)
+  symbols[greenNode.Lexeme].Decoration = *(symbols[greenNode.Lexeme].Decoration.PrevTypeD())
+  for child := greenNode.Children.Front(); child != nil; child = child.Next() {
+    childNode := child.Value.(lib.Node)
+    symbols[childNode.Lex()].Decoration = *(symbols[childNode.Lex()].Decoration.PrevTypeD())
+  }
 }
 
 func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {

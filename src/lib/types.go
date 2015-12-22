@@ -83,7 +83,6 @@ type Node interface {
 type GreenNode struct {
   Lexeme string
   Type int
-  Attr int
   Children *list.List
 }
 
@@ -94,7 +93,6 @@ func (self GreenNode) Lex() string {
 type BlueNode struct {
   Lexeme string
   Type int
-  Attr int
 }
 
 func (self BlueNode) Lex() string {
