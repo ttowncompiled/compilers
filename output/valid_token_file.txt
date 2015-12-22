@@ -1,30 +1,30 @@
 Lexeme               Type                 Attribute
 --------------------------------------------------------------
 program              17 (PROGRAM)         0  (NULL)
-example              22 (ID)              0xc820015f50
+example              22 (ID)              0xc820077c80
 (                    31 (OPEN_PAREN)      0  (NULL)
-input                22 (ID)              0xc82014a180
+input                22 (ID)              0xc820077e90
 ,                    35 (COMMA)           0  (NULL)
-output               22 (ID)              0xc82014a390
+output               22 (ID)              0xc82016c0c0
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 :                    34 (COLON)           0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-n                    22 (ID)              0xc82014b470
+n                    22 (ID)              0xc82016d1a0
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -36,7 +36,7 @@ of                   14 (OF)              0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 var                  20 (VAR)             0  (NULL)
-o                    22 (ID)              0xc82014c120
+o                    22 (ID)              0xc82016de30
 :                    34 (COLON)           0  (NULL)
 array                2  (ARRAY)           0  (NULL)
 [                    29 (OPEN_BRACKET)    0  (NULL)
@@ -48,13 +48,13 @@ of                   14 (OF)              0  (NULL)
 real                 18 (REAL)            0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 function             8  (FUNCTION)        0  (NULL)
-gcd                  22 (ID)              0xc82014cdb0
+gcd                  22 (ID)              0xc82016eae0
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :                    34 (COLON)           0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 )                    32 (CLOSE_PAREN)     0  (NULL)
@@ -62,118 +62,118 @@ integer              10 (INTEGER)         0  (NULL)
 integer              10 (INTEGER)         0  (NULL)
 ;                    33 (SEMICOLON)       0  (NULL)
 begin                3  (BEGIN)           0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2                  13 (NUM)             18 (REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 :=                   28 (ASSIGNOP)        0  (NULL)
 1.2E2                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 <                    25 (RELOP)           41 (LT)
 1                    13 (NUM)             24 (INT)
 then                 19 (THEN)            0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
 -                    26 (ADDOP)           46 (MINUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 >                    25 (RELOP)           44 (GT)
 1                    13 (NUM)             24 (INT)
 then                 19 (THEN)            0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
 +                    26 (ADDOP)           45 (PLUS)
 2                    13 (NUM)             24 (INT)
 else                 6  (ELSE)            0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 while                21 (WHILE)           0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 <>                   25 (RELOP)           40 (NEQ)
 3                    13 (NUM)             24 (INT)
 do                   5  (DO)              0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 +                    26 (ADDOP)           45 (PLUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
 if                   9  (IF)              0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 =                    25 (RELOP)           39 (EQ)
 3                    13 (NUM)             24 (INT)
 then                 19 (THEN)            0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
 0                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 +                    26 (ADDOP)           45 (PLUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 -                    26 (ADDOP)           46 (MINUS)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 or                   26 (ADDOP)           15 (OR)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 mod                  27 (MULOP)           11 (MOD)
 2                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 :=                   28 (ASSIGNOP)        0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 div                  27 (MULOP)           4  (DIV)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 :=                   28 (ASSIGNOP)        0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 *                    27 (MULOP)           47 (ASTERISK)
 2.0E1                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 :=                   28 (ASSIGNOP)        0  (NULL)
-d                    22 (ID)              0xc82014b020
+d                    22 (ID)              0xc82016cd50
 /                    27 (MULOP)           48 (SLASH)
 2.0E1                13 (NUM)             23 (LONG_REAL)
 ;                    33 (SEMICOLON)       0  (NULL)
-e                    22 (ID)              0xc820154390
+e                    22 (ID)              0xc8201760c0
 :=                   28 (ASSIGNOP)        0  (NULL)
-e                    22 (ID)              0xc820154390
+e                    22 (ID)              0xc8201760c0
 and                  27 (MULOP)           1  (AND)
 not                  12 (NOT)             0  (NULL)
 1                    13 (NUM)             24 (INT)
 ;                    33 (SEMICOLON)       0  (NULL)
-n                    22 (ID)              0xc82014b470
+n                    22 (ID)              0xc82016d1a0
 [                    29 (OPEN_BRACKET)    0  (NULL)
-gcd                  22 (ID)              0xc82014cdb0
+gcd                  22 (ID)              0xc82016eae0
 (                    31 (OPEN_PAREN)      0  (NULL)
-a                    22 (ID)              0xc82014a780
+a                    22 (ID)              0xc82016c4b0
 ,                    35 (COMMA)           0  (NULL)
-b                    22 (ID)              0xc82014abd0
+b                    22 (ID)              0xc82016c900
 )                    32 (CLOSE_PAREN)     0  (NULL)
 ]                    30 (CLOSE_BRACKET)   0  (NULL)
 :=                   28 (ASSIGNOP)        0  (NULL)

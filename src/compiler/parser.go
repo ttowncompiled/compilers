@@ -460,7 +460,7 @@ func expressionListPrime(listing *list.List, tokens *list.List, symbols map[stri
     return l
   }
   // epsilon production
-  if idx < params.Len() && idx != 0 {
+  if idx+1 < params.Len() && idx != 0 {
     // err not enough arguments
     e := listing.Front()
     for i := 1; i < t.LineNumber; i++ {
@@ -613,7 +613,12 @@ func factor(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbo
   }
   t, ok = matchYank(tokens, lib.NUM)
   if ok {
-    return lib.Decoration{t.Attr, nil}
+    if t.Attr == lib.INT || t.Attr == lib.INTEGER {
+      return lib.Decoration{lib.INTEGER, nil}
+    } else if t.Attr == lib.REAL || t.Attr == lib.LONG_REAL {
+      return lib.Decoration{lib.REAL, nil}
+    }
+    return lib.Decoration{lib.ERR, nil}
   }
   t, ok = matchYank(tokens, lib.OPEN_PAREN)
   if ok {
