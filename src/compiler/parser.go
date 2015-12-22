@@ -475,13 +475,23 @@ func factorPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.
   }
   t, ok = matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
-    expression(listing, tokens, symbols)
+    etype := expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
       report(listing, "]", t)
       sync(tokens, lib.FactorPrimeFollows())
       return lib.Decoration{lib.ERR, nil}
     }
-    return lib.Decoration{lib.ERR, nil} // fix this
+    flag := false
+    if !checkTypeAndReport(listing, t, etype.TypeD(), lib.INTEGER) {
+      flag = true
+    }
+    if !checkTypeAndReport(listing, t, in.TypeD(), lib.ARRAY) {
+      flag = true
+    }
+    if flag {
+      return lib.Decoration{lib.ERR, nil}
+    }
+    return in.(lib.ArrayD).Val
   }
   t, ok = match(tokens, lib.MULOP)
   if !ok {
@@ -535,13 +545,13 @@ func factor(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbo
   }
   t, ok = matchYank(tokens, lib.OPEN_PAREN)
   if ok {
-    expression(listing, tokens, symbols)
+    etype := expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
       report(listing, ")", t)
       sync(tokens, lib.FactorFollows())
       return lib.Decoration{lib.ERR, nil}
     }
-    return lib.Decoration{lib.ERR, nil} // fix this
+    return etype
   }
   t, ok = matchYank(tokens, lib.NOT)
   if !ok {
@@ -700,11 +710,14 @@ func simpleExpression(listing *list.List, tokens *list.List, symbols map[string]
   return simpleExpressionPrime(listing, tokens, symbols, ttype)
 }
 
-func expressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func expressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.RELOP)
   if ok {
-    simpleExpression(listing, tokens, symbols)
-    return
+    stype := simpleExpression(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, in.TypeD(), stype.TypeD()) {
+      return lib.Decoration{lib.ERR, nil}
+    }
+    return lib.Decoration{lib.BOOLEAN, nil}
   }
   t, ok = match(tokens, lib.ELSE)
   if !ok {
@@ -731,12 +744,13 @@ func expressionPrime(listing *list.List, tokens *list.List, symbols map[string]*
   if !ok {
     report(listing, "RELOP OR else OR ; OR end OR then OR do OR ] OR )", t)
     sync(tokens, lib.ExpressionPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  return in
 } 
 
-func expression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func expression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -752,37 +766,33 @@ func expression(listing *list.List, tokens *list.List, symbols map[string]*lib.S
     if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
       report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
       sync(tokens, lib.ExpressionFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
   }
-  simpleExpression(listing, tokens, symbols)
-  expressionPrime(listing, tokens, symbols)
+  stype := simpleExpression(listing, tokens, symbols)
+  return expressionPrime(listing, tokens, symbols, stype)
 }
 
 func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
-    expression(listing, tokens, symbols)
+    etype := expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.CLOSE_BRACKET); !ok {
       report(listing, "]", t)
       sync(tokens, lib.VariablePrimeFollows())
       return lib.Decoration{lib.ERR, nil}
     }
-    var ttype lib.TypeD
     flag := false
-    //if etype.TypeD() != lib.INTEGER {
-    //  flag = true
-    //  ttype := lib.Decoration{lib.ERR, nil}
-      // err*
-    //}
+    if checkTypeAndReport(listing, t, etype.TypeD(), lib.INTEGER) {
+      flag = true
+    }
     if !checkTypeAndReport(listing, t, in.TypeD(), lib.ARRAY) {
       flag = true
-      ttype = lib.Decoration{lib.ERR, nil}
     }
-    if !flag {
-      ttype = in.(lib.ArrayD).Val
+    if flag {
+      return lib.Decoration{lib.ERR, nil}
     }
-    return ttype
+    return in.(lib.ArrayD).Val
   }
   t, ok = match(tokens, lib.ASSIGNOP)
   if !ok {
