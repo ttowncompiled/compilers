@@ -1,6 +1,6 @@
 ## Scope Decorations - Ian Riley
 
-1 _program_ := **program id** _{ checkAddGreenNode(id.lex, PROGRAM, NULL) }_ **(** <_identifier-list_> **) ;** <_program-body_> _{ popGreenNode() }_
+1 _program_ := **program id** _{ checkAddGreenNode(id.lex, PROGRAM) }_ **(** <_identifier-list_> **) ;** <_program-body_> _{ popGreenNode() }_
 
 1.1 _program-body_ := <_declarations_> <_program-subbody_> <br>
 1.1 _program-body_ := <_program-subbody_>
@@ -8,14 +8,14 @@
 1.2 _program-subbody_ := <_subprogram-declarations_> <_compound-statement_> **.** <br>
 1.2 _program-subbody_ := <_compound-statement_> **.**
 
-3 _identifier-list_ := **id** _{ checkAddBlueNode(id.lex, PARG, NULL) }_ <_identifier-list'_>
+3 _identifier-list_ := **id** _{ checkAddBlueNode(id.lex, PARG) }_ <_identifier-list'_>
 
-3.1 _identifier-list'_ := **, id** _{ checkAddBlueNode(id.lex, PARG, NULL) }_ <_identifier-list'_> <br>
+3.1 _identifier-list'_ := **, id** _{ checkAddBlueNode(id.lex, PARG) }_ <_identifier-list'_> <br>
 3.1 _identifier-list'_ := **epsilon**
 
-4 _declarations_ := **var id :** <_type_> **;** _{ checkAddBlueNode(id.lex, VAR, type.type) }_ <_declarations'_>
+4 _declarations_ := **var id :** <_type_> **;** _{ checkAddBlueNode(id.lex, VAR) }_ <_declarations'_>
 
-4.1 _declarations'_ := **var id :** <_type_> **;** _{ checkAddBlueNode(id.lex, VAR, type.type) }_ <_declarations'_> <br>
+4.1 _declarations'_ := **var id :** <_type_> **;** _{ checkAddBlueNode(id.lex, VAR) }_ <_declarations'_> <br>
 4.1 _declarations'_ := **epsilon**
 
 5 _type_ := <_standard-type_> <br>
@@ -37,16 +37,16 @@
 8.2 _subprogram-subbody_ := <_subprogram-declarations_> <_compound-statement_> <br>
 8.2 _subprogram-subbody_ := <_compound-statement_>
 
-9 _subprogram-head_ := **function id** _{ checkAddGreenNode(id.lex, FUNCTION, VOID) }_ <_subprogram-head'_>
+9 _subprogram-head_ := **function id** _{ checkAddGreenNode(id.lex, FUNCTION) }_ <_subprogram-head'_>
 
-9.1 _subprogram-head'_ := <_arguments_> **:** <_standard-type_> **;** _{ modifyGreenNode(standard-type.type) }_ <br>
-9.1 _subprogram-head'_ := **:** <_standard-type_> **;** _{ modifyGreenNode(standard-type.type) }_
+9.1 _subprogram-head'_ := <_arguments_> **:** <_standard-type_> **;** <br>
+9.1 _subprogram-head'_ := **:** <_standard-type_> **;**
 
 10 _arguments_ := **(** <_parameter-list_> **)**
 
-11 _parameter-list_ := **id :** <_type_> _{ checkAddBlueNode(id.lex, FARG, type.type) }_ <_parameter-list'_>
+11 _parameter-list_ := **id :** <_type_> _{ checkAddBlueNode(id.lex, FARG) }_ <_parameter-list'_>
 
-11.1 _parameter-list'_ := **; id :** <_type_> _{ checkAddBlueNode(id.lex, FARG, type.type) }_ <_parameter-list'_> <br>
+11.1 _parameter-list'_ := **; id :** <_type_> _{ checkAddBlueNode(id.lex, FARG) }_ <_parameter-list'_> <br>
 11.1 _parameter-list'_ := **epsilon**
 
 12 _compound-statement_ := **begin** <_compound-statement'_>
