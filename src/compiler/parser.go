@@ -8,11 +8,39 @@ import (
 )
 
 func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
-  ttype.SetPrevTypeD(symbols[lex].Decoration)
-  symbols[lex].Decoration = ttype
   if ttype.TypeD() == lib.ARRAY {
+    decoration := ttype.(lib.ArrayD)
+    decoration.Prev = &(symbols[lex].Decoration)
+    symbols[lex].Decoration = decoration
     fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val))
+  } else if ttype.TypeD() == lib.FUNCTION { 
+    decoration := ttype.(lib.FunctionD)
+    decoration.Prev = &(symbols[lex].Decoration)
+    symbols[lex].Decoration = decoration
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return))
   } else {
+    decoration := ttype.(lib.Decoration)
+    decoration.Prev = &(symbols[lex].Decoration)
+    symbols[lex].Decoration = decoration
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
+  }
+}
+
+func modifyType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
+  if ttype.TypeD() == lib.ARRAY {
+    decoration := ttype.(lib.ArrayD)
+    decoration.Prev = symbols[lex].Decoration.PrevTypeD()
+    symbols[lex].Decoration = decoration
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val))
+  } else if ttype.TypeD() == lib.FUNCTION { 
+    decoration := ttype.(lib.FunctionD)
+    decoration.Prev = symbols[lex].Decoration.PrevTypeD()
+    symbols[lex].Decoration = decoration
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return))
+  } else {
+    decoration := ttype.(lib.ArrayD)
+    decoration.Prev = symbols[lex].Decoration.PrevTypeD()
+    symbols[lex].Decoration = decoration
     fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()))
   }
 }
@@ -220,95 +248,119 @@ func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib
   declarationsPrime(listing, tokens, symbols)
 }
 
-func parameterListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func parameterListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) *list.List {
   t, ok := matchYank(tokens, lib.SEMICOLON)
   if ok {
     if t, ok = matchYank(tokens, lib.ID); !ok {
       report(listing, "ID", t)
       sync(tokens, lib.ParameterListPrimeFollows())
-      return
+      l := list.New()
+      l.PushFront(lib.Decoration{lib.ERR, nil})
+      return l
     }
     id := t
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.ParameterListPrimeFollows())
-      return
+      l := list.New()
+      l.PushFront(lib.Decoration{lib.ERR, nil})
+      return l
     }
     ttype := type_(listing, tokens, symbols)
     addType(id.Lexeme, ttype, symbols)
-    parameterListPrime(listing, tokens, symbols)
-    return
+    plist := parameterListPrime(listing, tokens, symbols)
+    plist.PushFront(ttype)
+    return plist
   }
   if t, ok = match(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, "; OR )", t)
     sync(tokens, lib.ParameterListPrimeFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
   // epsilon production
+  l := list.New()
+  l.PushFront(lib.Decoration{lib.VOID, nil})
+  return l
 }
 
-func parameterList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func parameterList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) *list.List {
   t, ok := matchYank(tokens, lib.ID)
   if !ok {
     report(listing, "ID", t)
     sync(tokens, lib.ParameterListFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
   id := t
   if t, ok = matchYank(tokens, lib.COLON); !ok {
     report(listing, ":", t)
     sync(tokens, lib.ParameterListFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
   ttype := type_(listing, tokens, symbols)
   addType(id.Lexeme, ttype, symbols)
-  parameterListPrime(listing, tokens, symbols)
+  plist := parameterListPrime(listing, tokens, symbols)
+  plist.PushFront(ttype)
+  return plist
 }
 
-func arguments(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func arguments(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) *list.List {
   t, ok := matchYank(tokens, lib.OPEN_PAREN)
   if !ok {
     report(listing, "(", t)
     sync(tokens, lib.ArgumentsFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
-  parameterList(listing, tokens, symbols)
+  plist := parameterList(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
     report(listing, ")", t)
     sync(tokens, lib.ArgumentsFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
+  return plist
 }
 
-func subprogramHeadPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func subprogramHeadPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.OPEN_PAREN)
   if ok {
-    arguments(listing, tokens, symbols)
+    plist := arguments(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.SubprogramHeadPrimeFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    standardType(listing, tokens, symbols)
+    ttype := standardType(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.SubprogramHeadPrimeFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    return
+    return lib.FunctionD{plist, ttype.TypeD(), nil}
   }
   t, ok = matchYank(tokens, lib.COLON)
   if !ok {
     report(listing, "( OR :", t)
     sync(tokens, lib.SubprogramHeadPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  standardType(listing, tokens, symbols)
+  ttype := standardType(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.SubprogramHeadPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
+  l := list.New()
+  l.PushFront(lib.Decoration{lib.VOID, nil})
+  return lib.FunctionD{l, ttype.TypeD(), nil}
 }
 
 func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -323,7 +375,12 @@ func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*l
     sync(tokens, lib.SubprogramHeadFollows())
     return
   }
-  subprogramHeadPrime(listing, tokens, symbols)
+  l := list.New()
+  l.PushFront(lib.Decoration{lib.VOID, nil})
+  addType(t.Lexeme, lib.FunctionD{l, lib.VOID, nil}, symbols)
+  ttype := subprogramHeadPrime(listing, tokens, symbols)
+  fmt.Println(t.Lexeme)
+  modifyType(t.Lexeme, ttype, symbols)
 }
 
 func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {

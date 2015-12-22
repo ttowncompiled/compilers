@@ -28,7 +28,6 @@ type Token struct {
 type TypeD interface {
   TypeD() int
   PrevTypeD() *TypeD
-  SetPrevTypeD(prevType TypeD)
 }
 
 type Decoration struct {
@@ -42,10 +41,6 @@ func (self Decoration) TypeD() int {
 
 func (self Decoration) PrevTypeD() *TypeD {
   return self.Prev
-}
-
-func (self Decoration) SetPrevTypeD(prevType TypeD) {
-  self.Prev = &prevType
 }
 
 type ArrayD struct {
@@ -62,10 +57,6 @@ func (self ArrayD) PrevTypeD() *TypeD {
   return self.Prev
 }
 
-func (self ArrayD) SetPrevTypeD(prevType TypeD) {
-  self.Prev = &prevType
-}
-
 type FunctionD struct {
   Params *list.List
   Return int
@@ -78,10 +69,6 @@ func (self FunctionD) TypeD() int {
 
 func (self FunctionD) PrevTypeD() *TypeD {
   return self.Prev
-}
-
-func (self FunctionD) SetPrevTypeD(prevType TypeD) {
-  self.Prev = &prevType
 }
 
 type Symbol struct {
