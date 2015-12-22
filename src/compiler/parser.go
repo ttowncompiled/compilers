@@ -731,6 +731,15 @@ func factorPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.
     return &lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  if in.TypeD() == lib.FUNCTION {
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"TYPE_ERR: NOT ENOUGH ARGUMENTS", &t})
+    return &lib.Decoration{lib.ERR, nil}
+  }
   return in
 }
 
