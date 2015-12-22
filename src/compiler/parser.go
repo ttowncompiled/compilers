@@ -423,23 +423,59 @@ func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*l
   // epsilon production
 }
 
-func expressionListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func expressionListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, params *list.List, idx int) *list.List {
   t, ok := matchYank(tokens, lib.COMMA)
   if ok {
-    expression(listing, tokens, symbols)
-    expressionListPrime(listing, tokens, symbols)
-    return
+    etype := expression(listing, tokens, symbols)
+    if idx >= params.Len() {
+      // err too many arguments
+      e := listing.Front()
+      for i := 1; i < t.LineNumber; i++ {
+        e = e.Next()
+      }
+      line := e.Value.(lib.Line)
+      line.Errors.PushBack(lib.Error{"TYPE_ERR: TOO MANY ARGUMENTS", &t})
+      l := list.New()
+      l.PushFront(lib.Decoration{lib.ERR, nil})
+      return expressionListPrime(listing, tokens, symbols, l, 0)
+    }
+    e := params.Front()
+    for i := 0; i < idx; i++ {
+      e = e.Next()
+    }
+    inType := e.Value.(lib.TypeD)
+    if !checkTypeAndReport(listing, t, inType.TypeD(), etype.TypeD()) {
+      l := list.New()
+      l.PushFront(lib.Decoration{lib.ERR, nil})
+      return expressionListPrime(listing, tokens, symbols, l, 0)
+    }
+    return expressionListPrime(listing, tokens, symbols, params, idx+1)
   }
   t, ok = match(tokens, lib.CLOSE_PAREN)
   if !ok {
     report(listing, ", OR )", t)
     sync(tokens, lib.ExpressionListPrimeFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
   // epsilon production
+  if idx < params.Len() && idx != 0 {
+    // err not enough arguments
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"TYPE_ERR: NOT ENOUGH ARGUMENTS", &t})
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
+  }
+  return params
 }
 
-func expressionList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func expressionList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, params *list.List, idx int) *list.List {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -456,22 +492,58 @@ func expressionList(listing *list.List, tokens *list.List, symbols map[string]*l
   if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
     report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
     sync(tokens, lib.ExpressionListFollows())
-    return
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return l
   }
-  expression(listing, tokens, symbols)
-  expressionListPrime(listing, tokens, symbols)
+  etype := expression(listing, tokens, symbols)
+  if idx >= params.Len() {
+    // err too many arguments
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"TYPE_ERR: TOO MANY ARGUMENTS", &t})
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return expressionListPrime(listing, tokens, symbols, l, 0)
+  }
+  e := params.Front()
+  for i := 0; i < idx; i++ {
+    e = e.Next()
+  }
+  inType := e.Value.(lib.TypeD)
+  if !checkTypeAndReport(listing, t, inType.TypeD(), etype.TypeD()) {
+    l := list.New()
+    l.PushFront(lib.Decoration{lib.ERR, nil})
+    return expressionListPrime(listing, tokens, symbols, l, 0)
+  }
+  return expressionListPrime(listing, tokens, symbols, params, idx+1)
 }
 
 func factorPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.OPEN_PAREN)
   if ok {
-    expressionList(listing, tokens, symbols)
-    if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
-      report(listing, ")", t)
-      sync(tokens, lib.FactorPrimeFollows())
+    if !checkTypeAndReport(listing, t, in.TypeD(), lib.FUNCTION) {
+      l := list.New()
+      l.PushFront(lib.Decoration{lib.ERR, nil})
+      expressionList(listing, tokens, symbols, l, 0)
+      if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
+        report(listing, ")", t)
+        sync(tokens, lib.FactorPrimeFollows())
+        return lib.Decoration{lib.ERR, nil}
+      }
       return lib.Decoration{lib.ERR, nil}
+    } else {
+      expressionList(listing, tokens, symbols, in.(lib.FunctionD).Params, 0)
+      if t, ok = matchYank(tokens, lib.CLOSE_PAREN); !ok {
+        report(listing, ")", t)
+        sync(tokens, lib.FactorPrimeFollows())
+        return lib.Decoration{lib.ERR, nil}
+      }
+      return in.(lib.FunctionD).Return
     }
-    return lib.Decoration{lib.ERR, nil} // fix this
   }
   t, ok = matchYank(tokens, lib.OPEN_BRACKET)
   if ok {
