@@ -16,7 +16,7 @@ func MatchWhitespace(l string, index int) int {
 
 func MatchId(line lib.Line, index int, rwords map[string]lib.Rword, symbols map[string]*lib.Symbol) (int, lib.Token) {
   l := line.Value
-  if !unicode.IsLetter(rune(l[index])) {
+  if index >= len(l) || !unicode.IsLetter(rune(l[index])) {
     return index, lib.Token{}
   }
   i := index
@@ -44,7 +44,7 @@ func MatchLongReal(line lib.Line, index int) (int, lib.Token) {
   t := lib.Token{-1, "", lib.NULL, lib.NULL}
   errorFlag := false
   errorReasons := list.New()
-  if !unicode.IsDigit(rune(l[index])) {
+  if index >= len(l) || !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
   i := index
@@ -138,7 +138,7 @@ func MatchReal(line lib.Line, index int) (int, lib.Token) {
   t := lib.Token{-1, "", lib.NULL, lib.NULL}
   errorFlag := false
   errorReasons := list.New()
-  if !unicode.IsDigit(rune(l[index])) {
+  if index >= len(l) || !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
   i := index
@@ -202,7 +202,7 @@ func MatchInt(line lib.Line, index int) (int, lib.Token) {
   t := lib.Token{-1, "", lib.NULL, lib.NULL}
   errorFlag := false
   errorReasons := list.New()
-  if !unicode.IsDigit(rune(l[index])) {
+  if index >= len(l) || !unicode.IsDigit(rune(l[index])) {
     return index, lib.Token{}
   }
   i := index
@@ -235,6 +235,9 @@ func MatchInt(line lib.Line, index int) (int, lib.Token) {
 }
 
 func MatchRelop(l string, index int, ln int) (int, lib.Token) {
+  if index >= len(l) {
+    return index, lib.Token{}
+  }
   if string(l[index]) == "=" {
     return index+1, lib.Token{ln, l[index:index+1], lib.RELOP, lib.EQ}
   }
@@ -257,6 +260,9 @@ func MatchRelop(l string, index int, ln int) (int, lib.Token) {
 }
 
 func MatchAddop(l string, index int, ln int) (int, lib.Token) {
+  if index >= len(l) {
+    return index, lib.Token{}
+  }
   if string(l[index]) == "+" {
     return index+1, lib.Token{ln, l[index:index+1], lib.ADDOP, lib.PLUS}
   }
@@ -267,6 +273,9 @@ func MatchAddop(l string, index int, ln int) (int, lib.Token) {
 }
 
 func MatchMulop(l string, index int, ln int) (int, lib.Token) {
+  if index >= len(l) {
+    return index, lib.Token{}
+  }
   if string(l[index]) == "*" {
     return index+1, lib.Token{ln, l[index:index+1], lib.MULOP, lib.ASTERISK}
   }
@@ -277,6 +286,9 @@ func MatchMulop(l string, index int, ln int) (int, lib.Token) {
 }
 
 func MatchAssignop(l string, index int, ln int) (int, lib.Token) {
+  if index >= len(l) {
+    return index, lib.Token{}
+  }
   if string(l[index]) == ":" && string(l[index+1]) == "=" {
     return index+2, lib.Token{ln, l[index:index+2], lib.ASSIGNOP, lib.NULL}
   }
@@ -284,6 +296,9 @@ func MatchAssignop(l string, index int, ln int) (int, lib.Token) {
 }
 
 func CatchAll(l string, index int, ln int) (int, lib.Token) {
+  if index >= len(l) {
+    return index, lib.Token{}
+  }
   c := string(l[index])
   if c == "." {
     if index+1 < len(l) && string(l[index+1]) == "." {
@@ -319,6 +334,9 @@ func TokenizeLine(line lib.Line, tokens *list.List, rwords map[string]lib.Rword,
   i := 0
   for i < len(line.Value) {
     i = MatchWhitespace(line.Value, i)
+    if i >= len(line.Value) {
+      continue
+    }
     if idx, t := MatchId(line, i, rwords, symbols); idx != i {
       i = idx
       tokens.PushBack(t)
