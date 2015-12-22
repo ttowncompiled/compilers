@@ -12,12 +12,12 @@ func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
     decoration := ttype.(lib.ArrayD)
     decoration.Prev = &(symbols[lex].Decoration)
     symbols[lex].Decoration = decoration
-    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val))
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val.TypeD()))
   } else if ttype.TypeD() == lib.FUNCTION { 
     decoration := ttype.(lib.FunctionD)
     decoration.Prev = &(symbols[lex].Decoration)
     symbols[lex].Decoration = decoration
-    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return))
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return.TypeD()))
   } else {
     decoration := ttype.(lib.Decoration)
     decoration.Prev = &(symbols[lex].Decoration)
@@ -31,12 +31,12 @@ func modifyType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
     decoration := ttype.(lib.ArrayD)
     decoration.Prev = symbols[lex].Decoration.PrevTypeD()
     symbols[lex].Decoration = decoration
-    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val))
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "of", lib.Annotate(symbols[lex].Decoration.(lib.ArrayD).Val.TypeD()))
   } else if ttype.TypeD() == lib.FUNCTION { 
     decoration := ttype.(lib.FunctionD)
     decoration.Prev = symbols[lex].Decoration.PrevTypeD()
     symbols[lex].Decoration = decoration
-    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return))
+    fmt.Println(lex, lib.Annotate(symbols[lex].Decoration.TypeD()), "to", lib.Annotate(symbols[lex].Decoration.(lib.FunctionD).Return.TypeD()))
   } else {
     decoration := ttype.(lib.ArrayD)
     decoration.Prev = symbols[lex].Decoration.PrevTypeD()
@@ -191,7 +191,7 @@ func type_(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol
     return lib.Decoration{lib.ERR, nil}
   }
   valType := standardType(listing, tokens, symbols)
-  return lib.ArrayD{int(num2 - num1), valType.TypeD(), nil}
+  return lib.ArrayD{int(num2 - num1), valType, nil}
 }
 
 func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -354,7 +354,7 @@ func subprogramHeadPrime(listing *list.List, tokens *list.List, symbols map[stri
       sync(tokens, lib.SubprogramHeadPrimeFollows())
       return lib.Decoration{lib.ERR, nil}
     }
-    return lib.FunctionD{plist, ttype.TypeD(), nil}
+    return lib.FunctionD{plist, ttype, nil}
   }
   t, ok = matchYank(tokens, lib.COLON)
   if !ok {
@@ -370,7 +370,7 @@ func subprogramHeadPrime(listing *list.List, tokens *list.List, symbols map[stri
   }
   l := list.New()
   l.PushFront(lib.Decoration{lib.VOID, nil})
-  return lib.FunctionD{l, ttype.TypeD(), nil}
+  return lib.FunctionD{l, ttype, nil}
 }
 
 func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -387,7 +387,7 @@ func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*l
   }
   l := list.New()
   l.PushFront(lib.Decoration{lib.VOID, nil})
-  addType(t.Lexeme, lib.FunctionD{l, lib.VOID, nil}, symbols)
+  addType(t.Lexeme, lib.FunctionD{l, lib.Decoration{lib.VOID, nil}, nil}, symbols)
   ttype := subprogramHeadPrime(listing, tokens, symbols)
   fmt.Println(t.Lexeme)
   modifyType(t.Lexeme, ttype, symbols)
@@ -759,7 +759,7 @@ func variablePrime(listing *list.List, tokens *list.List, symbols map[string]*li
       // err*
     }
     if !flag {
-      ttype = lib.Decoration{in.(lib.ArrayD).Val, nil}
+      ttype = in.(lib.ArrayD).Val
     }
     return ttype
   }

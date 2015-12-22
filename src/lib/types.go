@@ -45,7 +45,7 @@ func (self Decoration) PrevTypeD() *TypeD {
 
 type ArrayD struct {
   Size int
-  Val int
+  Val TypeD
   Prev *TypeD
 }
 
@@ -59,7 +59,7 @@ func (self ArrayD) PrevTypeD() *TypeD {
 
 type FunctionD struct {
   Params *list.List
-  Return int
+  Return TypeD
   Prev *TypeD
 }
 
