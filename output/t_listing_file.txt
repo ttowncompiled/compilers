@@ -57,14 +57,18 @@ TYPE_ERR: EXPECTED TYPE: (FUNCTION) RECEIVED TYPE: (INTEGER)
 28.      begin
 
 29.        a:= fun1(x, e, c, b);
+TYPE_ERR: EXPECTED TYPE: (REAL) RECEIVED TYPE: (INTEGER)
 
 30.        x:= fun3(c[1], e);
+TYPE_ERR: EXPECTED TYPE: (REAL) RECEIVED TYPE: (INTEGER)
 
 31.        e := e + 4.44;
+TYPE_ERR: EXPECTED TYPE: (INTEGER) RECEIVED TYPE: (REAL)
 
 32.        a:= (a mod y) div x;
 
 33.        while ((a >= 4) and ((b <= e) 
+TYPE_ERR: EXPECTED TYPE: (REAL) RECEIVED TYPE: (INTEGER)
 
 34.                        or (not (a = c[a])))) do
 

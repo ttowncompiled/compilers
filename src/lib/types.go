@@ -27,47 +27,47 @@ type Token struct {
 
 type TypeD interface {
   TypeD() int
-  PrevTypeD() *TypeD
+  PrevTypeD() TypeD
 }
 
 type Decoration struct {
   Type int
-  Prev *TypeD
+  Prev TypeD
 }
 
-func (self Decoration) TypeD() int {
+func (self *Decoration) TypeD() int {
   return self.Type
 }
 
-func (self Decoration) PrevTypeD() *TypeD {
+func (self *Decoration) PrevTypeD() TypeD {
   return self.Prev
 }
 
 type ArrayD struct {
   Size int
   Val TypeD
-  Prev *TypeD
+  Prev TypeD
 }
 
-func (self ArrayD) TypeD() int {
+func (self *ArrayD) TypeD() int {
   return ARRAY
 }
 
-func (self ArrayD) PrevTypeD() *TypeD {
+func (self *ArrayD) PrevTypeD() TypeD {
   return self.Prev
 }
 
 type FunctionD struct {
   Params *list.List
   Return TypeD
-  Prev *TypeD
+  Prev TypeD
 }
 
-func (self FunctionD) TypeD() int {
+func (self *FunctionD) TypeD() int {
   return FUNCTION
 }
 
-func (self FunctionD) PrevTypeD() *TypeD {
+func (self *FunctionD) PrevTypeD() TypeD {
   return self.Prev
 }
 
