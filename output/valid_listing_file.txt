@@ -25,12 +25,15 @@
 13.   if a > 1 then b := +2 else b := 1;
 
 14.   while b <> 3 do b := b + 1;
+TYPE_ERR: EXPECTED TYPE: (INTEGER) RECEIVED TYPE: (INT)
 
 15.   if b = 3 then b := 0;
 
 16.   a := a + 1;
+TYPE_ERR: EXPECTED TYPE: (INTEGER) RECEIVED TYPE: (INT)
 
 17.   a := a - 1;
+TYPE_ERR: EXPECTED TYPE: (INTEGER) RECEIVED TYPE: (INT)
 
 18.   b := a or b;
 

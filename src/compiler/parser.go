@@ -622,12 +622,14 @@ func term(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol)
   return termPrime(listing, tokens, symbols, ftype)
 }
 
-func simpleExpressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func simpleExpressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, in lib.TypeD) lib.TypeD {
   t, ok := matchYank(tokens, lib.ADDOP)
   if ok {
-    term(listing, tokens, symbols)
-    simpleExpressionPrime(listing, tokens, symbols)
-    return
+    ttype := term(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, in.TypeD(), ttype.TypeD()) {
+      return simpleExpressionPrime(listing, tokens, symbols, lib.Decoration{lib.ERR, nil})
+    }
+    return simpleExpressionPrime(listing, tokens, symbols, ttype)
   }
   t, ok = match(tokens, lib.RELOP)
   if !ok {
@@ -657,9 +659,10 @@ func simpleExpressionPrime(listing *list.List, tokens *list.List, symbols map[st
   if !ok {
     report(listing, "ADDOP OR RELOP OR else OR ; OR end OR then OR do OR ] OR )", t)
     sync(tokens, lib.SimpleExpressionPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  return in
 }
 
 func sign(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
@@ -671,7 +674,7 @@ func sign(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol)
   }
 }
 
-func simpleExpression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func simpleExpression(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.NUM)
@@ -683,19 +686,18 @@ func simpleExpression(listing *list.List, tokens *list.List, symbols map[string]
     t, ok = match(tokens, lib.NOT)
   }
   if ok {
-    term(listing, tokens, symbols)
-    simpleExpressionPrime(listing, tokens, symbols)
-    return
+    ttype := term(listing, tokens, symbols)
+    return simpleExpressionPrime(listing, tokens, symbols, ttype)
   }
   t, ok = match(tokens, lib.ADDOP)
   if !ok || (t.Type == lib.ADDOP && t.Attr != lib.PLUS && t.Attr != lib.MINUS) {
     report(listing, "ID OR NUM OR ( OR not OR + OR -", t)
     sync(tokens, lib.SimpleExpressionFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   sign(listing, tokens, symbols)
-  term(listing, tokens, symbols)
-  simpleExpressionPrime(listing, tokens, symbols)
+  ttype := term(listing, tokens, symbols)
+  return simpleExpressionPrime(listing, tokens, symbols, ttype)
 }
 
 func expressionPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
