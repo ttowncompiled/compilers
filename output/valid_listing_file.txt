@@ -43,6 +43,7 @@
 22.   d := d / 2.0E1;
 
 23.   e := e and not 1;
+TYPE_ERR: EXPECTED TYPE: (INT) RECEIVED TYPE: (BOOLEAN)
 
 24.   n[gcd(a, b)] := 1
 
