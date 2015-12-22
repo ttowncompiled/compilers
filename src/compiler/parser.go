@@ -286,6 +286,7 @@ func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string
       return
     }
     id := t
+    checkAddBlueNode(listing, id, stack, id.Lexeme, lib.VAR)
     if t, ok = matchYank(tokens, lib.COLON); !ok {
       report(listing, ":", t)
       sync(tokens, lib.DeclarationsPrimeFollows())
@@ -293,7 +294,8 @@ func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string
     }
     ttype := type_(listing, tokens, symbols)
     addType(id.Lexeme, ttype, symbols)
-    checkAddBlueNode(listing, id, stack, id.Lexeme, lib.VAR)
+    addresses.PushBack(lib.Address{id.Lexeme, loc})
+    loc += computeMemory(ttype)
     if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
       report(listing, ";", t)
       sync(tokens, lib.DeclarationsPrimeFollows())
@@ -314,7 +316,7 @@ func declarationsPrime(listing *list.List, tokens *list.List, symbols map[string
   // epsilon production
 }
 
-func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, stack *list.List) {
+func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, stack *list.List, addresses *list.List, loc int) {
   t, ok := matchYank(tokens, lib.VAR)
   if !ok {
     report(listing, "var", t)
@@ -327,6 +329,7 @@ func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib
     return
   }
   id := t
+  checkAddBlueNode(listing, id, stack, id.Lexeme, lib.VAR)
   if t, ok = matchYank(tokens, lib.COLON); !ok {
     report(listing, ":", t)
     sync(tokens, lib.DeclarationsFollows())
@@ -334,7 +337,8 @@ func declarations(listing *list.List, tokens *list.List, symbols map[string]*lib
   }
   ttype := type_(listing, tokens, symbols)
   addType(id.Lexeme, ttype, symbols)
-  checkAddBlueNode(listing, id, stack, id.Lexeme, lib.VAR)
+  addresses.PushBack(lib.Address{id.Lexeme, loc})
+  loc += computeMemory(ttype)
   if t, ok = matchYank(tokens, lib.SEMICOLON); !ok {
     report(listing, ";", t)
     sync(tokens, lib.DeclarationsFollows())
@@ -1169,6 +1173,7 @@ func subprogramDeclaration(listing *list.List, tokens *list.List, symbols map[st
     return
   }
   subprogramHead(listing, tokens, symbols)
+  loc := 0
   subprogramBody(listing, tokens, symbols)
 }
 
@@ -1254,7 +1259,7 @@ func programBody(listing *list.List, tokens *list.List, symbols map[string]*lib.
   programSubbody(listing, tokens, symbols)
 }
 
-func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, stack *list.List) {
+func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, stack *list.List, addresses *list.List, loc int) {
   t, ok := matchYank(tokens, lib.PROGRAM)
   if !ok {
     report(listing, "program", t)
@@ -1285,6 +1290,7 @@ func program(listing *list.List, tokens *list.List, symbols map[string]*lib.Symb
     sync(tokens, lib.ProgramFollows())
     return
   }
+  loc := 0
   programBody(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.EOF); !ok {
     report(listing, "EOF", t)
