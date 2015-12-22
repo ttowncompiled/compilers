@@ -98,3 +98,8 @@ type BlueNode struct {
 func (self BlueNode) Lex() string {
   return self.Lexeme
 }
+
+type Address struct {
+  Lexeme string
+  Loc int
+}
