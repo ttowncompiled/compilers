@@ -29,7 +29,7 @@
 7.1 _subprogram-declarations'_ := <_subprogram-declaration_> **;** <_subprogram-declarations'_> <br>
 7.1 _subprogram-declarations'_ := **epsilon**
 
-8 _subprogram-declaration_ := <_subprogram-head_> _{ loc := 0 }_ <_subprogram-body_>
+8 _subprogram-declaration_ := <_subprogram-head_> _{ offset := loc; loc := 0; }_ <_subprogram-body_> _{ loc := offset }_
 
 8.1 _subprogram-body_ := <_declarations_> <_subprogram-subbody_> <br>
 8.1 _subprogram-body_ := <_subprogram-subbody_>

@@ -75,3 +75,18 @@ type Symbol struct {
   Token *Token
   Decoration TypeD
 }
+
+type Node interface {
+  Lex() string
+}
+
+type GreenNode struct {
+  Lexeme string
+  Type int
+  Attr int
+  Children *list.List
+}
+
+func (self GreenNode) Lex() string {
+  return self.Lexeme
+}

@@ -7,6 +7,37 @@ import (
   "strconv"
 )
 
+func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int, attr int) {
+  for stackNode := stack.Front(); stackNode != nil; stackNode = stackNode.Next() {
+    if stackNode.Value.(lib.GreenNode).Lexeme == lex {
+      // error
+      e := listing.Front()
+      for i := 1; i < t.LineNumber; i++ {
+        e = e.Next()
+      }
+      line := e.Value.(lib.Line)
+      line.Errors.PushBack(lib.Error{"SCOPE_ERR: " + lex + " HAS ALREADY BEEN DECLARED WITHIN THE CURRENT SCOPE", &t})
+      return
+    }
+    for childNode := stackNode.Value.(lib.GreenNode).Children.Front(); childNode != nil; childNode = childNode.Next() {
+      if childNode.Value.(lib.Node).Lex() == lex {
+        // error
+        e := listing.Front()
+        for i := 1; i < t.LineNumber; i++ {
+          e = e.Next()
+        }
+        line := e.Value.(lib.Line)
+        line.Errors.PushBack(lib.Error{"SCOPE_ERR: " + lex + " HAS ALREADY BEEN DECLARED WITHIN THE CURRENT SCOPE", &t})
+        return
+      }
+    }
+  }
+  greenNode := lib.GreenNode{lex, ttype, attr, list.New()}
+  peek := stack.Front().Value.(lib.GreenNode)
+  peek.Children.PushBack(greenNode)
+  stack.PushFront(greenNode)
+}
+
 func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
   if ttype.TypeD() == lib.ARRAY {
     decoration := ttype.(lib.ArrayD)
