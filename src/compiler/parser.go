@@ -405,11 +405,10 @@ func subprogramHead(listing *list.List, tokens *list.List, symbols map[string]*l
   modifyType(t.Lexeme, ttype, symbols)
 }
 
-func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.ELSE)
   if ok {
-    statement(listing, tokens, symbols)
-    return
+    return statement(listing, tokens, symbols)
   }
   t, ok = match(tokens, lib.SEMICOLON)
   if !ok {
@@ -417,10 +416,11 @@ func statementPrime(listing *list.List, tokens *list.List, symbols map[string]*l
     if !ok {
       report(listing, "else OR ; OR end", t)
       sync(tokens, lib.StatementPrimeFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
   }
   // epsilon production
+  return lib.Decoration{lib.VOID, nil}
 }
 
 func expressionListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol, params *list.List, idx int) *list.List {
@@ -887,67 +887,83 @@ func variable(listing *list.List, tokens *list.List, symbols map[string]*lib.Sym
   return variablePrime(listing, tokens, symbols, idType)
 }
 
-func statement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func statement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if ok {
-    variable(listing, tokens, symbols)
+    vtype := variable(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.ASSIGNOP); !ok {
       report(listing, ":=", t)
       sync(tokens, lib.StatementFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    expression(listing, tokens, symbols)
-    return
+    etype := expression(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, vtype.TypeD(), etype.TypeD()) {
+      return lib.Decoration{lib.ERR, nil}
+    }
+    return lib.Decoration{lib.VOID, nil}
   }
   t, ok = match(tokens, lib.BEGIN)
   if ok {
-    compoundStatement(listing, tokens, symbols)
-    return
+    return compoundStatement(listing, tokens, symbols)
   }
   t, ok = matchYank(tokens, lib.IF)
   if ok {
-    expression(listing, tokens, symbols)
+    etype := expression(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.THEN); !ok {
       report(listing, "then", t)
       sync(tokens, lib.StatementFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    statement(listing, tokens, symbols)
-    statementPrime(listing, tokens, symbols)
-    return
+    stype1 := statement(listing, tokens, symbols)
+    stype2 := statementPrime(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, etype.TypeD(), lib.BOOLEAN) {
+      return lib.Decoration{lib.ERR, nil}
+    }
+    if !checkTypeAndReport(listing, t, stype1.TypeD(), stype2.TypeD()) {
+      return lib.Decoration{lib.ERR, nil}
+    } 
+    return lib.Decoration{lib.VOID, nil}
   }
   t, ok = matchYank(tokens, lib.WHILE)
   if !ok {
     report(listing, "ID OR begin OR if OR while", t)
     sync(tokens, lib.StatementFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  expression(listing, tokens, symbols)
+  etype := expression(listing, tokens, symbols)
   if t, ok = matchYank(tokens, lib.DO); !ok {
     report(listing, "do", t)
     sync(tokens, lib.StatementFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  statement(listing, tokens, symbols)
+  stype := statement(listing, tokens, symbols)
+  if !checkTypeAndReport(listing, t, etype.TypeD(), lib.BOOLEAN) {
+    return lib.Decoration{lib.ERR, nil}
+  }
+  return stype
 }
 
-func statementListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func statementListPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.SEMICOLON)
   if ok {
-    statement(listing, tokens, symbols)
-    statementListPrime(listing, tokens, symbols)
-    return
+    stype := statement(listing, tokens, symbols)
+    sltype := statementListPrime(listing, tokens, symbols)
+    if !checkTypeAndReport(listing, t, stype.TypeD(), sltype.TypeD()) {
+      return lib.Decoration{lib.ERR, nil}
+    }
+    return lib.Decoration{lib.VOID, nil}
   }
   t, ok = match(tokens, lib.END)
   if !ok {
     report(listing, "; OR end", t)
     sync(tokens, lib.StatementListPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
   // epsilon production
+  return lib.Decoration{lib.VOID, nil}
 }
 
-func statementList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func statementList(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -961,13 +977,17 @@ func statementList(listing *list.List, tokens *list.List, symbols map[string]*li
   if !ok {
     report(listing, "ID OR begin OR if OR while", t)
     sync(tokens, lib.StatementListFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  statement(listing, tokens, symbols)
-  statementListPrime(listing, tokens, symbols)
+  stype := statement(listing, tokens, symbols)
+  sltype := statementListPrime(listing, tokens, symbols)
+  if !checkTypeAndReport(listing, t, stype.TypeD(), sltype.TypeD()) {
+    return lib.Decoration{lib.ERR, nil}
+  }
+  return lib.Decoration{lib.VOID, nil}
 }
 
-func optionalStatements(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func optionalStatements(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -981,12 +1001,12 @@ func optionalStatements(listing *list.List, tokens *list.List, symbols map[strin
   if !ok {
     report(listing, "ID OR begin OR if OR while", t)
     sync(tokens, lib.OptionalStatementsFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  statementList(listing, tokens, symbols)
+  return statementList(listing, tokens, symbols)
 }
 
-func compoundStatementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func compoundStatementPrime(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := match(tokens, lib.ID)
   if !ok {
     t, ok = match(tokens, lib.BEGIN)
@@ -998,30 +1018,31 @@ func compoundStatementPrime(listing *list.List, tokens *list.List, symbols map[s
     t, ok = match(tokens, lib.WHILE)
   }
   if ok {
-    optionalStatements(listing, tokens, symbols)
+    otype := optionalStatements(listing, tokens, symbols)
     if t, ok = matchYank(tokens, lib.END); !ok {
       report(listing, "end", t)
       sync(tokens, lib.CompoundStatementPrimeFollows())
-      return
+      return lib.Decoration{lib.ERR, nil}
     }
-    return
+    return otype
   }
   t, ok = matchYank(tokens, lib.END)
   if !ok {
     report(listing, "ID OR begin OR if OR while OR end", t)
     sync(tokens, lib.CompoundStatementPrimeFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
+  return lib.Decoration{lib.VOID, nil}
 }
 
-func compoundStatement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
+func compoundStatement(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) lib.TypeD {
   t, ok := matchYank(tokens, lib.BEGIN)
   if !ok {
     report(listing, "begin", t)
     sync(tokens, lib.CompoundStatementFollows())
-    return
+    return lib.Decoration{lib.ERR, nil}
   }
-  compoundStatementPrime(listing, tokens, symbols)
+  return compoundStatementPrime(listing, tokens, symbols)
 }
 
 func subprogramSubbody(listing *list.List, tokens *list.List, symbols map[string]*lib.Symbol) {
