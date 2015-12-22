@@ -2,17 +2,17 @@ Lexeme               Token
 -----------------------------------------
 output               0xc82014abd0        
 fun1                 0xc82014c510        
-x                    0xc82014c720        
 fun3                 0xc820151a10        
-input                0xc82014a9c0        
-b                    0xc82014b410        
-d                    0xc82014e300        
 a                    0xc82014afc0        
+b                    0xc82014b410        
+x                    0xc82014c720        
 z                    0xc82014cf00        
 fun2                 0xc820150810        
-q                    0xc82014db30        
+d                    0xc82014e300        
 e                    0xc8201515c0        
 n                    0xc820151c20        
 test                 0xc82014a7b0        
+input                0xc82014a9c0        
 c                    0xc82014b860        
 y                    0xc82014cb10        
+q                    0xc82014db30        

@@ -90,3 +90,13 @@ type GreenNode struct {
 func (self GreenNode) Lex() string {
   return self.Lexeme
 }
+
+type BlueNode struct {
+  Lexeme string
+  Type int
+  Attr int
+}
+
+func (self BlueNode) Lex() string {
+  return self.Lexeme
+}

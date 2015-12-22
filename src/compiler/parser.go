@@ -10,7 +10,6 @@ import (
 func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int, attr int) {
   for stackNode := stack.Front(); stackNode != nil; stackNode = stackNode.Next() {
     if stackNode.Value.(lib.GreenNode).Lexeme == lex {
-      // error
       e := listing.Front()
       for i := 1; i < t.LineNumber; i++ {
         e = e.Next()
@@ -21,7 +20,6 @@ func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex st
     }
     for childNode := stackNode.Value.(lib.GreenNode).Children.Front(); childNode != nil; childNode = childNode.Next() {
       if childNode.Value.(lib.Node).Lex() == lex {
-        // error
         e := listing.Front()
         for i := 1; i < t.LineNumber; i++ {
           e = e.Next()
@@ -36,6 +34,32 @@ func checkAddGreenNode(listing *list.List, t lib.Token, stack *list.List, lex st
   peek := stack.Front().Value.(lib.GreenNode)
   peek.Children.PushBack(greenNode)
   stack.PushFront(greenNode)
+}
+
+func checkAddBlueNode(listing *list.List, t lib.Token, stack *list.List, lex string, ttype int, attr int) {
+  peek := stack.Front()
+  if peek.Value.(lib.GreenNode).Lexeme == lex {
+    e := listing.Front()
+    for i := 1; i < t.LineNumber; i++ {
+      e = e.Next()
+    }
+    line := e.Value.(lib.Line)
+    line.Errors.PushBack(lib.Error{"SCOPE_ERR: " + lex + " HAS ALREADY BEEN DECLARED WITHIN THE CURRENT SCOPE", &t})
+    return
+  }
+  for childNode := peek.Value.(lib.GreenNode).Children.Front(); childNode != nil; childNode.Next() {
+    if childNode.Value.(lib.Node).Lex() == lex {
+      e := listing.Front()
+      for i := 1; i < t.LineNumber; i++ {
+        e = e.Next()
+      }
+      line := e.Value.(lib.Line)
+      line.Errors.PushBack(lib.Error{"SCOPE_ERR: " + lex + " HAS ALREADY BEEN DECLARED WITHIN THE CURRENT SCOPE", &t})
+      return
+    }
+  }
+  blueNode := lib.BlueNode{lex, ttype, attr}
+  peek.Value.(lib.GreenNode).Children.PushBack(blueNode)
 }
 
 func addType(lex string, ttype lib.TypeD, symbols map[string]*lib.Symbol) {
