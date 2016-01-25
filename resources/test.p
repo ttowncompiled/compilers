@@ -27,31 +27,18 @@ program test (input, output);
 
      begin
        a:= fun1(x, e, c, b);
-       x:= fun3(c[1], e);
-       e := e + 4.44;
-       a:= (a mod y) div x;
-       while ((a >= 4) and ((b <= e) 
+       x:= fun4(c[1], e);
+       e := e + 4;
+       a:= (a mod 4.4) div 4.4;
+       while ((a >= 4.4) and ((b <= e) 
                        or (not (a = c[a])))) do
          begin
-           a:= c[a] + 1
+           a:= c + 1
          end;
-       fun2 := 2.5 
+       fun2 := 2 
      end;
 
 begin
-  b:= fun2(c[4], c[5,5]);
-  b:= fun2(c[4], c[5],5);
-  b:= fun2(c[4], c);
-  b:= fun2(c[4]);
-  b:= fun2();
-  b:= fun2;
-  b:= fun3(c[4], c[5]);
-  b:= fun4(c[4], c[5]);
-  b:= fun2(c[4], c[5]);
-  b:= fun2(c[4], c[5]);
-  b:= fun2(c[4], c[5]);
-  b:= fun2(c[4], c[5]);
-  b:= fun2(c[4],2);
   if (a < 2) then a:= 1 else a := a + 2;
   if (b > 4.2) then a := c[a]
 end.
